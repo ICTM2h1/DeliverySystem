@@ -19,6 +19,8 @@ public class Main {
 
         ResultSet cities = Database.select("SELECT * FROM city");
         System.out.println(cities);
+        new Menu();
+
     }
 
 }
