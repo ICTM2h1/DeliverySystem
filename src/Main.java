@@ -1,6 +1,3 @@
-/**
- * @author Koen van Meijeren (s1153353)
- */
 
 public class Main {
 
