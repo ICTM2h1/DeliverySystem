@@ -8,6 +8,7 @@ public class Main {
      *
      * @param args
      *   The given arguments.
+     *
      */
     public static void main(String[] args) {
         System.out.println("Application entry point.");
