@@ -18,8 +18,15 @@ public class Config {
 
             while (scanner.hasNext()) {
                 String key = scanner.next();
-                scanner.next();
-                String value = scanner.next();
+                if (scanner.hasNext()) {
+                    scanner.next();
+                }
+
+                String value = "";
+                if (scanner.hasNext()) {
+                    value = scanner.next();
+                }
+
                 this.items.put(key, value);
             }
         } catch (FileNotFoundException e) {
