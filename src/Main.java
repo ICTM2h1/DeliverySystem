@@ -1,5 +1,5 @@
 import System.Config.Config;
-import System.Database.Database;
+import System.Database.Query;
 
 import java.sql.ResultSet;
 
@@ -17,8 +17,6 @@ public class Main {
         Config config = Config.getInstance();
         System.out.println("Application entry point.");
 
-        ResultSet cities = Database.select("SELECT * FROM city");
-        System.out.println(cities);
         new Menu();
 
     }

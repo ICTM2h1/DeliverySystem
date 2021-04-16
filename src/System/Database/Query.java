@@ -1,9 +1,5 @@
 package System.Database;
 
-import System.Config.Config;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -11,24 +7,21 @@ import java.util.HashMap;
 /**
  * Provides a class for interacting with the database.
  */
-public class Database {
+public class Query {
 
     /**
      * Holds the reference to the database object.
      */
-    private static Database database;
-    private static Config config = Config.getInstance();
+    private static Query query;
     private static Connection connection;
 
     /**
      * Creates a new database instance.
      */
-    private Database() {
+    private Query() {
         try {
-            Class.forName(config.get("database_driver"));
-            connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
+            connection = new Connection();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
             System.out.println("An error occurred while connecting to the database.");
         }
     }
@@ -38,24 +31,25 @@ public class Database {
      *
      * @return The database instance.
      */
-    private static Database getInstance() {
-        if (database != null) {
-            return database;
+    private static Query getInstance() {
+        if (query != null) {
+            return query;
         }
 
-        database = new Database();
-        return database;
+        query = new Query();
+        return query;
     }
 
     public static ResultSet select(String query) {
         try {
             getInstance();
-            Statement statement = connection.createStatement();
+            Statement statement = connection.get().createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             connection.close();
 
             return resultSet;
         } catch(Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("An error while executing this query.");
         }
 
@@ -65,7 +59,7 @@ public class Database {
     public static ResultSet select(String query, HashMap<String, String> conditions) {
         try {
             getInstance();
-            Statement statement = connection.createStatement();
+            Statement statement = connection.get().createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             connection.close();
 
