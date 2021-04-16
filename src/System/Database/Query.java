@@ -1,7 +1,9 @@
 package System.Database;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -32,22 +34,19 @@ public class Query {
      * @return The database instance.
      */
     private static Query getInstance() {
-        if (query != null) {
-            return query;
-        }
-
         query = new Query();
         return query;
     }
 
-    public static ResultSet select(String query) {
+    public static ArrayList<Object> select(String query, ArrayList<String> selectFields) {
         try {
             getInstance();
-            Statement statement = connection.get().createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+
+            Statement stmt = connection.get().createStatement();
+            ArrayList<Object> results = resultSetToArray(selectFields, stmt.executeQuery(query));
             connection.close();
 
-            return resultSet;
+            return results;
         } catch(Exception e) {
             System.out.println(e.getMessage());
             System.out.println("An error while executing this query.");
@@ -56,20 +55,41 @@ public class Query {
         return null;
     }
 
-    public static ResultSet select(String query, HashMap<String, String> conditions) {
+    public static ArrayList<Object> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             getInstance();
-            Statement statement = connection.get().createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
+            if (stmt.fields() == 0 && conditions.size() > 0) {
+                throw new RuntimeException("All specified conditions must be used inside the query.");
+            }
+
+            stmt.setValues(conditions);
+            ArrayList<Object> results = resultSetToArray(selectFields, stmt.executeQuery());
+            stmt.close();
             connection.close();
 
-            return resultSet;
+            return results;
         } catch(Exception e) {
             System.out.println(e.getMessage());
             System.out.println("An error while executing this query.");
         }
 
         return null;
+    }
+
+    private static ArrayList<Object> resultSetToArray(ArrayList<String> selectFields, ResultSet rs) throws SQLException {
+        ArrayList<Object> results = new ArrayList<>();
+        while (rs.next()) {
+            HashMap<String, String> selectedValues = new HashMap<>();
+            for (String field : selectFields) {
+                selectedValues.put(field, rs.getString(field));
+            }
+
+            results.add(selectedValues);
+        }
+
+        return results;
     }
 
 }
