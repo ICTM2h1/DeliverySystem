@@ -83,7 +83,7 @@ public class Query {
             getInstance();
 
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
-            if (stmt.fields() == 0 && conditions.size() > 0) {
+            if (stmt.fields() != conditions.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
             }
 
@@ -131,7 +131,7 @@ public class Query {
 
             String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query, insertValues.size());
-            if (stmt.fields() == 0 && insertValues.size() > 0) {
+            if (stmt.fields() != insertValues.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
             }
 
