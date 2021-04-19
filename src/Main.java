@@ -1,7 +1,4 @@
 import System.Config.Config;
-import System.Database.Query;
-
-import java.sql.ResultSet;
 
 /**
  * This class provides the main entry point for the application.
