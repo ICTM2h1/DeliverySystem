@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Query {
 
-    private static Config config = Config.getInstance();
+    private static final Config config = Config.getInstance();
 
     /**
      * The connection object.
@@ -35,11 +35,9 @@ public class Query {
 
     /**
      * Instantiates an instance for the database or gets an existing one.
-     *
-     * @return The database instance.
      */
-    private static Query getInstance() {
-        return new Query();
+    private static void getInstance() {
+        new Query();
     }
 
     /**

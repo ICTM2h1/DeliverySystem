@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class Connection {
 
-    private static Config config = Config.getInstance();
+    private static final Config config = Config.getInstance();
     private java.sql.Connection connection;
 
     /**

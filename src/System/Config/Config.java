@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Config {
 
     private static Config config;
-    private Map<String, String> items = new HashMap<>();
+    private final Map<String, String> items = new HashMap<>();
 
     /**
      * Creates a new config object.
@@ -38,7 +38,7 @@ public class Config {
                 this.items.put(key, value);
             }
         } catch (FileNotFoundException e) {
-            System.out.printf("Configuratiebestand kon niet worden gevonden: %s%n", e.getMessage());
+            System.out.printf("Configuration file could not be found: %s%n", e.getMessage());
         }
     }
 

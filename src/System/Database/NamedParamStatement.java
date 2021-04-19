@@ -82,11 +82,9 @@ public class NamedParamStatement {
 
     /**
      * Executes the query.
-     *
-     * @return Whether the query was executed successfully or not.
      */
-    public boolean execute() throws SQLException {
-        return this.prepStmt.execute();
+    public void execute() throws SQLException {
+        this.prepStmt.execute();
     }
 
     /**
