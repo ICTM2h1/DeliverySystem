@@ -73,33 +73,23 @@ public class Query {
      * @return Whether the data was successfully inserted or not.
      */
     public static boolean insert(String table, HashMap<String, String> values) {
-        try {
-            HashMap<String, String> insertValues = new HashMap<>();
-            StringBuilder queryColumns = new StringBuilder();
-            StringBuilder queryValues = new StringBuilder();
-            Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, String> pair = it.next();
+        HashMap<String, String> insertValues = new HashMap<>();
+        StringBuilder queryColumns = new StringBuilder();
+        StringBuilder queryValues = new StringBuilder();
+        Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pair = it.next();
 
-                queryColumns.append(pair.getKey()).append(it.hasNext() ? ", " : " ");
-                queryValues.append(":").append(pair.getKey()).append(it.hasNext() ? ", " : " ");
-                insertValues.put(pair.getKey(), pair.getValue());
+            queryColumns.append(pair.getKey()).append(it.hasNext() ? ", " : " ");
+            queryValues.append(":").append(pair.getKey()).append(it.hasNext() ? ", " : " ");
+            insertValues.put(pair.getKey(), pair.getValue());
 
-                it.remove(); // avoids a ConcurrentModificationException
-            }
-
-            String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
-            execute(query, insertValues);
-
-            return true;
-        } catch(Exception e) {
-            System.out.printf("An error occurred while inserting the data into table '%s'.%n", table);
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
+            it.remove(); // avoids a ConcurrentModificationException
         }
 
-        return false;
+        String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
+
+        return execute(query, insertValues);
     }
 
     /**
@@ -112,44 +102,32 @@ public class Query {
      * @return Whether the data was successfully updated or not.
      */
     public static boolean update(String table, HashMap<String, String> values, HashMap<String, String> conditions) {
-        boolean success;
-        try {
-            HashMap<String, String> updateValues = new HashMap<>();
-            StringBuilder queryValues = new StringBuilder();
-            Iterator<Map.Entry<String, String>> itValues = values.entrySet().iterator();
-            while (itValues.hasNext()) {
-                Map.Entry<String, String> pair = itValues.next();
+        HashMap<String, String> updateValues = new HashMap<>();
+        StringBuilder queryValues = new StringBuilder();
+        Iterator<Map.Entry<String, String>> itValues = values.entrySet().iterator();
+        while (itValues.hasNext()) {
+            Map.Entry<String, String> pair = itValues.next();
 
-                queryValues.append(pair.getKey()).append(" = ").append(":update").append(pair.getKey()).append(itValues.hasNext() ? ", " : " ");
-                updateValues.put("update" + pair.getKey(), pair.getValue());
+            queryValues.append(pair.getKey()).append(" = ").append(":update").append(pair.getKey()).append(itValues.hasNext() ? ", " : " ");
+            updateValues.put("update" + pair.getKey(), pair.getValue());
 
-                itValues.remove(); // avoids a ConcurrentModificationException
-            }
-
-            StringBuilder queryConditions = new StringBuilder();
-            Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
-            while (itConditions.hasNext()) {
-                Map.Entry<String, String> pair = itConditions.next();
-
-                queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
-                updateValues.put("where" + pair.getKey(), pair.getValue());
-
-                itConditions.remove(); // avoids a ConcurrentModificationException
-            }
-
-            String query = String.format("UPDATE %s SET %s WHERE %s", table, queryValues, queryConditions);
-            execute(query, updateValues);
-
-            success = true;
-        } catch(Exception e) {
-            success = false;
-            System.out.printf("An error occurred while updating the table '%s'.%n", table);
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
+            itValues.remove(); // avoids a ConcurrentModificationException
         }
 
-        return success;
+        StringBuilder queryConditions = new StringBuilder();
+        Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
+        while (itConditions.hasNext()) {
+            Map.Entry<String, String> pair = itConditions.next();
+
+            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+            updateValues.put("where" + pair.getKey(), pair.getValue());
+
+            itConditions.remove(); // avoids a ConcurrentModificationException
+        }
+
+        String query = String.format("UPDATE %s SET %s WHERE %s", table, queryValues, queryConditions);
+
+        return execute(query, updateValues);
     }
 
     /**
@@ -161,33 +139,21 @@ public class Query {
      * @return Whether the data was successfully deleted or not.
      */
     public static boolean delete(String table, HashMap<String, String> conditions) {
-        boolean success;
-        try {
-            HashMap<String, String> updateValues = new HashMap<>();
-            StringBuilder queryConditions = new StringBuilder();
-            Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
-            while (itConditions.hasNext()) {
-                Map.Entry<String, String> pair = itConditions.next();
+        HashMap<String, String> updateValues = new HashMap<>();
+        StringBuilder queryConditions = new StringBuilder();
+        Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
+        while (itConditions.hasNext()) {
+            Map.Entry<String, String> pair = itConditions.next();
 
-                queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
-                updateValues.put("where" + pair.getKey(), pair.getValue());
+            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+            updateValues.put("where" + pair.getKey(), pair.getValue());
 
-                itConditions.remove(); // avoids a ConcurrentModificationException
-            }
-
-            String query = String.format("DELETE FROM %s WHERE %s", table, queryConditions);
-            execute(query, updateValues);
-
-            success = true;
-        } catch(Exception e) {
-            success = false;
-            System.out.printf("An error occurred while updating the table '%s'.%n", table);
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
+            itConditions.remove(); // avoids a ConcurrentModificationException
         }
 
-        return success;
+        String query = String.format("DELETE FROM %s WHERE %s", table, queryConditions);
+
+        return execute(query, updateValues);
     }
 
     /**
@@ -229,18 +195,31 @@ public class Query {
      *
      * @param query The query.
      * @param queryValues The values of the query.
+     *
+     * @return Whether the query was executed successfully or not.
      */
-    private static void execute(String query, HashMap<String, String> queryValues) throws SQLException {
-        getInstance();
-        NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
-        if (stmt.fields() != queryValues.size()) {
-            throw new RuntimeException("All specified values must be used inside the query.");
+    private static boolean execute(String query, HashMap<String, String> queryValues) {
+        try {
+            getInstance();
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
+            if (stmt.fields() != queryValues.size()) {
+                throw new RuntimeException("All specified values must be used inside the query.");
+            }
+
+            stmt.setValues(queryValues);
+            stmt.execute();
+            stmt.close();
+            connection.close();
+
+            return true;
+        } catch(Exception e) {
+            System.out.println("An error occurred while executing this query.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
         }
 
-        stmt.setValues(queryValues);
-        stmt.execute();
-        stmt.close();
-        connection.close();
+        return false;
     }
 
     /**
