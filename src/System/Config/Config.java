@@ -39,6 +39,7 @@ public class Config {
             }
         } catch (FileNotFoundException e) {
             System.out.printf("Configuration file could not be found: %s%n", e.getMessage());
+            System.exit(-1);
         }
     }
 

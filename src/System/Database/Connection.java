@@ -26,6 +26,7 @@ public class Connection {
                 System.out.println(e.getMessage());
             }
             this.connection = null;
+            System.exit(-1);
         }
     }
 
@@ -49,6 +50,7 @@ public class Connection {
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(s.getMessage());
             }
+            System.exit(-1);
         }
     }
 
