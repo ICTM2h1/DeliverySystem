@@ -1,5 +1,7 @@
 package System.Database;
 
+import System.Config.Config;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,6 +14,8 @@ import java.util.Map;
  * Provides a class for interacting with the database.
  */
 public class Query {
+
+    private static Config config = Config.getInstance();
 
     /**
      * The connection object.
@@ -56,8 +60,10 @@ public class Query {
 
             return results;
         } catch(Exception e) {
-            System.out.println(e.getMessage());
             System.out.println("An error occurred while executing this query.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return null;
@@ -88,8 +94,10 @@ public class Query {
 
             return results;
         } catch(Exception e) {
-            System.out.println(e.getMessage());
             System.out.println("An error occurred while executing this query.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return null;
@@ -109,13 +117,14 @@ public class Query {
             getInstance();
 
             HashMap<String, String> insertValues = (HashMap<String, String>) values.clone();
-            String queryColumns = "", queryValues = "";
+            StringBuilder queryColumns = new StringBuilder();
+            StringBuilder queryValues = new StringBuilder();
             Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<String, String> pair = it.next();
 
-                queryColumns += pair.getKey() + (it.hasNext() ? ", " : " ");
-                queryValues += ":" + pair.getKey() + (it.hasNext() ? ", " : " ");
+                queryColumns.append(pair.getKey()).append(it.hasNext() ? ", " : " ");
+                queryValues.append(":").append(pair.getKey()).append(it.hasNext() ? ", " : " ");
 
                 it.remove(); // avoids a ConcurrentModificationException
             }

@@ -64,7 +64,9 @@ public class Config {
      * @return The value of the key.
      */
     public String get(String key) {
-        return this.items.get(key);
+        String value = this.items.get(key);
+
+        return value.equals("null") ? "" : value;
     }
 
     /**
