@@ -84,7 +84,7 @@ public class NamedParamStatement {
      * @param values The values to be used inside the query.
      */
     public void setValues(HashMap<String, String> values) throws SQLException {
-        if (this.fields.size() < 1) {
+        if (this.fields.size() < 1 || values == null || values.isEmpty()) {
             return;
         }
 
