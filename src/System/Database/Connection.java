@@ -5,6 +5,9 @@ import System.Config.Config;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Provides a class for connecting with the database.
+ */
 public class Connection {
 
     private static Config config = Config.getInstance();
@@ -19,6 +22,9 @@ public class Connection {
             this.connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
         } catch(SQLException | ClassNotFoundException e) {
             System.out.println("An error occurred while connecting to the database.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
             this.connection = null;
         }
     }
@@ -40,6 +46,9 @@ public class Connection {
             this.connection.close();
         } catch (SQLException s) {
             System.out.println("An error occurred while closing the connection.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(s.getMessage());
+            }
         }
     }
 

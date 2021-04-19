@@ -6,11 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Provides a class for getting values from the config.
+ */
 public class Config {
 
     private static Config config;
     private Map<String, String> items = new HashMap<>();
 
+    /**
+     * Creates a new config object.
+     *
+     * Loads all .env values into the items map.
+     */
     private Config() {
         try {
             File file = new File(".env");
@@ -34,6 +42,11 @@ public class Config {
         }
     }
 
+    /**
+     * Creates one instance of this class.
+     *
+     * @return Either a new config instance or an existing one.
+     */
     public static Config getInstance() {
         if (config != null) {
             return config;
@@ -43,10 +56,24 @@ public class Config {
         return config;
     }
 
+    /**
+     * Gets a key from the config.
+     *
+     * @param key The key.
+     *
+     * @return The value of the key.
+     */
     public String get(String key) {
-        return this.items.get(key);
+        String value = this.items.get(key);
+
+        return value.equals("null") ? "" : value;
     }
 
+    /**
+     * Gets the config items map.
+     *
+     * @return The config items.
+     */
     public Map<String, String> get() {
         return this.items;
     }
