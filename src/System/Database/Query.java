@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Provides a class for interacting with the database.
@@ -91,6 +93,54 @@ public class Query {
         }
 
         return null;
+    }
+
+    /**
+     * Inserts data into a table inside the database.
+     *
+     * @param table The table to insert data in.
+     * @param values The data to be inserted into the database.
+     *
+     * @return Whether the data was successfully inserted or not.
+     */
+    public static boolean insert(String table, HashMap<String, String> values) {
+        boolean success;
+        try {
+            getInstance();
+
+            HashMap<String, String> insertValues = (HashMap<String, String>) values.clone();
+            String queryColumns = "", queryValues = "";
+            Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, String> pair = it.next();
+
+                queryColumns += pair.getKey() + (it.hasNext() ? ", " : " ");
+                queryValues += ":" + pair.getKey() + (it.hasNext() ? ", " : " ");
+
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+
+            String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query, insertValues.size());
+            if (stmt.fields() == 0 && insertValues.size() > 0) {
+                throw new RuntimeException("All specified conditions must be used inside the query.");
+            }
+
+            stmt.setValues(insertValues);
+            stmt.execute();
+            stmt.close();
+            connection.close();
+
+            success = true;
+        } catch(Exception e) {
+            success = false;
+            System.out.println("An error occurred while executing this query.");
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return success;
     }
 
     /**

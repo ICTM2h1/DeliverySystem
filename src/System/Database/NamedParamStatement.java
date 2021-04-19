@@ -41,12 +41,52 @@ public class NamedParamStatement {
     }
 
     /**
+     * Creates a new named statement object.
+     *
+     * @param conn The connection.
+     * @param sql The sql query.
+     * @param values The number of values.
+     */
+    public NamedParamStatement(Connection conn, String sql, int values) throws SQLException {
+        int position, counter = 1;
+        while ((position = sql.indexOf(":")) != -1) {
+            int end = sql.substring(position).indexOf(" ");
+            if (end == -1) {
+                end = sql.length();
+            } else {
+                end += position;
+            }
+
+            String field = sql.substring(position + 1, end);
+            int comma = sql.substring(position).indexOf(",");
+            if (comma != -1) {
+                field = field.substring(0, comma - 1);
+            }
+
+            this.fields.add(field);
+            sql = sql.substring(0, position) + (counter == values ? "?" : "?,") + sql.substring(end);
+            counter++;
+        }
+
+        this.prepStmt = conn.prepareStatement(sql);
+    }
+
+    /**
      * Executes the query.
      *
      * @return The result set.
      */
     public ResultSet executeQuery() throws SQLException {
         return this.prepStmt.executeQuery();
+    }
+
+    /**
+     * Executes the query.
+     *
+     * @return Whether the query was executed successfully or not.
+     */
+    public boolean execute() throws SQLException {
+        return this.prepStmt.execute();
     }
 
     /**
