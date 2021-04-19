@@ -33,30 +33,6 @@ public class NamedParamStatement {
                 end += position;
             }
 
-            this.fields.add(sql.substring(position + 1, end));
-            sql = sql.substring(0, position) + "?" + sql.substring(end);
-        }
-
-        this.prepStmt = conn.prepareStatement(sql);
-    }
-
-    /**
-     * Creates a new named statement object.
-     *
-     * @param conn The connection.
-     * @param sql The sql query.
-     * @param values The number of values.
-     */
-    public NamedParamStatement(Connection conn, String sql, int values) throws SQLException {
-        int position, counter = 1;
-        while ((position = sql.indexOf(":")) != -1) {
-            int end = sql.substring(position).indexOf(" ");
-            if (end == -1) {
-                end = sql.length();
-            } else {
-                end += position;
-            }
-
             String field = sql.substring(position + 1, end);
             int comma = sql.substring(position).indexOf(",");
             if (comma != -1) {
@@ -64,8 +40,7 @@ public class NamedParamStatement {
             }
 
             this.fields.add(field);
-            sql = sql.substring(0, position) + (counter == values ? "?" : "?,") + sql.substring(end);
-            counter++;
+            sql = sql.substring(0, position) + (comma != -1 ? "?," : "?") + sql.substring(end);
         }
 
         this.prepStmt = conn.prepareStatement(sql);
@@ -143,7 +118,7 @@ public class NamedParamStatement {
      * @return The index of the named parameter.
      */
     private int getIndex(String name) {
-        if (this.fields.size() < 1) {
+        if (this.fields.size() < 1 || !this.fields.contains(name)) {
             return 0;
         }
 
