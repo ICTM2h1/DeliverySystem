@@ -152,12 +152,13 @@ public class Query {
     }
 
     /**
-     * Inserts data into a table inside the database.
+     * Update data from one or more records inside a table from the database.
      *
-     * @param table The table to insert data in.
-     * @param values The data to be inserted into the database.
+     * @param table The table to update data in.
+     * @param values The data to be updated.
+     * @param conditions The conditions for updating the data.
      *
-     * @return Whether the data was successfully inserted or not.
+     * @return Whether the data was successfully updated or not.
      */
     public static boolean update(String table, HashMap<String, String> values, HashMap<String, String> conditions) {
         boolean success;
@@ -188,6 +189,54 @@ public class Query {
             }
 
             String query = String.format("UPDATE %s SET %s WHERE %s", table, queryValues, queryConditions);
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
+            if (stmt.fields() != updateValues.size()) {
+                throw new RuntimeException("All specified conditions must be used inside the query.");
+            }
+
+            stmt.setValues(updateValues);
+            stmt.execute();
+            stmt.close();
+            connection.close();
+
+            success = true;
+        } catch(Exception e) {
+            success = false;
+            System.out.printf("An error occurred while updating the table '%s'.%n", table);
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * Delete data from one or more records inside a table from the database.
+     *
+     * @param table The table to delete data from.
+     * @param conditions The conditions for deleting the data.
+     *
+     * @return Whether the data was successfully deleted or not.
+     */
+    public static boolean delete(String table, HashMap<String, String> conditions) {
+        boolean success;
+        try {
+            getInstance();
+
+            HashMap<String, String> updateValues = new HashMap<>();
+            StringBuilder queryConditions = new StringBuilder();
+            Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
+            while (itConditions.hasNext()) {
+                Map.Entry<String, String> pair = itConditions.next();
+
+                queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+                updateValues.put("where" + pair.getKey(), pair.getValue());
+
+                itConditions.remove(); // avoids a ConcurrentModificationException
+            }
+
+            String query = String.format("DELETE FROM %s WHERE %s", table, queryConditions);
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
             if (stmt.fields() != updateValues.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
