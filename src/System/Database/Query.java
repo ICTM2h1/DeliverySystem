@@ -114,7 +114,7 @@ public class Query {
         try {
             getInstance();
 
-            HashMap<String, String> insertValues = (HashMap<String, String>) values.clone();
+            HashMap<String, String> insertValues = new HashMap<>();
             StringBuilder queryColumns = new StringBuilder();
             StringBuilder queryValues = new StringBuilder();
             Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
@@ -123,12 +123,13 @@ public class Query {
 
                 queryColumns.append(pair.getKey()).append(it.hasNext() ? ", " : " ");
                 queryValues.append(":").append(pair.getKey()).append(it.hasNext() ? ", " : " ");
+                insertValues.put(pair.getKey(), pair.getValue());
 
                 it.remove(); // avoids a ConcurrentModificationException
             }
 
             String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
-            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query, insertValues.size());
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
             if (stmt.fields() != insertValues.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
             }
@@ -141,7 +142,66 @@ public class Query {
             success = true;
         } catch(Exception e) {
             success = false;
-            System.out.println("An error occurred while executing this query.");
+            System.out.printf("An error occurred while inserting the data into table '%s'.%n", table);
+            if (Boolean.parseBoolean(config.get("debug"))) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return success;
+    }
+
+    /**
+     * Inserts data into a table inside the database.
+     *
+     * @param table The table to insert data in.
+     * @param values The data to be inserted into the database.
+     *
+     * @return Whether the data was successfully inserted or not.
+     */
+    public static boolean update(String table, HashMap<String, String> values, HashMap<String, String> conditions) {
+        boolean success;
+        try {
+            getInstance();
+
+            HashMap<String, String> updateValues = new HashMap<>();
+            StringBuilder queryValues = new StringBuilder();
+            Iterator<Map.Entry<String, String>> itValues = values.entrySet().iterator();
+            while (itValues.hasNext()) {
+                Map.Entry<String, String> pair = itValues.next();
+
+                queryValues.append(pair.getKey()).append(" = ").append(":update").append(pair.getKey()).append(itValues.hasNext() ? ", " : " ");
+                updateValues.put("update" + pair.getKey(), pair.getValue());
+
+                itValues.remove(); // avoids a ConcurrentModificationException
+            }
+
+            StringBuilder queryConditions = new StringBuilder();
+            Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
+            while (itConditions.hasNext()) {
+                Map.Entry<String, String> pair = itConditions.next();
+
+                queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+                updateValues.put("where" + pair.getKey(), pair.getValue());
+
+                itConditions.remove(); // avoids a ConcurrentModificationException
+            }
+
+            String query = String.format("UPDATE %s SET %s WHERE %s", table, queryValues, queryConditions);
+            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
+            if (stmt.fields() != updateValues.size()) {
+                throw new RuntimeException("All specified conditions must be used inside the query.");
+            }
+
+            stmt.setValues(updateValues);
+            stmt.execute();
+            stmt.close();
+            connection.close();
+
+            success = true;
+        } catch(Exception e) {
+            success = false;
+            System.out.printf("An error occurred while updating the table '%s'.%n", table);
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(e.getMessage());
             }
