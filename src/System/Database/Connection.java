@@ -5,6 +5,9 @@ import System.Config.Config;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Provides a class for connecting with the database.
+ */
 public class Connection {
 
     private static Config config = Config.getInstance();

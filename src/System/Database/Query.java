@@ -12,9 +12,8 @@ import java.util.HashMap;
 public class Query {
 
     /**
-     * Holds the reference to the database object.
+     * The connection object.
      */
-    private static Query query;
     private static Connection connection;
 
     /**
@@ -34,10 +33,17 @@ public class Query {
      * @return The database instance.
      */
     private static Query getInstance() {
-        query = new Query();
-        return query;
+        return new Query();
     }
 
+    /**
+     * Selects data from the database.
+     *
+     * @param query The query to be executed.
+     * @param selectFields The fields to be selected from the returned data.
+     *
+     * @return An array list with the data of the result set.
+     */
     public static ArrayList<Object> select(String query, ArrayList<String> selectFields) {
         try {
             getInstance();
@@ -49,12 +55,21 @@ public class Query {
             return results;
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            System.out.println("An error while executing this query.");
+            System.out.println("An error occurred while executing this query.");
         }
 
         return null;
     }
 
+    /**
+     * Selects data from the database.
+     *
+     * @param query The query to be executed.
+     * @param selectFields The fields to be selected from the returned data.
+     * @param conditions The conditions of the query.
+     *
+     * @return An array list with the data of the result set.
+     */
     public static ArrayList<Object> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             getInstance();
@@ -72,12 +87,20 @@ public class Query {
             return results;
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            System.out.println("An error while executing this query.");
+            System.out.println("An error occurred while executing this query.");
         }
 
         return null;
     }
 
+    /**
+     * Renders the result to array.
+     *
+     * @param selectFields The fields to be selected from the returned data.
+     * @param rs The result set.
+     *
+     * @return An array list with the data of the result set.
+     */
     private static ArrayList<Object> resultSetToArray(ArrayList<String> selectFields, ResultSet rs) throws SQLException {
         ArrayList<Object> results = new ArrayList<>();
         while (rs.next()) {
