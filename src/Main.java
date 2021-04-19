@@ -1,25 +1,21 @@
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import System.Config.Config;
 
 /**
  * This class provides the main entry point for the application.
  */
-public class Main extends JFrame implements ActionListener {
+public class Main {
 
     /**
      * Main entry point of this class.
      *
-     * @param args
-     *   The given arguments.
+     * @param args The given arguments.
      */
     public static void main(String[] args) {
+        Config config = Config.getInstance();
+        System.out.println("Application entry point.");
+
         new Menu();
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 }
