@@ -17,29 +17,6 @@ public class Query {
     private static final Config config = Config.getInstance();
 
     /**
-     * The connection object.
-     */
-    private static Connection connection;
-
-    /**
-     * Creates a new database instance.
-     */
-    private Query() {
-        try {
-            connection = new Connection();
-        } catch(Exception e) {
-            System.out.println("An error occurred while connecting to the database.");
-        }
-    }
-
-    /**
-     * Instantiates an instance for the database or gets an existing one.
-     */
-    private static void getInstance() {
-        new Query();
-    }
-
-    /**
      * Selects data from the database.
      *
      * @param query The query to be executed.
@@ -167,8 +144,7 @@ public class Query {
      */
     private static ArrayList<Object> executeQuery(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
-            getInstance();
-
+            Connection connection = new Connection();
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
             if (conditions != null && stmt.fields() != conditions.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
@@ -185,6 +161,7 @@ public class Query {
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(e.getMessage());
             }
+            System.exit(-1);
         }
 
         return null;
@@ -200,7 +177,7 @@ public class Query {
      */
     private static boolean execute(String query, HashMap<String, String> queryValues) {
         try {
-            getInstance();
+            Connection connection = new Connection();
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
             if (stmt.fields() != queryValues.size()) {
                 throw new RuntimeException("All specified values must be used inside the query.");
@@ -217,6 +194,7 @@ public class Query {
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(e.getMessage());
             }
+            System.exit(-1);
         }
 
         return false;
