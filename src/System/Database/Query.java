@@ -53,15 +53,15 @@ public class Query {
         HashMap<String, String> insertValues = new HashMap<>();
         StringBuilder queryColumns = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
-        Iterator<Map.Entry<String, String>> it = values.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = it.next();
+        Iterator<Map.Entry<String, String>> iterator = values.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> pair = iterator.next();
 
-            queryColumns.append(pair.getKey()).append(it.hasNext() ? ", " : " ");
-            queryValues.append(":").append(pair.getKey()).append(it.hasNext() ? ", " : " ");
+            queryColumns.append(pair.getKey()).append(iterator.hasNext() ? ", " : " ");
+            queryValues.append(":").append(pair.getKey()).append(iterator.hasNext() ? ", " : " ");
             insertValues.put(pair.getKey(), pair.getValue());
 
-            it.remove(); // avoids a ConcurrentModificationException
+            iterator.remove(); // avoids a ConcurrentModificationException
         }
 
         String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, queryColumns, queryValues);
@@ -81,25 +81,25 @@ public class Query {
     public static boolean update(String table, HashMap<String, String> values, HashMap<String, String> conditions) {
         HashMap<String, String> updateValues = new HashMap<>();
         StringBuilder queryValues = new StringBuilder();
-        Iterator<Map.Entry<String, String>> itValues = values.entrySet().iterator();
-        while (itValues.hasNext()) {
-            Map.Entry<String, String> pair = itValues.next();
+        Iterator<Map.Entry<String, String>> iteratorValues = values.entrySet().iterator();
+        while (iteratorValues.hasNext()) {
+            Map.Entry<String, String> pair = iteratorValues.next();
 
-            queryValues.append(pair.getKey()).append(" = ").append(":update").append(pair.getKey()).append(itValues.hasNext() ? ", " : " ");
+            queryValues.append(pair.getKey()).append(" = ").append(":update").append(pair.getKey()).append(iteratorValues.hasNext() ? ", " : " ");
             updateValues.put("update" + pair.getKey(), pair.getValue());
 
-            itValues.remove(); // avoids a ConcurrentModificationException
+            iteratorValues.remove(); // avoids a ConcurrentModificationException
         }
 
         StringBuilder queryConditions = new StringBuilder();
-        Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
-        while (itConditions.hasNext()) {
-            Map.Entry<String, String> pair = itConditions.next();
+        Iterator<Map.Entry<String, String>> iteratorConditions = conditions.entrySet().iterator();
+        while (iteratorConditions.hasNext()) {
+            Map.Entry<String, String> pair = iteratorConditions.next();
 
-            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(iteratorConditions.hasNext() ? " AND " : " ");
             updateValues.put("where" + pair.getKey(), pair.getValue());
 
-            itConditions.remove(); // avoids a ConcurrentModificationException
+            iteratorConditions.remove(); // avoids a ConcurrentModificationException
         }
 
         String query = String.format("UPDATE %s SET %s WHERE %s", table, queryValues, queryConditions);
@@ -118,14 +118,14 @@ public class Query {
     public static boolean delete(String table, HashMap<String, String> conditions) {
         HashMap<String, String> updateValues = new HashMap<>();
         StringBuilder queryConditions = new StringBuilder();
-        Iterator<Map.Entry<String, String>> itConditions = conditions.entrySet().iterator();
-        while (itConditions.hasNext()) {
-            Map.Entry<String, String> pair = itConditions.next();
+        Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> pair = iterator.next();
 
-            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(itConditions.hasNext() ? " AND " : " ");
+            queryConditions.append(pair.getKey()).append(" = ").append(":where").append(pair.getKey()).append(iterator.hasNext() ? " AND " : " ");
             updateValues.put("where" + pair.getKey(), pair.getValue());
 
-            itConditions.remove(); // avoids a ConcurrentModificationException
+            iterator.remove(); // avoids a ConcurrentModificationException
         }
 
         String query = String.format("DELETE FROM %s WHERE %s", table, queryConditions);
@@ -145,14 +145,14 @@ public class Query {
     private static ArrayList<HashMap<String, String>> executeQuery(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             Connection connection = new Connection();
-            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
-            if (conditions != null && stmt.fields() != conditions.size()) {
+            NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
+            if (conditions != null && statement.fields() != conditions.size()) {
                 throw new RuntimeException("All specified conditions must be used inside the query.");
             }
 
-            stmt.setValues(conditions);
-            ArrayList<HashMap<String, String>> results = resultSetToArray(selectFields, stmt.executeQuery());
-            stmt.close();
+            statement.setValues(conditions);
+            ArrayList<HashMap<String, String>> results = resultSetToArray(selectFields, statement.executeQuery());
+            statement.close();
             connection.close();
 
             return results;
@@ -178,14 +178,14 @@ public class Query {
     private static boolean execute(String query, HashMap<String, String> values) {
         try {
             Connection connection = new Connection();
-            NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
-            if (stmt.fields() != values.size()) {
+            NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
+            if (statement.fields() != values.size()) {
                 throw new RuntimeException("All specified values must be used inside the query.");
             }
 
-            stmt.setValues(values);
-            stmt.execute();
-            stmt.close();
+            statement.setValues(values);
+            statement.execute();
+            statement.close();
             connection.close();
 
             return true;
@@ -204,16 +204,16 @@ public class Query {
      * Renders the result to array.
      *
      * @param selectFields The fields to be selected from the returned data.
-     * @param rs The result set.
+     * @param resultSet The result set.
      *
      * @return An array list with the data of the result set.
      */
-    private static ArrayList<HashMap<String, String>> resultSetToArray(ArrayList<String> selectFields, ResultSet rs) throws SQLException {
+    private static ArrayList<HashMap<String, String>> resultSetToArray(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
         ArrayList<HashMap<String, String>> results = new ArrayList<>();
-        while (rs.next()) {
+        while (resultSet.next()) {
             HashMap<String, String> selectedValues = new HashMap<>();
             for (String field : selectFields) {
-                selectedValues.put(field, rs.getString(field));
+                selectedValues.put(field, resultSet.getString(field));
             }
 
             results.add(selectedValues);
