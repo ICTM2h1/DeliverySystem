@@ -171,19 +171,19 @@ public class Query {
      * Executes a query.
      *
      * @param query The query.
-     * @param queryValues The values of the query.
+     * @param values The values of the query.
      *
      * @return Whether the query was executed successfully or not.
      */
-    private static boolean execute(String query, HashMap<String, String> queryValues) {
+    private static boolean execute(String query, HashMap<String, String> values) {
         try {
             Connection connection = new Connection();
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
-            if (stmt.fields() != queryValues.size()) {
+            if (stmt.fields() != values.size()) {
                 throw new RuntimeException("All specified values must be used inside the query.");
             }
 
-            stmt.setValues(queryValues);
+            stmt.setValues(values);
             stmt.execute();
             stmt.close();
             connection.close();
