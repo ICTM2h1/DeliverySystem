@@ -14,61 +14,36 @@ import java.util.Map;
  */
 public class NamedParamStatement {
 
-    private final PreparedStatement prepStmt;
+    private final PreparedStatement statement;
     private final ArrayList<String> fields = new ArrayList<>();
 
     /**
      * Creates a new named statement object.
      *
-     * @param conn The connection.
-     * @param sql The sql query.
+     * @param connection The connection.
+     * @param query The sql query.
      */
-    public NamedParamStatement(Connection conn, String sql) throws SQLException {
+    public NamedParamStatement(Connection connection, String query) throws SQLException {
         int position;
-        while ((position = sql.indexOf(":")) != -1) {
-            int end = sql.substring(position).indexOf(" ");
+        while ((position = query.indexOf(":")) != -1) {
+            int end = query.substring(position).indexOf(" ");
             if (end == -1) {
-                end = sql.length();
+                end = query.length();
             } else {
                 end += position;
             }
 
-            this.fields.add(sql.substring(position + 1, end));
-            sql = sql.substring(0, position) + "?" + sql.substring(end);
-        }
-
-        this.prepStmt = conn.prepareStatement(sql);
-    }
-
-    /**
-     * Creates a new named statement object.
-     *
-     * @param conn The connection.
-     * @param sql The sql query.
-     * @param values The number of values.
-     */
-    public NamedParamStatement(Connection conn, String sql, int values) throws SQLException {
-        int position, counter = 1;
-        while ((position = sql.indexOf(":")) != -1) {
-            int end = sql.substring(position).indexOf(" ");
-            if (end == -1) {
-                end = sql.length();
-            } else {
-                end += position;
-            }
-
-            String field = sql.substring(position + 1, end);
-            int comma = sql.substring(position).indexOf(",");
+            String field = query.substring(position + 1, end);
+            int comma = query.substring(position).indexOf(",");
             if (comma != -1) {
                 field = field.substring(0, comma - 1);
             }
 
             this.fields.add(field);
-            sql = sql.substring(0, position) + (counter == values ? "?" : "?,") + sql.substring(end);
-            counter++;
+            query = query.substring(0, position) + (comma != -1 ? "?," : "?") + query.substring(end);
         }
 
-        this.prepStmt = conn.prepareStatement(sql);
+        this.statement = connection.prepareStatement(query);
     }
 
     /**
@@ -77,23 +52,21 @@ public class NamedParamStatement {
      * @return The result set.
      */
     public ResultSet executeQuery() throws SQLException {
-        return this.prepStmt.executeQuery();
+        return this.statement.executeQuery();
     }
 
     /**
      * Executes the query.
-     *
-     * @return Whether the query was executed successfully or not.
      */
-    public boolean execute() throws SQLException {
-        return this.prepStmt.execute();
+    public void execute() throws SQLException {
+        this.statement.execute();
     }
 
     /**
      * Closes the connection with the database.
      */
     public void close() throws SQLException {
-        this.prepStmt.close();
+        this.statement.close();
     }
 
     /**
@@ -111,7 +84,7 @@ public class NamedParamStatement {
      * @param values The values to be used inside the query.
      */
     public void setValues(HashMap<String, String> values) throws SQLException {
-        if (this.fields.size() < 1) {
+        if (this.fields.size() < 1 || values == null || values.isEmpty()) {
             return;
         }
 
@@ -134,7 +107,7 @@ public class NamedParamStatement {
             return;
         }
 
-        this.prepStmt.setString(getIndex(name), value);
+        this.statement.setString(getIndex(name), value);
     }
 
     /**
@@ -145,7 +118,7 @@ public class NamedParamStatement {
      * @return The index of the named parameter.
      */
     private int getIndex(String name) {
-        if (this.fields.size() < 1) {
+        if (this.fields.size() < 1 || !this.fields.contains(name)) {
             return 0;
         }
 
