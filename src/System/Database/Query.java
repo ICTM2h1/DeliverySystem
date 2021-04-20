@@ -24,7 +24,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    public static ArrayList<Object> select(String query, ArrayList<String> selectFields) {
+    public static ArrayList<HashMap<String, String>> select(String query, ArrayList<String> selectFields) {
         return executeQuery(query, selectFields, null);
     }
 
@@ -37,7 +37,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    public static ArrayList<Object> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
+    public static ArrayList<HashMap<String, String>> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         return executeQuery(query, selectFields, conditions);
     }
 
@@ -142,7 +142,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    private static ArrayList<Object> executeQuery(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
+    private static ArrayList<HashMap<String, String>> executeQuery(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             Connection connection = new Connection();
             NamedParamStatement stmt = new NamedParamStatement(connection.get(), query);
@@ -151,7 +151,7 @@ public class Query {
             }
 
             stmt.setValues(conditions);
-            ArrayList<Object> results = resultSetToArray(selectFields, stmt.executeQuery());
+            ArrayList<HashMap<String, String>> results = resultSetToArray(selectFields, stmt.executeQuery());
             stmt.close();
             connection.close();
 
@@ -208,8 +208,8 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    private static ArrayList<Object> resultSetToArray(ArrayList<String> selectFields, ResultSet rs) throws SQLException {
-        ArrayList<Object> results = new ArrayList<>();
+    private static ArrayList<HashMap<String, String>> resultSetToArray(ArrayList<String> selectFields, ResultSet rs) throws SQLException {
+        ArrayList<HashMap<String, String>> results = new ArrayList<>();
         while (rs.next()) {
             HashMap<String, String> selectedValues = new HashMap<>();
             for (String field : selectFields) {
