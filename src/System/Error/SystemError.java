@@ -17,14 +17,7 @@ public class SystemError {
      * @param exception The exception.
      */
     public static void handle(Exception exception) {
-        if (Boolean.parseBoolean(config.get("debug"))) {
-            System.out.println(exception.getMessage());
-            System.out.println(Arrays.toString(exception.getStackTrace()));
-            System.exit(-1);
-        }
-
-        System.out.println("Something went wrong while running this code, please try again or contact the adminstrators.");
-        System.exit(-1);
+        handle(exception, null);
     }
 
     /**
@@ -35,7 +28,10 @@ public class SystemError {
      */
     public static void handle(Exception exception, String message) {
         if (Boolean.parseBoolean(config.get("debug"))) {
-            System.out.println(message);
+            if (message != null && !message.isEmpty()) {
+                System.out.println(message);
+            }
+
             System.out.println(exception.getMessage());
             System.out.println(Arrays.toString(exception.getStackTrace()));
             System.exit(-1);
