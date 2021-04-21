@@ -1,6 +1,7 @@
 package System.Database;
 
 import System.Config.Config;
+import System.Error.SystemError;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,14 +19,10 @@ public class Connection {
      */
     public Connection() {
         try {
-            this.connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
+            this.connection = DriverManager.getConnection(config.get("database_fpath"), config.get("database_username"), config.get("database_password"));
         } catch(SQLException e) {
-            System.out.println("An error occurred while connecting to the database.");
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
             this.connection = null;
-            System.exit(-1);
+            SystemError.handle(e, "An error occurred while connecting to the database.");
         }
     }
 
@@ -45,11 +42,7 @@ public class Connection {
         try {
             this.connection.close();
         } catch (SQLException s) {
-            System.out.println("An error occurred while closing the connection.");
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(s.getMessage());
-            }
-            System.exit(-1);
+            SystemError.handle(s, "An error occurred while closing the connection.");
         }
     }
 

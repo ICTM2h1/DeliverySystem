@@ -1,6 +1,6 @@
 package System.Database;
 
-import System.Config.Config;
+import System.Error.SystemError;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +13,6 @@ import java.util.Map;
  * Provides a class for interacting with the database.
  */
 public class Query {
-
-    private static final Config config = Config.getInstance();
 
     /**
      * Selects data from the database.
@@ -157,11 +155,7 @@ public class Query {
 
             return results;
         } catch(Exception e) {
-            System.out.println("An error occurred while executing this query.");
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
-            System.exit(-1);
+            SystemError.handle(e, "An error occurred while executing this query.");
         }
 
         return null;
@@ -190,11 +184,7 @@ public class Query {
 
             return true;
         } catch(Exception e) {
-            System.out.println("An error occurred while executing this query.");
-            if (Boolean.parseBoolean(config.get("debug"))) {
-                System.out.println(e.getMessage());
-            }
-            System.exit(-1);
+            SystemError.handle(e, "An error occurred while executing this query.");
         }
 
         return false;
