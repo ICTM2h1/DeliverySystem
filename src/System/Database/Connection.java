@@ -19,7 +19,7 @@ public class Connection {
      */
     public Connection() {
         try {
-            this.connection = DriverManager.getConnection(config.get("database_fpath"), config.get("database_username"), config.get("database_password"));
+            this.connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
         } catch(SQLException e) {
             this.connection = null;
             SystemError.handle(e, "An error occurred while connecting to the database.");
