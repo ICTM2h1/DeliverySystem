@@ -5,6 +5,7 @@ import System.Error.SystemError;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -68,7 +69,7 @@ public class Config {
     public String get(String key) {
         String value = this.items.get(key);
 
-        return value.equals("null") ? "" : value;
+        return Objects.equals(value, "null") ? "" : value;
     }
 
     /**
