@@ -12,7 +12,7 @@ public class SystemError {
     private static final Config config = Config.getInstance();
 
     /**
-     * Handles an exception, either shows the message or stops running the program.
+     * Handles an exception, either shows the error or stops running the program.
      *
      * @param exception The exception.
      */
@@ -28,9 +28,10 @@ public class SystemError {
     }
 
     /**
-     * Handles an exception, either shows the message or stops running the program.
+     * Handles an exception, either shows the error or stops running the program.
      *
      * @param exception The exception.
+     * @param message The message.
      */
     public static void handle(Exception exception, String message) {
         if (Boolean.parseBoolean(config.get("debug"))) {
