@@ -40,7 +40,6 @@ public class Config {
                 this.items.put(key, value);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Configuration file could not be found.");
             SystemError.handle(e, "Configuration file could not be found.");
         }
     }
