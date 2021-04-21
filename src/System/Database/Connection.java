@@ -18,9 +18,8 @@ public class Connection {
      */
     public Connection() {
         try {
-            Class.forName(config.get("database_driver"));
             this.connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
-        } catch(SQLException | ClassNotFoundException e) {
+        } catch(SQLException e) {
             System.out.println("An error occurred while connecting to the database.");
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(e.getMessage());
