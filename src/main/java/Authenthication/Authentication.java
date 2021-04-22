@@ -1,3 +1,5 @@
+package Authenthication;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -116,12 +118,9 @@ public class Authentication extends JFrame implements ActionListener {
                     conditions.put("LogonName", username);
 
                     // SELECT-query
-                    ArrayList<Object> results = Query.select("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
+                    ArrayList<HashMap<String, String>> results = Query.select("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
 
-                    //TODO
-                    // Dit is retarded, wist ff niet hoe ik dit moest doen
-                    HashMap resultHashMap = (HashMap) results.get(0);
-                    String HashedDatabasePassword = (String) resultHashMap.get("HashedPassword");
+                    String HashedDatabasePassword = (String) results.get(0).get("HashedPassword");
 
                     // Check if database hash matches with entered password
                     if (BCrypt.verifyer().verify(password.toCharArray(), HashedDatabasePassword).verified) {

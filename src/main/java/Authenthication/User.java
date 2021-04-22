@@ -1,3 +1,5 @@
+package Authenthication;
+
 public class User {
 
     private String username;
