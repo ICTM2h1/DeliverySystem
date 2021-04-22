@@ -11,15 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-java-8.0.23.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="mysql:mysql-connector-java:8.0.24" level="project" />
     <orderEntry type="library" exported="" name="bcrypt-0.9.0" level="project" />
     <orderEntry type="library" name="at.favre.lib:bcrypt:0.9.0" level="project" />
     <orderEntry type="library" name="Maven: at.favre.lib:bcrypt:0.9.0" level="project" />
