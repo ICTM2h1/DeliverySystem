@@ -31,12 +31,37 @@ public class Query {
      *
      * @param query The query to be executed.
      * @param selectFields The fields to be selected from the returned data.
+     *
+     * @return An array list with the data of the result set.
+     */
+    public static HashMap<String, String> selectFirst(String query, ArrayList<String> selectFields) {
+        return executeQueryFirst(query, selectFields, null);
+    }
+
+    /**
+     * Selects data from the database.
+     *
+     * @param query The query to be executed.
+     * @param selectFields The fields to be selected from the returned data.
      * @param conditions The conditions of the query.
      *
      * @return An array list with the data of the result set.
      */
     public static ArrayList<HashMap<String, String>> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         return executeQuery(query, selectFields, conditions);
+    }
+
+    /**
+     * Selects data from the database and returns one row.
+     *
+     * @param query The query to be executed.
+     * @param selectFields The fields to be selected from the returned data.
+     * @param conditions The conditions of the query.
+     *
+     * @return An hash map with the data of the result set.
+     */
+    public static HashMap<String, String> selectFirst(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
+        return executeQueryFirst(query, selectFields, conditions);
     }
 
     /**
@@ -162,6 +187,36 @@ public class Query {
     }
 
     /**
+     * Selects data from the database and returns one row.
+     *
+     * @param query The query to be executed.
+     * @param selectFields The fields to be selected from the returned data.
+     * @param conditions The conditions of the query.
+     *
+     * @return An hash map with the data of the result set.
+     */
+    private static HashMap<String, String> executeQueryFirst(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
+        try {
+            Connection connection = new Connection();
+            NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
+            if (conditions != null && statement.fields() != conditions.size()) {
+                throw new RuntimeException("All specified conditions must be used inside the query.");
+            }
+
+            statement.setValues(conditions);
+            HashMap<String, String> results = resultSetToFirst(selectFields, statement.executeQuery());
+            statement.close();
+            connection.close();
+
+            return results;
+        } catch(Exception e) {
+            SystemError.handle(e, "An error occurred while executing this query.");
+        }
+
+        return null;
+    }
+
+    /**
      * Executes a query.
      *
      * @param query The query.
@@ -210,6 +265,24 @@ public class Query {
         }
 
         return results;
+    }
+
+    /**
+     * Renders the result to array.
+     *
+     * @param selectFields The fields to be selected from the returned data.
+     * @param resultSet The result set.
+     *
+     * @return An array list with the data of the result set.
+     */
+    private static HashMap<String, String> resultSetToFirst(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
+        resultSet.next();
+        HashMap<String, String> selectedValues = new HashMap<>();
+        for (String field : selectFields) {
+            selectedValues.put(field, resultSet.getString(field));
+        }
+
+        return selectedValues;
     }
 
 }
