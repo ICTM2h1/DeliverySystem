@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class Connection {
 
-    private static Config config = Config.getInstance();
+    private static final Config config = Config.getInstance();
     private java.sql.Connection connection;
 
     /**
@@ -26,6 +26,7 @@ public class Connection {
                 System.out.println(e.getMessage());
             }
             this.connection = null;
+            System.exit(-1);
         }
     }
 
@@ -49,6 +50,7 @@ public class Connection {
             if (Boolean.parseBoolean(config.get("debug"))) {
                 System.out.println(s.getMessage());
             }
+            System.exit(-1);
         }
     }
 

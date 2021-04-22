@@ -3,7 +3,6 @@ package System.Config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Scanner;
 public class Config {
 
     private static Config config;
-    private Map<String, String> items = new HashMap<>();
+    private final HashMap<String, String> items = new HashMap<>();
 
     /**
      * Creates a new config object.
@@ -38,7 +37,8 @@ public class Config {
                 this.items.put(key, value);
             }
         } catch (FileNotFoundException e) {
-            System.out.printf("Configuratiebestand kon niet worden gevonden: %s%n", e.getMessage());
+            System.out.printf("Configuration file could not be found: %s%n", e.getMessage());
+            System.exit(-1);
         }
     }
 
@@ -74,7 +74,7 @@ public class Config {
      *
      * @return The config items.
      */
-    public Map<String, String> get() {
+    public HashMap<String, String> get() {
         return this.items;
     }
 }
