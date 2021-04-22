@@ -17,6 +17,12 @@ public class Orders extends CrudBase {
         super("orders");
 
         this.addSelectField("OrderID");
+        this.addSelectField("CustomerID");
+        this.addSelectField("ExpectedDeliveryDate");
+        this.addSelectField("CityName");
+        this.addSelectField("DeliveryAddressLine1");
+        this.addSelectField("DeliveryPostalCode");
+        this.addSelectField("DeliveryLocation");
     }
 
     /**
@@ -36,12 +42,15 @@ public class Orders extends CrudBase {
      * @return An array list with the selected orders.
      */
     public ArrayList<HashMap<String, String>> all() {
+        String query = "SELECT * FROM orders O " +
+                "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
+                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID ";
         if (this.date != null && !this.date.isEmpty()) {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
-            return super.all("SELECT * FROM nerdygadgets.orders WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate LIMIT 10");
+            query += " WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate";
         }
 
-        return super.all("SELECT * FROM nerdygadgets.orders LIMIT 10");
+        return super.all(query + " LIMIT 10");
     }
 }
