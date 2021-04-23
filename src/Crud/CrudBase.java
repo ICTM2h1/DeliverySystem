@@ -12,13 +12,46 @@ public abstract class CrudBase {
 
     protected ArrayList<String> selectFields = new ArrayList<>();
 
-    protected HashMap<String, String> values = new HashMap<>();
-    protected HashMap<String, String> parameters = new HashMap<>();
+    protected HashMap<String, String> values = new HashMap<>(), parameters = new HashMap<>();
 
-    protected String table;
+    protected String table, primaryKey;
 
+    /**
+     * Constructs a new crud object.
+     *
+     * @param table The table to be used inside the queries.
+     */
     public CrudBase(String table) {
+        this(table, table + "ID");
+    }
+
+    /**
+     * Constructs a new crud object.
+     *
+     * @param table The table to be used inside the queries.
+     * @param primaryKey The primary key of the table.
+     */
+    public CrudBase(String table, String primaryKey) {
         this.table = table;
+        this.primaryKey = primaryKey;
+
+        this.addSelectField(primaryKey);
+    }
+
+    /**
+     * Gets the first record from the database for a given id.
+     *
+     * @param id The ID of the record to filter on.
+     *
+     * @return A hash map with the selected row.
+     */
+    public HashMap<String, String> get(int id) {
+        this.addCondition(this.primaryKey, String.valueOf(id));
+
+        return Query.selectFirst(
+            String.format("SELECT * FROM %s WHERE %s = :%s", this.table, this.primaryKey, this.primaryKey),
+            this.selectFields, this.parameters
+        );
     }
 
     /**
@@ -30,6 +63,15 @@ public abstract class CrudBase {
      */
     public HashMap<String, String> get(String query) {
         return Query.selectFirst(query, this.selectFields, this.parameters);
+    }
+
+    /**
+     * Gets all records from the database.
+     *
+     * @return An array list with the selected rows.
+     */
+    public ArrayList<HashMap<String, String>> all() {
+        return Query.select("SELECT * FROM " + this.table, this.selectFields);
     }
 
     /**
@@ -65,7 +107,7 @@ public abstract class CrudBase {
      */
     public boolean update() {
         if (this.values.isEmpty() || this.parameters.isEmpty()) {
-            throw new RuntimeException("Values or parameters cannot be empty while update data.");
+            throw new RuntimeException("Values or parameters cannot be empty while updating data.");
         }
 
         boolean success = Query.update(this.table, this.values, this.parameters);
@@ -81,7 +123,7 @@ public abstract class CrudBase {
      */
     public boolean delete() {
         if (this.parameters.isEmpty()) {
-            throw new RuntimeException("Parameters cannot be empty while inserting data.");
+            throw new RuntimeException("Parameters cannot be empty while deleting data.");
         }
 
         boolean success = Query.delete(this.table, this.parameters);

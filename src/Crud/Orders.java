@@ -24,7 +24,7 @@ public class Orders extends CrudBase {
      * Constructs a new orders object.
      */
     public Orders() {
-        super("orders");
+        super("orders", "OrderID");
 
         this.addSelectField("OrderID");
         this.addSelectField("CustomerID");
