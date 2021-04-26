@@ -276,7 +276,11 @@ public class Query {
      * @return An array list with the data of the result set.
      */
     private static HashMap<String, String> resultSetToFirst(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
-        resultSet.next();
+        boolean result = resultSet.next();
+        if (!result) {
+            return null;
+        }
+
         HashMap<String, String> selectedValues = new HashMap<>();
         for (String field : selectFields) {
             selectedValues.put(field, resultSet.getString(field));
