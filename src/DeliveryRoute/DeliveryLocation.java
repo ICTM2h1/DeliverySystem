@@ -5,7 +5,7 @@ package DeliveryRoute;
  */
 public class DeliveryLocation {
 
-    private final double latitude, longitude, el;
+    private final double latitude, longitude, altitude;
     private final int earthRadius = 6371; // Radius in kilometers.
 
     /**
@@ -13,12 +13,12 @@ public class DeliveryLocation {
      *
      * @param latitude The latitude.
      * @param longitude The longitude.
-     * @param el Altitude in meters.
+     * @param altitude Altitude in meters.
      */
-    public DeliveryLocation(double latitude, double longitude, double el) {
+    public DeliveryLocation(double latitude, double longitude, double altitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.el = el;
+        this.altitude = altitude;
     }
 
     /**
@@ -47,7 +47,7 @@ public class DeliveryLocation {
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = earthRadius * c * 1000; // convert to meters
-        double height = this.getEl() - location.getEl();
+        double height = this.getAltitude() - location.getAltitude();
 
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
 
@@ -72,8 +72,13 @@ public class DeliveryLocation {
         return longitude;
     }
 
-    public double getEl() {
-        return el;
+    /**
+     * Gets the altitude.
+     *
+     * @return The altitude in meters.
+     */
+    public double getAltitude() {
+        return altitude;
     }
 
 }
