@@ -1,13 +1,7 @@
 package Crud;
 
+import DeliveryRoute.DeliveryAddress;
 import DeliveryRoute.DeliveryLocation;
-import System.Config.Config;
-import System.Url.UrlRequest;
-import System.Url.UrlResponse;
-import com.mysql.cj.xdevapi.DbDocImpl;
-import com.mysql.cj.xdevapi.JsonArray;
-import com.mysql.cj.xdevapi.JsonNumber;
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -16,9 +10,10 @@ import java.util.*;
  */
 public class Orders extends CrudBase {
 
-    protected Config config = Config.getInstance();
+    protected Customer customer = new Customer();
 
     protected String date;
+    protected int withoutGeometry;
 
     /**
      * Constructs a new orders object.
@@ -62,7 +57,7 @@ public class Orders extends CrudBase {
             query += " WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate";
         }
 
-        return super.all(query + " LIMIT 10");
+        return super.all(query);
     }
 
     /**
@@ -71,49 +66,25 @@ public class Orders extends CrudBase {
      * @return An array list with the sorted orders.
      */
     public ArrayList<HashMap<String, String>> filterOnGeometry() {
-        Customer customer = new Customer();
         ArrayList<HashMap<String, String>> orders = new ArrayList<>();
         HashMap<String, String> previousOrder = null;
         for (HashMap<String, String> order : this.all()) {
-            String customerID = order.get("CustomerID");
-            String city = order.get("CityName");
-            String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
-            String postalCode = order.get("DeliveryPostalCode");
-            String address = deliveryAddressLine1 + ",+" + postalCode + ",+" + city;
-            address = address.replace(" ", "+");
-
             String latitudeString = String.valueOf(order.get("Latitude"));
             String longitudeString = String.valueOf(order.get("Longitude"));
 
-            // This is an expensive task, so we run this only when the order does not have geometric data. After the
-            // calculation we save it into the customer in order to skip this the next time we want to get the orders.
-            if (latitudeString.equals("null") || longitudeString.equals("null")) {
-                HashMap<String, BigDecimal> geometry = this.addressToGeometry(address);
-                latitudeString = "0";
-                longitudeString = "0";
-                if (geometry != null) {
-                    latitudeString = String.valueOf(geometry.get("latitude"));
-                    longitudeString = String.valueOf(geometry.get("longitude"));
-                }
+            double distance = calculateDistance(order, previousOrder);
 
-                customer.addValue("Longitude", longitudeString);
-                customer.addValue("Latitude", latitudeString);
-                customer.addCondition("CustomerID", customerID);
-                customer.update();
+            double latitude, longitude;
+            try {
+                latitude = Double.parseDouble(latitudeString);
+                longitude = Double.parseDouble(longitudeString);
+            } catch (NumberFormatException e) {
+                continue;
             }
 
-            double latitude = Double.parseDouble(latitudeString);
-            double longitude = Double.parseDouble(longitudeString);
-            double latitude_two = latitude;
-            double longitude_two = longitude;
-            if (previousOrder != null) {
-                latitude_two = Double.parseDouble(previousOrder.get("Latitude"));
-                longitude_two = Double.parseDouble(previousOrder.get("Longitude"));
+            if (latitude == 0 || longitude == 0) {
+                this.withoutGeometry++;
             }
-
-            DeliveryLocation location = new DeliveryLocation(latitude, longitude, 0);
-            DeliveryLocation location_two = new DeliveryLocation(latitude_two, longitude_two, 0);
-            double distance = location.distance(location_two);
 
             order.put("geometry.distance", String.valueOf(distance));
             order.put("geometry.latitude", latitudeString);
@@ -137,46 +108,65 @@ public class Orders extends CrudBase {
     }
 
     /**
-     * Renders an address to geometric data.
+     * Gets the number of orders without geometry.
      *
-     * @param address The address.
-     *
-     * @return A hash map with the geometric data.
+     * @return The number of orders.
      */
-    private HashMap<String, BigDecimal> addressToGeometry(String address) {
-        String url = this.config.get("google_maps_api_url") + "?" + "address="+ address + "&key=" + this.config.get("google_maps_api_key");
+    public int getWithoutGeometry() {
+        return this.withoutGeometry;
+    }
 
-        UrlRequest urlRequest = new UrlRequest(url);
-        urlRequest.addHeader("accept", "application/json");
-        UrlResponse urlResponse = urlRequest.send();
-        JsonArray jsonResponse = (JsonArray) urlResponse.toJson().get("results");
-        if (jsonResponse == null || jsonResponse.isEmpty()) {
-            return null;
+    /**
+     * Calculates the distance between two orders.
+     *
+     * @param order The order.
+     * @param compareOrder The order to compare the current one to.
+     *
+     * @return The distance between two orders.
+     */
+    private double calculateDistance(HashMap<String, String> order, HashMap<String, String> compareOrder) {
+        String customerID = order.get("CustomerID");
+        String city = order.get("CityName");
+        String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
+        String postalCode = order.get("DeliveryPostalCode");
+        String latitudeString = String.valueOf(order.get("Latitude"));
+        String longitudeString = String.valueOf(order.get("Longitude"));
+
+        // This is an expensive task, so we run this only when the order does not have geometric data. After the
+        // calculation we save it into the customer in order to skip this the next time we want to get the orders.
+        if (latitudeString.equals("null") || longitudeString.equals("null")) {
+            DeliveryAddress deliveryAddress = new DeliveryAddress(deliveryAddressLine1, postalCode, city);
+            HashMap<String, BigDecimal> geometry = deliveryAddress.toGeometry();
+            latitudeString = "0";
+            longitudeString = "0";
+            if (geometry != null) {
+                latitudeString = String.valueOf(geometry.get("latitude"));
+                longitudeString = String.valueOf(geometry.get("longitude"));
+            }
+
+            this.customer.addValue("Longitude", longitudeString);
+            this.customer.addValue("Latitude", latitudeString);
+            this.customer.addCondition("CustomerID", customerID);
+            this.customer.update();
         }
 
-        DbDocImpl result = (DbDocImpl) jsonResponse.get(0);
-        if (result == null || result.isEmpty()) {
-            return null;
+        double latitude = Double.parseDouble(latitudeString);
+        double longitude = Double.parseDouble(longitudeString);
+        double latitude_two = latitude;
+        double longitude_two = longitude;
+        if (compareOrder != null) {
+            String previousLatitudeString = String.valueOf(compareOrder.get("Latitude"));
+            String previousLongitudeString = String.valueOf(compareOrder.get("Longitude"));
+            if (!previousLongitudeString.equals("null") && !previousLatitudeString.equals("null")) {
+                latitude_two = Double.parseDouble(previousLatitudeString);
+                longitude_two = Double.parseDouble(previousLongitudeString);
+            }
         }
 
-        DbDocImpl geometry = (DbDocImpl) result.get("geometry");
-        if (geometry == null || geometry.isEmpty()) {
-            return null;
-        }
+        DeliveryLocation location = new DeliveryLocation(latitude, longitude, 0);
+        DeliveryLocation location_two = new DeliveryLocation(latitude_two, longitude_two, 0);
 
-        DbDocImpl location = (DbDocImpl) geometry.get("location");
-        if (location == null || location.isEmpty()) {
-            return null;
-        }
-
-        JsonNumber latitude = (JsonNumber) location.get("lat");
-        JsonNumber longitude = (JsonNumber) location.get("lng");
-
-        HashMap<String, BigDecimal> items = new HashMap<>();
-        items.put("latitude", latitude.getBigDecimal());
-        items.put("longitude", longitude.getBigDecimal());
-
-        return items;
+        return location.distance(location_two);
     }
 
 }
