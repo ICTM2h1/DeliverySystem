@@ -54,10 +54,20 @@ public class DeliveryLocation {
         return Math.sqrt(distance);
     }
 
+    /**
+     * Gets the latitude.
+     *
+     * @return The latitude.
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Gets the longitude.
+     *
+     * @return The longitude.
+     */
     public double getLongitude() {
         return longitude;
     }
