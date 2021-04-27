@@ -1,70 +1,68 @@
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
+public class Menu {
+    final static String BUTTONPANEL = "Menu 1";
+    final static String TEXTPANEL = "Menu 2";
+    final static int extraWindowWidth = 400;
+    final static int extraWindowHeight = 400;
 
-public class Menu implements Runnable, ActionListener
-{
-    private JFrame frame;
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
-    private JMenu editMenu;
+    public void addComponentToPane(Container pane) {
+        JTabbedPane tabbedPane = new JTabbedPane();
 
 
+        JPanel card1 = new JPanel() {
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                size.width += extraWindowWidth;
+                size.height += extraWindowHeight;
+                return size;
+            }
+        };
 
-    public void run()
-    {
-        frame = new JFrame("Java Menubar Example");
-        menuBar = new JMenuBar();
+        card1.add(new JButton("Button 1"));
+        card1.add(new JButton("Button 2"));
+        card1.add(new JButton("Button 3"));
 
-        // file menu
-        fileMenu = new JMenu("File");
+        JPanel card2 = new JPanel();
+        card2.add(new JTextField("TextField", 20));
 
-        // edit menu
-        editMenu = new JMenu("Edit");
+        tabbedPane.addTab(BUTTONPANEL, card1);
+        tabbedPane.addTab(TEXTPANEL, card2);
 
-        // menus toevoegen aan menu
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
+        pane.add(tabbedPane, BorderLayout.CENTER);
+    }
 
-        // menubar in de frame zetten
-        frame.setJMenuBar(menuBar);
-
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 300));
+
+        Menu demo = new Menu();
+        demo.addComponentToPane(frame.getContentPane());
+
         frame.pack();
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-
-    public void actionPerformed(ActionEvent ev)
-    {
-        SampleDialog dialog = new SampleDialog();
-        dialog.setModal(true);
-        dialog.setVisible(true);
-    }
-
-
-    private class SampleDialog extends JDialog implements ActionListener
-    {
-        private JButton okButton = new JButton("OK");
-
-        private SampleDialog()
-        {
-            super(frame, "Testing", true);
-            JPanel panel = new JPanel(new FlowLayout());
-            panel.add(okButton);
-            getContentPane().add(panel);
-            okButton.addActionListener(this);
-            setPreferredSize(new Dimension(400, 400));
-            pack();
-            setLocationRelativeTo(frame);
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
 
-        public void actionPerformed(ActionEvent ev)
-        {
-            setVisible(false);
-        }
+        UIManager.put("swing.boldMetal", Boolean.FALSE);
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
     }
 }

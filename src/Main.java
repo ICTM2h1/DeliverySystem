@@ -11,10 +11,7 @@ public class Main {
      * @param args The given arguments.
      */
     public static void main(String[] args) {
-        Config config = Config.getInstance();
-        System.out.println("Application entry point.");
-
-        new Menu();
+        System.out.println("Start");
 
     }
 
