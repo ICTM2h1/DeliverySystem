@@ -1,13 +1,21 @@
-import System.Error.SystemError;
-
 import java.awt.*;
 import javax.swing.*;
 
-public class Menu {
-    final static String BUTTONPANEL = "Menu 1";
-    final static String TEXTPANEL = "Menu 2";
-    final static int extraWindowWidth = 400;
-    final static int extraWindowHeight = 400;
+public class Window {
+    private final static String BUTTONPANEL = "Menu 1";
+    private final static String TEXTPANEL = "Menu 2";
+    private final static int extraWindowWidth = 400;
+    private final static int extraWindowHeight = 400;
+
+    public Window() {
+        JFrame frame = new JFrame("Menu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.addComponentToPane(frame.getContentPane());
+
+        frame.pack();
+        frame.setVisible(true);
+    }
 
     public void addComponentToPane(Container pane) {
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -34,16 +42,4 @@ public class Menu {
 
         pane.add(tabbedPane, BorderLayout.CENTER);
     }
-
-    public Menu() {
-        JFrame frame = new JFrame("Menu");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.addComponentToPane(frame.getContentPane());
-
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-
 }
