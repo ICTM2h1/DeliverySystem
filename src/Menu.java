@@ -35,12 +35,11 @@ public class Menu {
         pane.add(tabbedPane, BorderLayout.CENTER);
     }
 
-    public static void createAndShowGUI() {
+    public Menu() {
         JFrame frame = new JFrame("Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Menu demo = new Menu();
-        demo.addComponentToPane(frame.getContentPane());
+        this.addComponentToPane(frame.getContentPane());
 
         frame.pack();
         frame.setVisible(true);
