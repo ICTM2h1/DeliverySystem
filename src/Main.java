@@ -1,4 +1,7 @@
 import System.Config.Config;
+import System.Error.SystemError;
+
+import javax.swing.*;
 
 /**
  * This class provides the main entry point for the application.
@@ -11,8 +14,11 @@ public class Main {
      * @param args The given arguments.
      */
     public static void main(String[] args) {
-        System.out.println("Start");
-
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Menu.createAndShowGUI();
+            }
+        });
     }
 
 }

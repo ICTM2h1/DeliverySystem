@@ -35,7 +35,7 @@ public class Menu {
         pane.add(tabbedPane, BorderLayout.CENTER);
     }
 
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         JFrame frame = new JFrame("Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -46,25 +46,5 @@ public class Menu {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        } catch (IllegalAccessException ex) {
-            SystemError.handle(ex);
-        } catch (InstantiationException ex) {
-            SystemError.handle(ex);
-        } catch (ClassNotFoundException ex) {
-            SystemError.handle(ex);
-        }
 
-        UIManager.put("swing.boldMetal", Boolean.FALSE);
-
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
 }
