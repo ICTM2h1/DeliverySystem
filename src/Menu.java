@@ -1,3 +1,5 @@
+import System.Error.SystemError;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -50,11 +52,11 @@ public class Menu {
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
+            SystemError.handle(ex);
         } catch (InstantiationException ex) {
-            ex.printStackTrace();
+            SystemError.handle(ex);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            SystemError.handle(ex);
         }
 
         UIManager.put("swing.boldMetal", Boolean.FALSE);
