@@ -1,12 +1,18 @@
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ *  provide class with main window of the application
+ */
 public class Window {
     private final static String BUTTONPANEL = "Menu 1";
     private final static String TEXTPANEL = "Menu 2";
     private final static int extraWindowWidth = 400;
     private final static int extraWindowHeight = 400;
 
+    /**
+     * Create new window object
+     */
     public Window() {
         JFrame frame = new JFrame("Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,6 +23,11 @@ public class Window {
         frame.setVisible(true);
     }
 
+    /**
+     * Builds the window content
+     *
+     * @param pane frame container
+     */
     public void addComponentToPane(Container pane) {
         JTabbedPane tabbedPane = new JTabbedPane();
 
