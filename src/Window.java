@@ -1,3 +1,5 @@
+import System.Config.Config;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -5,6 +7,9 @@ import javax.swing.*;
  *  provide class with main window of the application
  */
 public class Window {
+
+    private final static Config config = Config.getInstance();
+
     private final static String BUTTONPANEL = "Menu 1";
     private final static String TEXTPANEL = "Menu 2";
     private final static int extraWindowWidth = 400;
@@ -14,7 +19,7 @@ public class Window {
      * Create new window object
      */
     public Window() {
-        JFrame frame = new JFrame("Menu");
+        JFrame frame = new JFrame(String.format("%s", config.get("app_title")).replace("+", " "));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.addComponentToPane(frame.getContentPane());
