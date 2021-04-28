@@ -1,7 +1,5 @@
 import UI.Window;
 
-import javax.swing.*;
-
 /**
  * This class provides the main entry point for the application.
  */
