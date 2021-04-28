@@ -1,3 +1,5 @@
+import UI.Window;
+
 import javax.swing.*;
 
 /**
@@ -11,7 +13,7 @@ public class Main {
      * @param args The given arguments.
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Window::new);
+        Window window = new Window();
     }
 
 }
