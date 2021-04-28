@@ -3,7 +3,6 @@ package UI;
 import System.Config.Config;
 
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.*;
 
 /**
@@ -35,8 +34,7 @@ public class Window extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanelBase.registerPanels();
-        ArrayList<JPanelBase> panels = JPanelBase.getPanels();
-        for (JPanelBase panel : panels) {
+        for (JPanelBase panel : JPanelBase.getPanels()) {
             tabbedPane.addTab(panel.getTitle(), panel);
         }
 
