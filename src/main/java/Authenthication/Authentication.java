@@ -6,12 +6,15 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.BorderFactory;
-import System.Config.Config;
+
+import Home.AdminHome;
+import Home.DelivererHome;
 import System.Database.Query;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class Authentication extends JFrame implements ActionListener {
 
+    private HashMap<String, String> loginResultset;
     private JPanel panel;
     private JLabel usernameLabel, passwordLabel, errorMessage;
     private JTextField usernameTextfield;
@@ -103,32 +106,26 @@ public class Authentication extends JFrame implements ActionListener {
         if (username != null && !username.equals("")) {
             // Check if password is set
             if (password != null && !password.equals("")) {
+                // Fields that are going to be fetched
+                ArrayList<String> selectFields = new ArrayList<>();
+                selectFields.add("LogonName");
+                selectFields.add("HashedPassword");
+                selectFields.add("FullName");
+                selectFields.add("isSalesperson");
 
-                // Tries to execute a SQL-query
-                try {
-                    Config config = Config.getInstance();
+                // Fetch data from a specific LogonName
+                HashMap<String, String> conditions = new HashMap<>();
+                conditions.put("LogonName", username);
 
-                    // Fields that are going to be fetched
-                    ArrayList<String> selectFields = new ArrayList<>();
-                    selectFields.add("LogonName");
-                    selectFields.add("HashedPassword");
+                // SELECT-query
+                HashMap<String, String> results = Query.selectFirst("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
 
-                    // Fetch data from a specific LogonName
-                    HashMap<String, String> conditions = new HashMap<>();
-                    conditions.put("LogonName", username);
+                String HashedDatabasePassword = (String) results.get("HashedPassword");
 
-                    // SELECT-query
-                    ArrayList<HashMap<String, String>> results = Query.select("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
-
-                    String HashedDatabasePassword = (String) results.get(0).get("HashedPassword");
-
-                    // Check if database hash matches with entered password
-                    if (BCrypt.verifyer().verify(password.toCharArray(), HashedDatabasePassword).verified) {
-                        return true;
-                    }
-                // Catches potential SQL-query failures
-                } catch (Exception throwable) {
-                    return false;
+                // Check if database hash matches with entered password
+                if (BCrypt.verifyer().verify(password.toCharArray(), HashedDatabasePassword).verified) {
+                    this.loginResultset = results;
+                    return true;
                 }
             }
         }
@@ -140,8 +137,26 @@ public class Authentication extends JFrame implements ActionListener {
      */
     private void handleLogin() {
         if (validateUser()) {
-            errorMessage.setText("Welkom");
-            errorMessage.setForeground(Color.black);
+            UserRole userRole = UserRole.valueOf(Integer.parseInt(loginResultset.get("isSalesperson")));
+
+            // Check if userrole is valid.
+            if (userRole != null) {
+                String username = loginResultset.get("FullName");
+                String HashedDatabasePassword = loginResultset.get("HashedPassword");
+
+                // Create a new user (Deliverer or Admin)
+                User user = userRole.createUser(username, HashedDatabasePassword, userRole);
+
+                if (userRole.isAdmin()) {
+                    AdminHome ah = new AdminHome();
+                } else if (userRole.isDeliverer()) {
+                    DelivererHome dh = new DelivererHome();
+                }
+                dispose();
+            } else {
+                errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
+                errorMessage.setForeground(Color.red);
+            }
         } else {
             errorMessage.setText("Gebruikersnaam en wachtwoord combinatie is onjuist!");
             errorMessage.setForeground(Color.red);

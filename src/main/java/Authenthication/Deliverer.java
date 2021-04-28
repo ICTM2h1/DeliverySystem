@@ -1,11 +1,15 @@
 package Authenthication;
 
-import Authenthication.User;
-
 public class Deliverer extends User {
 
-    public Deliverer(String username, String password, int type) {
-        super(username, password, 2);
+    /**
+     * Instantiates a new deliverer.
+     *
+     * @param username of the deliverer.
+     * @param password of the deliverer.
+     * @param role of the deliverer.
+     */
+    public Deliverer(String username, String password, UserRole role) {
+        super(username, password, role);
     }
-
 }

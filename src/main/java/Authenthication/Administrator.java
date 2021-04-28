@@ -1,11 +1,15 @@
 package Authenthication;
 
-import Authenthication.User;
-
 public class Administrator extends User {
 
-    public Administrator(String username, String password, String type) {
-        super(username, password, 1);
+    /**
+     * Instantiates a new admin.
+     *
+     * @param username of the admin.
+     * @param password of the admin.
+     * @param role of the admin.
+     */
+    public Administrator(String username, String password, UserRole role) {
+        super(username, password, role);
     }
-
 }
