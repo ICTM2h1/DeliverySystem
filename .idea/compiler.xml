@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="DeliverySystem" options="--add-exports java.base/jdk.internal.access=ALL-UNNAMED" />
+      <module name="DeliverySystem" options="" />
     </option>
   </component>
 </project>
