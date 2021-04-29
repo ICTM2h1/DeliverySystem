@@ -55,16 +55,24 @@ public abstract class JPanelBase extends JPanel {
      * Registers manually the panels.
      */
     public static void registerPanels(User user) {
-        JPanelBase deliveryRoutePanel = new DeliveryRoutePanel(user);
-        deliveryRoutePanel.instantiate();
-        deliveryRoutePanel.updateUI();
-        panels.add(deliveryRoutePanel);
+        ArrayList<JPanelBase> delivererPanels = new ArrayList<>();
+        delivererPanels.add(new DeliveryRoutePanel(user));
+
+        for (JPanelBase panel : delivererPanels) {
+            panel.instantiate();
+            panel.updateUI();
+            panels.add(panel);
+        }
 
         if (user.getRole().isAdmin()) {
-            JPanelBase testPanel = new TestPanel(user);
-            testPanel.instantiate();
-            testPanel.updateUI();
-            panels.add(testPanel);
+            ArrayList<JPanelBase> adminPanels = new ArrayList<>();
+            adminPanels.add(new TestPanel(user));
+
+            for (JPanelBase panel : adminPanels) {
+                panel.instantiate();
+                panel.updateUI();
+                panels.add(panel);
+            }
         }
     }
 
