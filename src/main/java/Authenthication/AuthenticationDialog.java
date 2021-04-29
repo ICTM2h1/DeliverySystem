@@ -23,6 +23,12 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     private final JPasswordField passwordField;
     private final JButton loginButton;
 
+    /**
+     * Creates a new authentication dialog.
+     *
+     * @param frame The frame.
+     * @param modal Determines if it is a modal?
+     */
     public AuthenticationDialog(JFrame frame, boolean modal) {
         super(frame, modal);
         Config config = Config.getInstance();
