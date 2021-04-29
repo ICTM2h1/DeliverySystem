@@ -1,6 +1,7 @@
 package UI;
 
 import Authenthication.User;
+import UI.Panel.JPanelBase;
 
 import javax.swing.*;
 

@@ -3,6 +3,7 @@ package UI;
 import Authenthication.AuthenticationDialog;
 import Authenthication.User;
 import System.Config.Config;
+import UI.Panel.JPanelBase;
 
 import java.awt.*;
 import javax.swing.*;
