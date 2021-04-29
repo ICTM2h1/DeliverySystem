@@ -1,27 +1,21 @@
 package DeliveryRoute;
 
 import Crud.Orders;
-import UI.JPanelBase;
+import UI.JPanelListBase;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Provides a class for generating the delivery routes.
  */
-public class DeliveryRoutePanel extends JPanelBase {
-
-    private final ArrayList<HashMap<String, String>> orders;
-
-    public static int routeCount = 0;
-    public static int ordersCount = 0;
-    private static double ordersUnsorted = 0;
+public class DeliveryRoutePanel extends JPanelListBase {
 
     /**
      * Creates a new delivery route object.
      */
     public DeliveryRoutePanel() {
+        // @todo use the date of today instead of this date
         this("2013-01-03");
     }
 
@@ -31,17 +25,7 @@ public class DeliveryRoutePanel extends JPanelBase {
      * @param date The date.
      */
     public DeliveryRoutePanel(String date) {
-        super();
-
-        Orders orders = new Orders(date);
-
-        this.orders = orders.filterOnGeometry();
-        routeCount++;
-        ordersCount += this.orders.size();
-        ordersUnsorted += (((double) orders.getWithoutGeometry()) / ((double) this.orders.size())) * 100;
-
-        this.add(new JButton("Test"));
-        this.add(new JButton("Test 1"));
+        super((new Orders(date)).filterOnGeometry());
     }
 
     @Override
@@ -49,8 +33,14 @@ public class DeliveryRoutePanel extends JPanelBase {
         return "Bezorgingstrajecten";
     }
 
-    public static double getOrdersUnsortedPercentage() {
-        return ordersUnsorted / (routeCount * 100) * 100;
+    @Override
+    protected String getEntityLabel(HashMap<String, String> entity) {
+        return String.format("Bestelling #%s", entity.get("OrderID"));
+    }
+
+    @Override
+    protected void updatePreview(HashMap<String, String> entity) {
+        this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));
     }
 
 }
