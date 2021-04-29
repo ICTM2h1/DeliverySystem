@@ -3,7 +3,7 @@ package Crud;
 import System.Database.Query;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a class for basis crud actions.
@@ -12,7 +12,7 @@ public abstract class CrudBase {
 
     protected ArrayList<String> selectFields = new ArrayList<>();
 
-    protected HashMap<String, String> values = new HashMap<>(), parameters = new HashMap<>();
+    protected LinkedHashMap<String, String> values = new LinkedHashMap<>(), parameters = new LinkedHashMap<>();
 
     protected String table, primaryKey;
 
@@ -45,7 +45,7 @@ public abstract class CrudBase {
      *
      * @return A hash map with the selected row.
      */
-    public HashMap<String, String> get(int id) {
+    public LinkedHashMap<String, String> get(int id) {
         this.addCondition(this.primaryKey, String.valueOf(id));
 
         return Query.selectFirst(
@@ -61,7 +61,7 @@ public abstract class CrudBase {
      *
      * @return A hash map with the selected row.
      */
-    public HashMap<String, String> get(String query) {
+    public LinkedHashMap<String, String> get(String query) {
         return Query.selectFirst(query, this.selectFields, this.parameters);
     }
 
@@ -70,7 +70,7 @@ public abstract class CrudBase {
      *
      * @return An array list with the selected rows.
      */
-    public ArrayList<HashMap<String, String>> all() {
+    public ArrayList<LinkedHashMap<String, String>> all() {
         return Query.select("SELECT * FROM " + this.table, this.selectFields);
     }
 
@@ -81,7 +81,7 @@ public abstract class CrudBase {
      *
      * @return An array list with the selected rows.
      */
-    public ArrayList<HashMap<String, String>> all(String query) {
+    public ArrayList<LinkedHashMap<String, String>> all(String query) {
         return Query.select(query, this.selectFields, this.parameters);
     }
 
@@ -154,7 +154,7 @@ public abstract class CrudBase {
      *
      * @param values The values.
      */
-    public void addValues(HashMap<String, String> values) {
+    public void addValues(LinkedHashMap<String, String> values) {
         this.values.putAll(values);
     }
 
@@ -173,7 +173,7 @@ public abstract class CrudBase {
      *
      * @param conditions The conditions.
      */
-    public void addCondition(HashMap<String, String> conditions) {
+    public void addCondition(LinkedHashMap<String, String> conditions) {
         this.bindParams(conditions);
     }
 
@@ -192,7 +192,7 @@ public abstract class CrudBase {
      *
      * @param conditions The parameters.
      */
-    public void bindParams(HashMap<String, String> conditions) {
+    public void bindParams(LinkedHashMap<String, String> conditions) {
         this.parameters.putAll(conditions);
     }
 

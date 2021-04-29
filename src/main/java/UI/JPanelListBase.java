@@ -7,14 +7,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a base panel for lists.
  */
 public abstract class JPanelListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<HashMap<String, String>> listItems;
+    protected ArrayList<LinkedHashMap<String, String>> listItems;
 
     protected JPanel preview;
     protected final JList<String> list;
@@ -25,7 +25,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      *
      * @param listItems The entities.
      */
-    public JPanelListBase(ArrayList<HashMap<String, String>> listItems, User user) {
+    public JPanelListBase(ArrayList<LinkedHashMap<String, String>> listItems, User user) {
         super(user);
         this.listItems = listItems;
 
@@ -76,7 +76,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     protected String[] getListLabels() {
         String[] labels = new String[this.listItems.size()];
         for (int delta = 0; delta < this.listItems.size(); delta++) {
-            HashMap<String, String> entity = this.listItems.get(delta);
+            LinkedHashMap<String, String> entity = this.listItems.get(delta);
             labels[delta] = this.getListItemLabel(entity);
         }
 
@@ -90,13 +90,13 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      *
      * @return The label.
      */
-    protected abstract String getListItemLabel(HashMap<String, String> listItem);
+    protected abstract String getListItemLabel(LinkedHashMap<String, String> listItem);
 
     /**
      * Updates the preview of the list.
      *
      * @param listItem The entity.
      */
-    protected abstract void updateListItemPreview(HashMap<String, String> listItem);
+    protected abstract void updateListItemPreview(LinkedHashMap<String, String> listItem);
 
 }

@@ -3,7 +3,7 @@ package Authenthication;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import javax.swing.BorderFactory;
 
 import Crud.People;
@@ -16,7 +16,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 public class AuthenticationDialog extends JDialog implements ActionListener {
 
     private User user;
-    private HashMap<String, String> userResultSet;
+    private LinkedHashMap<String, String> userResultSet;
 
     private final JLabel usernameLabel, passwordLabel, errorMessage;
     private final JTextField usernameField;
@@ -108,7 +108,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
             // Check if password is set
             if (!password.isEmpty()) {
                 People people = new People();
-                HashMap<String, String> results = people.getByUsername(username);
+                LinkedHashMap<String, String> results = people.getByUsername(username);
                 if (results == null) {
                     return false;
                 }

@@ -8,7 +8,7 @@ import com.mysql.cj.xdevapi.JsonArray;
 import com.mysql.cj.xdevapi.JsonNumber;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a class for the delivery address with generic behavior.
@@ -37,7 +37,7 @@ public class DeliveryAddress {
      *
      * @return A hash map with the geometric data.
      */
-    public HashMap<String, BigDecimal> toGeometry() {
+    public LinkedHashMap<String, BigDecimal> toGeometry() {
         String address = String.format("%s,+%s,+%s", this.address, this.postalCode, this.city).replace(" ", "+");
         String url = this.config.get("google_maps_api_url") + "?" + "address="+ address + "&key=" + this.config.get("google_maps_api_key");
 
@@ -68,7 +68,7 @@ public class DeliveryAddress {
         JsonNumber latitude = (JsonNumber) location.get("lat");
         JsonNumber longitude = (JsonNumber) location.get("lng");
 
-        HashMap<String, BigDecimal> items = new HashMap<>();
+        LinkedHashMap<String, BigDecimal> items = new LinkedHashMap<>();
         items.put("latitude", latitude.getBigDecimal());
         items.put("longitude", longitude.getBigDecimal());
 
