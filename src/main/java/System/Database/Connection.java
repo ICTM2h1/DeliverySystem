@@ -11,7 +11,6 @@ import java.sql.SQLException;
  */
 public class Connection {
 
-    private static final Config config = Config.getInstance();
     private java.sql.Connection connection;
 
     /**
@@ -19,6 +18,7 @@ public class Connection {
      */
     public Connection() {
         try {
+            Config config = Config.getInstance();
             this.connection = DriverManager.getConnection(config.get("database_path"), config.get("database_username"), config.get("database_password"));
         } catch(SQLException e) {
             this.connection = null;
