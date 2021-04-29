@@ -106,20 +106,8 @@ public class Authentication extends JFrame implements ActionListener {
         if (!username.isEmpty()) {
             // Check if password is set
             if (!password.isEmpty()) {
-                // Fields that are going to be fetched
-                ArrayList<String> selectFields = new ArrayList<>();
-                selectFields.add("LogonName");
-                selectFields.add("HashedPassword");
-                selectFields.add("FullName");
-                selectFields.add("isSalesperson");
-
-                // Fetch data from a specific LogonName
-                HashMap<String, String> conditions = new HashMap<>();
-                conditions.put("LogonName", username);
-
-                // SELECT-query
-                HashMap<String, String> results = Query.selectFirst("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
-
+                People people = new People();
+                HashMap<String, String> results = people.getByUsername(username);
                 if (results == null) {
                     return false;
                 }
