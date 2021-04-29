@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Provides a base for panels.
  */
-abstract public class JPanelBase extends JPanel {
+public abstract class JPanelBase extends JPanel {
 
     private int extraWidth, extraHeight;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
