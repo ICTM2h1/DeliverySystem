@@ -35,13 +35,13 @@ public class DeliveryRoutePanel extends JPanelListBase {
     }
 
     @Override
-    protected String getEntityLabel(HashMap<String, String> entity) {
-        return String.format("Bestelling #%s", entity.get("OrderID"));
+    protected String getListItemLabel(HashMap<String, String> listItem) {
+        return String.format("Bestelling #%s", listItem.get("OrderID"));
     }
 
     @Override
-    protected void updatePreview(HashMap<String, String> entity) {
-        this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));
+    protected void updateListItemPreview(HashMap<String, String> listItem) {
+        this.preview.add(new JLabel(String.format("Bestelling #%s", listItem.get("OrderID"))));
     }
 
 }

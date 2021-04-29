@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public abstract class JPanelListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<HashMap<String, String>> entities;
+    protected ArrayList<HashMap<String, String>> listItems;
 
     protected JPanel preview;
     protected final JList<String> list;
@@ -23,11 +23,11 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     /**
      * Creates a new list panel.
      *
-     * @param entities The entities.
+     * @param listItems The entities.
      */
-    public JPanelListBase(ArrayList<HashMap<String, String>> entities, User user) {
+    public JPanelListBase(ArrayList<HashMap<String, String>> listItems, User user) {
         super(user);
-        this.entities = entities;
+        this.listItems = listItems;
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -51,7 +51,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
 
         // Provide a preferred size for the split pane.
         this.splitPane.setPreferredSize(new Dimension(400, 200));
-        this.updatePreview(this.entities.get(this.list.getSelectedIndex()));
+        this.updateListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
         this.add(this.splitPane);
     }
@@ -61,7 +61,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
         JList<String> list = (JList<String>) e.getSource();
 
         this.preview.removeAll();
-        this.updatePreview(this.entities.get(list.getSelectedIndex()));
+        this.updateListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
     }
 
@@ -71,10 +71,10 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      * @return The list item labels.
      */
     protected String[] getListLabels() {
-        String[] labels = new String[this.entities.size()];
-        for (int delta = 0; delta < this.entities.size(); delta++) {
-            HashMap<String, String> entity = this.entities.get(delta);
-            labels[delta] = this.getEntityLabel(entity);
+        String[] labels = new String[this.listItems.size()];
+        for (int delta = 0; delta < this.listItems.size(); delta++) {
+            HashMap<String, String> entity = this.listItems.get(delta);
+            labels[delta] = this.getListItemLabel(entity);
         }
 
         return labels;
@@ -83,17 +83,17 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     /**
      * Gets the label of an entity.
      *
-     * @param entity The entity.
+     * @param listItem The entity.
      *
      * @return The label.
      */
-    protected abstract String getEntityLabel(HashMap<String, String> entity);
+    protected abstract String getListItemLabel(HashMap<String, String> listItem);
 
     /**
      * Updates the preview of the list.
      *
-     * @param entity The entity.
+     * @param listItem The entity.
      */
-    protected abstract void updatePreview(HashMap<String, String> entity);
+    protected abstract void updateListItemPreview(HashMap<String, String> listItem);
 
 }
