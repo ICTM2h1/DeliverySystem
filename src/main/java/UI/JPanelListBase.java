@@ -56,6 +56,9 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
         this.add(this.splitPane);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList<String> list = (JList<String>) e.getSource();

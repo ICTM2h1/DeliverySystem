@@ -29,16 +29,25 @@ public class DeliveryRoutePanel extends JPanelListBase {
         super((new Orders(date)).filterOnGeometry(), user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle() {
         return "Bezorgingstrajecten";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getListItemLabel(HashMap<String, String> listItem) {
         return String.format("Bestelling #%s", listItem.get("OrderID"));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateListItemPreview(HashMap<String, String> listItem) {
         this.preview.add(new JLabel(String.format("Bestelling #%s", listItem.get("OrderID"))));

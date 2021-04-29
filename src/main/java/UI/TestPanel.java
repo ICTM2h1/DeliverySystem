@@ -11,6 +11,9 @@ public class TestPanel extends JPanelBase {
         this.add(new JTextField("TextField", 20));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle() {
         return "Item 2";
