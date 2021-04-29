@@ -15,7 +15,7 @@ INSERT INTO `nerdygadgets`.`people` (
     ValidTo, LastEditedBy, Role
 ) VALUES (
     'Beheerder', 'Beheerder', 'Beheerder',
-    1, 'beheerder@beheerder.nl', 0,
+    1, 'beheerder', 0,
     '$2y$10$.D3CZ9FSjEYCOoZwlr.WjekQaijWBo4KTW0I3rpgm4Ou60cknIIXi', 0, 1,
     0, '+310612345678', 'beheerder@beheerder.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1, 1
@@ -31,7 +31,7 @@ INSERT INTO `nerdygadgets`.`people` (
     ValidTo, LastEditedBy, Role
 ) VALUES (
     'Admin', 'Admin', 'Admin',
-    1, 'admin@admin.nl', 0,
+    1, 'admin', 0,
     '$2y$10$.D3CZ9FSjEYCOoZwlr.WjekQaijWBo4KTW0I3rpgm4Ou60cknIIXi', 0, 1,
     0, '+310612345678', 'admin@admin.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1, 2
