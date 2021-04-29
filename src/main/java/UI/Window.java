@@ -2,6 +2,7 @@ package UI;
 
 import Authenthication.AuthenticationDialog;
 import Authenthication.User;
+import Authenthication.UserRole;
 import System.Config.Config;
 import UI.Panel.JPanelBase;
 
@@ -19,14 +20,20 @@ public class Window extends JFrame {
      * Creates new window object.
      */
     public Window() {
-        AuthenticationDialog authentication = new AuthenticationDialog(this, true);
-        this.user = authentication.getUser();
-        if (!authentication.isAuthenticated()) {
-            System.out.println("Inloggen is afgebroken. U heeft geen toegang tot de applicatie.");
-            System.exit(0);
+        Config config = Config.getInstance();
+
+        // @todo remove this temporary debug code when the application is no longer in development.
+        if (!Boolean.parseBoolean(config.get("debug"))) {
+            AuthenticationDialog authentication = new AuthenticationDialog(this, true);
+            this.user = authentication.getUser();
+            if (!authentication.isAuthenticated()) {
+                System.out.println("Inloggen is afgebroken. U heeft geen toegang tot de applicatie.");
+                System.exit(0);
+            }
+        } else {
+            this.user = UserRole.ADMIN.createUser("test", "test", UserRole.ADMIN);
         }
 
-        Config config = Config.getInstance();
         this.setTitle(String.format("%s", config.get("app_title")).replace("+", " "));
 
         this.setSize(700, 700);
