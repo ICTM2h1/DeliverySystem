@@ -1,5 +1,7 @@
 package UI;
 
+import Authenthication.User;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,7 +25,8 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      *
      * @param entities The entities.
      */
-    public JPanelListBase(ArrayList<HashMap<String, String>> entities) {
+    public JPanelListBase(ArrayList<HashMap<String, String>> entities, User user) {
+        super(user);
         this.entities = entities;
 
         this.list = new JList<>(this.getListLabels());

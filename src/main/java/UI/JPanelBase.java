@@ -1,5 +1,6 @@
 package UI;
 
+import Authenthication.User;
 import DeliveryRoute.DeliveryRoutePanel;
 
 import javax.swing.*;
@@ -14,11 +15,13 @@ abstract public class JPanelBase extends JPanel {
     private int extraWidth, extraHeight;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
+    protected final User user;
+
     /**
      * Creates a new panel.
      */
-    protected JPanelBase() {
-        this(400, 400);
+    protected JPanelBase(User user) {
+        this(400, 400, user);
     }
 
     /**
@@ -27,9 +30,10 @@ abstract public class JPanelBase extends JPanel {
      * @param extraWidth The extra width of the panel.
      * @param extraHeight The extra height of the panel.
      */
-    protected JPanelBase(int extraWidth, int extraHeight) {
+    protected JPanelBase(int extraWidth, int extraHeight, User user) {
         this.extraWidth = extraWidth;
         this.extraHeight = extraHeight;
+        this.user = user;
     }
 
     /**
@@ -42,9 +46,12 @@ abstract public class JPanelBase extends JPanel {
     /**
      * Registers manually the panels.
      */
-    public static void registerPanels() {
-        panels.add(new DeliveryRoutePanel());
-        panels.add(new TestPanel());
+    public static void registerPanels(User user) {
+        panels.add(new DeliveryRoutePanel(user));
+
+        if (user.getRole().isAdmin()) {
+            panels.add(new TestPanel(user));
+        }
     }
 
     /**

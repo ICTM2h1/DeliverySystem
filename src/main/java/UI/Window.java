@@ -1,5 +1,7 @@
 package UI;
 
+import Authenthication.AuthenticationDialog;
+import Authenthication.User;
 import System.Config.Config;
 
 import java.awt.*;
@@ -10,10 +12,19 @@ import javax.swing.*;
  */
 public class Window extends JFrame {
 
+    private final User user;
+
     /**
      * Creates new window object.
      */
     public Window() {
+        AuthenticationDialog authentication = new AuthenticationDialog(this, true);
+        this.user = authentication.getUser();
+        if (!authentication.isAuthenticated()) {
+            System.out.println("Inloggen is afgebroken. U heeft geen toegang tot de applicatie.");
+            System.exit(0);
+        }
+
         Config config = Config.getInstance();
         this.setTitle(String.format("%s", config.get("app_title")).replace("+", " "));
 
@@ -33,7 +44,7 @@ public class Window extends JFrame {
     private void addComponentToPane(Container pane) {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanelBase.registerPanels();
+        JPanelBase.registerPanels(this.user);
         for (JPanelBase panel : JPanelBase.getPanels()) {
             tabbedPane.addTab(panel.getTitle(), panel);
         }

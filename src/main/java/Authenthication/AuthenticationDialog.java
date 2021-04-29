@@ -3,94 +3,88 @@ package Authenthication;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.BorderFactory;
 
-import Home.AdminHome;
-import Home.DelivererHome;
-import System.Database.Query;
+import Crud.People;
+import System.Config.Config;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-public class Authentication extends JFrame implements ActionListener {
+public class AuthenticationDialog extends JDialog implements ActionListener {
 
-    private HashMap<String, String> loginResultset;
-    private JPanel panel;
-    private JLabel usernameLabel, passwordLabel, errorMessage;
-    private JTextField usernameTextfield;
-    private JPasswordField passwordPasswordfield;
-    private JButton loginButton;
+    private User user;
+    private HashMap<String, String> userResultSet;
 
-    public static void main(String[] args) {
-        new Authentication();
-    }
+    private final JLabel usernameLabel, passwordLabel, errorMessage;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JButton loginButton;
 
-    Authentication() {
-        // Username
-        usernameLabel = new JLabel();
-        usernameLabel.setText("Gebruikersnaam:");
-        usernameTextfield = new JTextField();
-        usernameTextfield.addActionListener(enterPressedUsername);
+    public AuthenticationDialog(JFrame frame, boolean modal) {
+        super(frame, modal);
+        Config config = Config.getInstance();
 
-        // Password
-        passwordLabel = new JLabel();
-        passwordLabel.setText("Wachtwoord:");
-        passwordPasswordfield = new JPasswordField();
-        passwordPasswordfield.addActionListener(enterPressedPassword);
+        this.usernameLabel = new JLabel();
+        this.usernameLabel.setText("Gebruikersnaam:");
+        this.usernameField = new JTextField();
+        this.usernameField.addActionListener(enterPressedUsername);
 
-        // Submit
-        errorMessage = new JLabel();
-        loginButton = new JButton("Aanmelden");
+        this.passwordLabel = new JLabel();
+        this.passwordLabel.setText("Wachtwoord:");
+        this.passwordField = new JPasswordField();
+        this.passwordField.addActionListener(enterPressedPassword);
 
-        panel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
+        this.errorMessage = new JLabel();
+        this.loginButton = new JButton("Aanmelden");
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 
         // Row 0 - Username
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 0;
-        panel.add(usernameLabel, c);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        panel.add(usernameLabel, gridBagConstraints);
 
-        c.weightx = 0.5;
-        c.gridx = 1;
-        panel.add(usernameTextfield, c);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.gridx = 1;
+        panel.add(usernameField, gridBagConstraints);
 
         // Row 1 - Password
-        c.insets = new Insets(5, 0, 0, 0);
-        c.weightx = 0.5;
-        c.gridx = 0;
-        c.gridy = 1;
-        panel.add(passwordLabel, c);
+        gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        panel.add(passwordLabel, gridBagConstraints);
 
-        c.weightx = 0.5;
-        c.gridx = 1;
-        panel.add(passwordPasswordfield, c);
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.gridx = 1;
+        panel.add(passwordField, gridBagConstraints);
 
         // Row 2 - error message
-        c.insets = new Insets(5, 0, 5, 0);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 2;
-        panel.add(errorMessage, c);
+        gridBagConstraints.insets = new Insets(5, 0, 5, 0);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        panel.add(errorMessage, gridBagConstraints);
 
         // Row 3 - Login button
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
-        c.gridy = 3;
-        panel.add(loginButton, c);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        panel.add(loginButton, gridBagConstraints);
 
         // Display panel
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginButton.addActionListener(this);
-        add(panel, BorderLayout.CENTER);
-        setTitle("Awesomely NerdyGadgets - Routebepaling portaal");
-        setSize(650, 175);
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        this.loginButton.addActionListener(this);
+        this.add(panel, BorderLayout.CENTER);
+        this.setTitle(String.format("%s", config.get("app_title")).replace("+", " "));
+        this.setSize(650, 175);
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setVisible(true);
-
+        this.setVisible(true);
     }
 
     /**
@@ -99,8 +93,8 @@ public class Authentication extends JFrame implements ActionListener {
      * @return boolean validation successful
      */
     private boolean validateUser() {
-        String username = usernameTextfield.getText().trim();
-        String password = String.valueOf(passwordPasswordfield.getPassword()).trim();
+        String username = this.usernameField.getText().trim();
+        String password = String.valueOf(this.passwordField.getPassword()).trim();
 
         // Check if username is set
         if (!username.isEmpty()) {
@@ -116,11 +110,12 @@ public class Authentication extends JFrame implements ActionListener {
 
                 // Check if database hash matches with entered password
                 if (BCrypt.verifyer().verify(password.toCharArray(), HashedDatabasePassword).verified) {
-                    this.loginResultset = results;
+                    this.userResultSet = results;
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -129,30 +124,41 @@ public class Authentication extends JFrame implements ActionListener {
      */
     private void handleLogin() {
         if (validateUser()) {
-            UserRole userRole = UserRole.valueOf(Integer.parseInt(loginResultset.get("isSalesperson")));
+            UserRole userRole = UserRole.valueOf(Integer.parseInt(this.userResultSet.get("Role")));
 
-            // Check if userrole is valid.
+            // Check if user role is valid.
             if (userRole != null) {
-                String username = loginResultset.get("FullName");
-                String HashedDatabasePassword = loginResultset.get("HashedPassword");
+                String username = this.userResultSet.get("FullName");
+                String HashedDatabasePassword = this.userResultSet.get("HashedPassword");
 
-                // Create a new user (Deliverer or Admin)
-                User user = userRole.createUser(username, HashedDatabasePassword, userRole);
-
-                if (userRole.isAdmin()) {
-                    AdminHome ah = new AdminHome();
-                } else if (userRole.isDeliverer()) {
-                    DelivererHome dh = new DelivererHome();
-                }
+                this.user = userRole.createUser(username, HashedDatabasePassword, userRole);
                 dispose();
             } else {
-                errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
-                errorMessage.setForeground(Color.red);
+                this.errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
+                this.errorMessage.setForeground(Color.red);
             }
         } else {
-            errorMessage.setText("Gebruikersnaam en wachtwoord combinatie is onjuist!");
-            errorMessage.setForeground(Color.red);
+            this.errorMessage.setText("Gebruikersnaam en wachtwoord combinatie is onjuist!");
+            this.errorMessage.setForeground(Color.red);
         }
+    }
+
+    /**
+     * Determines whether the user is authenticated or not.
+     *
+     * @return If user is authenticated.
+     */
+    public boolean isAuthenticated() {
+        return this.user != null;
+    }
+
+    /**
+     * Gets the user.
+     *
+     * @return The logged in user.
+     */
+    public User getUser() {
+        return user;
     }
 
     /**
@@ -162,7 +168,7 @@ public class Authentication extends JFrame implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
+        if (e.getSource() == this.loginButton) {
             handleLogin();
         }
     }
@@ -173,13 +179,13 @@ public class Authentication extends JFrame implements ActionListener {
     Action enterPressedUsername = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (usernameTextfield.getText().trim().length() > 0)
-                passwordPasswordfield.requestFocus();
+            if (usernameField.getText().trim().length() > 0)
+                passwordField.requestFocus();
         }
     };
 
     /**
-     * Enter key on focus passwordfield acts as a submit button.
+     * Enter key on focus password field acts as a submit button.
      */
     Action enterPressedPassword = new AbstractAction() {
         @Override

@@ -1,7 +1,6 @@
 package Authenthication;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public enum UserRole {
 
@@ -56,8 +55,8 @@ public enum UserRole {
         }
     };
 
-    private int role;
-    private static Map map = new HashMap<>();
+    private final int role;
+    private static HashMap<Integer, UserRole> roleMap = new HashMap<>();
 
     /**
      * Constructs the user role.
@@ -74,7 +73,7 @@ public enum UserRole {
     /* Create a static map with all defined user roles. */
     static {
         for (UserRole userRole : UserRole.values()) {
-            map.put(userRole.role, userRole);
+            roleMap.put(userRole.role, userRole);
         }
     }
 
@@ -85,7 +84,7 @@ public enum UserRole {
      * @return UserRole with corresponding value.
      */
     public static UserRole valueOf(int userRole) {
-        return (UserRole) map.get(userRole);
+        return roleMap.get(userRole);
     }
 
     /**

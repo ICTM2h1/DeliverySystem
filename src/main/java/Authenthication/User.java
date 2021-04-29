@@ -1,10 +1,12 @@
 package Authenthication;
 
+/**
+ * Provides a base class for users.
+ */
 public class User {
 
-    private String username;
-    private String password;
-    private UserRole role;
+    private final String username, password;
+    private final UserRole role;
 
     /**
      * Creates a new user object.
@@ -27,4 +29,14 @@ public class User {
     public String getUsername() {
         return this.username;
     }
+
+    /**
+     * Gets the user role.
+     *
+     * @return The role.
+     */
+    public UserRole getRole() {
+        return role;
+    }
+
 }

@@ -1,5 +1,6 @@
 package DeliveryRoute;
 
+import Authenthication.User;
 import Crud.Orders;
 import UI.JPanelListBase;
 
@@ -14,9 +15,9 @@ public class DeliveryRoutePanel extends JPanelListBase {
     /**
      * Creates a new delivery route object.
      */
-    public DeliveryRoutePanel() {
+    public DeliveryRoutePanel(User user) {
         // @todo use the date of today instead of this date
-        this("2013-01-03");
+        this("2013-01-03", user);
     }
 
     /**
@@ -24,8 +25,8 @@ public class DeliveryRoutePanel extends JPanelListBase {
      *
      * @param date The date.
      */
-    public DeliveryRoutePanel(String date) {
-        super((new Orders(date)).filterOnGeometry());
+    public DeliveryRoutePanel(String date, User user) {
+        super((new Orders(date)).filterOnGeometry(), user);
     }
 
     @Override

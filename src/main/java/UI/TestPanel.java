@@ -1,10 +1,13 @@
 package UI;
 
+import Authenthication.User;
+
 import javax.swing.*;
 
 public class TestPanel extends JPanelBase {
 
-    public TestPanel() {
+    public TestPanel(User user) {
+        super(user);
         this.add(new JTextField("TextField", 20));
     }
 
