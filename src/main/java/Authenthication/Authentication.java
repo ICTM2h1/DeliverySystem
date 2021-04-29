@@ -103,9 +103,9 @@ public class Authentication extends JFrame implements ActionListener {
         String password = String.valueOf(passwordPasswordfield.getPassword()).trim();
 
         // Check if username is set
-        if (username != null && !username.equals("")) {
+        if (!username.isEmpty()) {
             // Check if password is set
-            if (password != null && !password.equals("")) {
+            if (!password.isEmpty()) {
                 // Fields that are going to be fetched
                 ArrayList<String> selectFields = new ArrayList<>();
                 selectFields.add("LogonName");
@@ -120,7 +120,11 @@ public class Authentication extends JFrame implements ActionListener {
                 // SELECT-query
                 HashMap<String, String> results = Query.selectFirst("SELECT * FROM people WHERE LogonName = :LogonName", selectFields, conditions);
 
-                String HashedDatabasePassword = (String) results.get("HashedPassword");
+                if (results == null) {
+                    return false;
+                }
+
+                String HashedDatabasePassword = results.get("HashedPassword");
 
                 // Check if database hash matches with entered password
                 if (BCrypt.verifyer().verify(password.toCharArray(), HashedDatabasePassword).verified) {
