@@ -2,13 +2,13 @@ package Home;
 
 import javax.swing.*;
 
-public class AdminHome {
+public class AdminHome extends JFrame {
 
     public AdminHome() {
-        JFrame frame = new JFrame("Homepage beheerder");
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.pack();
-        frame.setVisible(true);
+        this.setTitle("Homepage beheerder");
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.pack();
+        this.setVisible(true);
     }
 
 }
