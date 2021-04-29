@@ -10,6 +10,9 @@ import Crud.People;
 import System.Config.Config;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+/**
+ * Provides a dialog modal for authentication.
+ */
 public class AuthenticationDialog extends JDialog implements ActionListener {
 
     private User user;
@@ -24,13 +27,11 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
         super(frame, modal);
         Config config = Config.getInstance();
 
-        this.usernameLabel = new JLabel();
-        this.usernameLabel.setText("Gebruikersnaam:");
+        this.usernameLabel = new JLabel("Gebruikersnaam:");
         this.usernameField = new JTextField();
         this.usernameField.addActionListener(enterPressedUsername);
 
-        this.passwordLabel = new JLabel();
-        this.passwordLabel.setText("Wachtwoord:");
+        this.passwordLabel = new JLabel("Wachtwoord:");
         this.passwordField = new JPasswordField();
         this.passwordField.addActionListener(enterPressedPassword);
 
@@ -179,8 +180,9 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     Action enterPressedUsername = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (usernameField.getText().trim().length() > 0)
+            if (usernameField.getText().trim().length() > 0) {
                 passwordField.requestFocus();
+            }
         }
     };
 

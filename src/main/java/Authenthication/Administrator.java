@@ -1,5 +1,8 @@
 package Authenthication;
 
+/**
+ * Provides an administrator user.
+ */
 public class Administrator extends User {
 
     /**

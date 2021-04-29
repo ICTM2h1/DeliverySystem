@@ -2,11 +2,15 @@ package Authenthication;
 
 import java.util.HashMap;
 
+/**
+ * Provides an enum with user roles.
+ */
 public enum UserRole {
 
     DELIVERER (1) {
+
         /**
-         * Changes function isDeliverer to true in case enum stats = 1/
+         * Changes function isDeliverer to true in case enum stats = 1.
          *
          * @return boolean value true if user is deliverer.
          */

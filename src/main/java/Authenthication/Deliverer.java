@@ -1,5 +1,8 @@
 package Authenthication;
 
+/**
+ * Provides a deliverer user.
+ */
 public class Deliverer extends User {
 
     /**
