@@ -4,7 +4,7 @@ import System.Error.SystemError;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Config {
 
     private static Config config;
-    private final LinkedHashMap<String, String> items = new LinkedHashMap<>();
+    private final HashMap<String, String> items = new HashMap<>();
 
     /**
      * Creates a new config object.
@@ -76,7 +76,7 @@ public class Config {
      *
      * @return The config items.
      */
-    public LinkedHashMap<String, String> get() {
+    public HashMap<String, String> get() {
         return this.items;
     }
 }

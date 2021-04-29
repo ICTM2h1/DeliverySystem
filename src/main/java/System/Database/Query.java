@@ -4,10 +4,7 @@ import System.Error.SystemError;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Provides a class for interacting with the database.
@@ -22,7 +19,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    public static ArrayList<LinkedHashMap<String, String>> select(String query, ArrayList<String> selectFields) {
+    public static ArrayList<HashMap<String, String>> select(String query, ArrayList<String> selectFields) {
         return executeQuery(query, selectFields, null);
     }
 
@@ -34,7 +31,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    public static LinkedHashMap<String, String> selectFirst(String query, ArrayList<String> selectFields) {
+    public static HashMap<String, String> selectFirst(String query, ArrayList<String> selectFields) {
         return executeQueryFirst(query, selectFields, null);
     }
 
@@ -47,7 +44,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    public static ArrayList<LinkedHashMap<String, String>> select(String query, ArrayList<String> selectFields, LinkedHashMap<String, String> conditions) {
+    public static ArrayList<HashMap<String, String>> select(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         return executeQuery(query, selectFields, conditions);
     }
 
@@ -60,7 +57,7 @@ public class Query {
      *
      * @return An hash map with the data of the result set.
      */
-    public static LinkedHashMap<String, String> selectFirst(String query, ArrayList<String> selectFields, LinkedHashMap<String, String> conditions) {
+    public static HashMap<String, String> selectFirst(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         return executeQueryFirst(query, selectFields, conditions);
     }
 
@@ -72,8 +69,8 @@ public class Query {
      *
      * @return Whether the data was successfully inserted or not.
      */
-    public static boolean insert(String table, LinkedHashMap<String, String> values) {
-        LinkedHashMap<String, String> insertValues = new LinkedHashMap<>();
+    public static boolean insert(String table, HashMap<String, String> values) {
+        HashMap<String, String> insertValues = new HashMap<>();
         StringBuilder queryColumns = new StringBuilder();
         StringBuilder queryValues = new StringBuilder();
         Iterator<Map.Entry<String, String>> iterator = values.entrySet().iterator();
@@ -101,8 +98,8 @@ public class Query {
      *
      * @return Whether the data was successfully updated or not.
      */
-    public static boolean update(String table, LinkedHashMap<String, String> values, LinkedHashMap<String, String> conditions) {
-        LinkedHashMap<String, String> updateValues = new LinkedHashMap<>();
+    public static boolean update(String table, HashMap<String, String> values, HashMap<String, String> conditions) {
+        HashMap<String, String> updateValues = new HashMap<>();
         StringBuilder queryValues = new StringBuilder();
         Iterator<Map.Entry<String, String>> iteratorValues = values.entrySet().iterator();
         while (iteratorValues.hasNext()) {
@@ -138,8 +135,8 @@ public class Query {
      *
      * @return Whether the data was successfully deleted or not.
      */
-    public static boolean delete(String table, LinkedHashMap<String, String> conditions) {
-        LinkedHashMap<String, String> updateValues = new LinkedHashMap<>();
+    public static boolean delete(String table, HashMap<String, String> conditions) {
+        HashMap<String, String> updateValues = new HashMap<>();
         StringBuilder queryConditions = new StringBuilder();
         Iterator<Map.Entry<String, String>> iterator = conditions.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -165,7 +162,7 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    private static ArrayList<LinkedHashMap<String, String>> executeQuery(String query, ArrayList<String> selectFields, LinkedHashMap<String, String> conditions) {
+    private static ArrayList<HashMap<String, String>> executeQuery(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             Connection connection = new Connection();
             NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
@@ -174,7 +171,7 @@ public class Query {
             }
 
             statement.setValues(conditions);
-            ArrayList<LinkedHashMap<String, String>> results = resultSetToArray(selectFields, statement.executeQuery());
+            ArrayList<HashMap<String, String>> results = resultSetToArray(selectFields, statement.executeQuery());
             statement.close();
             connection.close();
 
@@ -195,7 +192,7 @@ public class Query {
      *
      * @return An hash map with the data of the result set.
      */
-    private static LinkedHashMap<String, String> executeQueryFirst(String query, ArrayList<String> selectFields, LinkedHashMap<String, String> conditions) {
+    private static HashMap<String, String> executeQueryFirst(String query, ArrayList<String> selectFields, HashMap<String, String> conditions) {
         try {
             Connection connection = new Connection();
             NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
@@ -204,7 +201,7 @@ public class Query {
             }
 
             statement.setValues(conditions);
-            LinkedHashMap<String, String> results = resultSetToFirst(selectFields, statement.executeQuery());
+            HashMap<String, String> results = resultSetToFirst(selectFields, statement.executeQuery());
             statement.close();
             connection.close();
 
@@ -224,7 +221,7 @@ public class Query {
      *
      * @return Whether the query was executed successfully or not.
      */
-    private static boolean execute(String query, LinkedHashMap<String, String> values) {
+    private static boolean execute(String query, HashMap<String, String> values) {
         try {
             Connection connection = new Connection();
             NamedParamStatement statement = new NamedParamStatement(connection.get(), query);
@@ -253,10 +250,10 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    private static ArrayList<LinkedHashMap<String, String>> resultSetToArray(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
-        ArrayList<LinkedHashMap<String, String>> results = new ArrayList<>();
+    private static ArrayList<HashMap<String, String>> resultSetToArray(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
+        ArrayList<HashMap<String, String>> results = new ArrayList<>();
         while (resultSet.next()) {
-            LinkedHashMap<String, String> selectedValues = new LinkedHashMap<>();
+            HashMap<String, String> selectedValues = new HashMap<>();
             for (String field : selectFields) {
                 selectedValues.put(field, resultSet.getString(field));
             }
@@ -275,13 +272,13 @@ public class Query {
      *
      * @return An array list with the data of the result set.
      */
-    private static LinkedHashMap<String, String> resultSetToFirst(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
+    private static HashMap<String, String> resultSetToFirst(ArrayList<String> selectFields, ResultSet resultSet) throws SQLException {
         boolean result = resultSet.next();
         if (!result) {
             return null;
         }
 
-        LinkedHashMap<String, String> selectedValues = new LinkedHashMap<>();
+        HashMap<String, String> selectedValues = new HashMap<>();
         for (String field : selectFields) {
             selectedValues.put(field, resultSet.getString(field));
         }

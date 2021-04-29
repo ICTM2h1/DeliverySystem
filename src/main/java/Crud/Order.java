@@ -47,7 +47,7 @@ public class Order extends CrudBase {
      *
      * @return An array list with the selected orders.
      */
-    public ArrayList<LinkedHashMap<String, String>> all() {
+    public ArrayList<HashMap<String, String>> all() {
         String query = "SELECT * FROM orders O " +
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID ";
@@ -66,13 +66,17 @@ public class Order extends CrudBase {
      * @return An array list with the sorted orders.
      */
     public ArrayList<LinkedHashMap<String, String>> filterOnGeometry() {
+        ArrayList<HashMap<String, String>> entities = this.all();
         ArrayList<LinkedHashMap<String, String>> orders = new ArrayList<>();
-        LinkedHashMap<String, String> previousOrder = null;
-        for (LinkedHashMap<String, String> order : this.all()) {
-            String latitudeString = String.valueOf(order.get("Latitude"));
-            String longitudeString = String.valueOf(order.get("Longitude"));
 
-            double distance = calculateDistance(order, previousOrder);
+        LinkedHashMap<String, String> previousOrder = null;
+        for (HashMap<String, String> entity : entities) {
+            LinkedHashMap<String, String> ordersLinkedHashMap = new LinkedHashMap<>(entity);
+
+            String latitudeString = String.valueOf(entity.get("Latitude"));
+            String longitudeString = String.valueOf(entity.get("Longitude"));
+
+            double distance = calculateDistance(entity, previousOrder);
 
             double latitude, longitude;
             try {
@@ -86,14 +90,14 @@ public class Order extends CrudBase {
                 this.withoutGeometry++;
             }
 
-            order.put("geometry.distance", String.valueOf(distance));
-            order.put("geometry.latitude", latitudeString);
-            order.put("geometry.longitude", longitudeString);
-            orders.add(order);
+            entity.put("geometry.distance", String.valueOf(distance));
+            entity.put("geometry.latitude", latitudeString);
+            entity.put("geometry.longitude", longitudeString);
+            orders.add(ordersLinkedHashMap);
 
             // Keeps track of the previous order.
-            if (previousOrder == null || !previousOrder.equals(order)) {
-                previousOrder = order;
+            if (previousOrder == null || !previousOrder.equals(entity)) {
+                previousOrder = ordersLinkedHashMap;
             }
         }
 
@@ -124,7 +128,7 @@ public class Order extends CrudBase {
      *
      * @return The distance between two orders.
      */
-    private double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
+    private double calculateDistance(HashMap<String, String> order, HashMap<String, String> compareOrder) {
         String customerID = order.get("CustomerID");
         String city = order.get("CityName");
         String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
@@ -136,7 +140,7 @@ public class Order extends CrudBase {
         // calculation we save it into the customer in order to skip this the next time we want to get the orders.
         if (latitudeString.equals("null") || longitudeString.equals("null")) {
             DeliveryAddress deliveryAddress = new DeliveryAddress(deliveryAddressLine1, postalCode, city);
-            LinkedHashMap<String, BigDecimal> geometry = deliveryAddress.toGeometry();
+            HashMap<String, BigDecimal> geometry = deliveryAddress.toGeometry();
             latitudeString = "0";
             longitudeString = "0";
             if (geometry != null) {

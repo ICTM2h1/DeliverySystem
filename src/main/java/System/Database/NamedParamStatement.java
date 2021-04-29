@@ -4,10 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Provides a statement class for converting named parameters to ?-marks inside the query.
@@ -83,7 +80,7 @@ public class NamedParamStatement {
      *
      * @param values The values to be used inside the query.
      */
-    public void setValues(LinkedHashMap<String, String> values) throws SQLException {
+    public void setValues(HashMap<String, String> values) throws SQLException {
         if (this.fields.size() < 1 || values == null || values.isEmpty()) {
             return;
         }

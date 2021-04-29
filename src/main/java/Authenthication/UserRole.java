@@ -1,6 +1,6 @@
 package Authenthication;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 /**
  * Provides an enum with user roles.
@@ -60,7 +60,7 @@ public enum UserRole {
     };
 
     private final int role;
-    private static LinkedHashMap<Integer, UserRole> roleMap = new LinkedHashMap<>();
+    private static HashMap<Integer, UserRole> roleMap = new HashMap<>();
 
     /**
      * Constructs the user role.
