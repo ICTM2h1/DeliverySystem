@@ -1,7 +1,7 @@
 package DeliveryRoute;
 
 import Authenthication.User;
-import Crud.Orders;
+import Crud.Order;
 import UI.JPanelListBase;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * @param date The date.
      */
     public DeliveryRoutePanel(String date, User user) {
-        super((new Orders(date)).filterOnGeometry(), user);
+        super((new Order(date)).filterOnGeometry(), user);
     }
 
     /**

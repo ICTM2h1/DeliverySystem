@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Provides a class for interacting with the order table.
  */
-public class Orders extends CrudBase {
+public class Order extends CrudBase {
 
     protected Customer customer = new Customer();
 
@@ -18,7 +18,7 @@ public class Orders extends CrudBase {
     /**
      * Constructs a new orders object.
      */
-    public Orders() {
+    public Order() {
         super("orders", "OrderID");
 
         this.addSelectField("OrderID");
@@ -36,7 +36,7 @@ public class Orders extends CrudBase {
      *
      * @param date The date to filter on.
      */
-    public Orders(String date) {
+    public Order(String date) {
         this();
 
         this.date = date;
