@@ -17,21 +17,26 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     protected ArrayList<LinkedHashMap<String, String>> listItems;
 
     protected JPanel preview;
-    protected final JList<String> list;
+    protected JList<String> list;
     protected JSplitPane splitPane;
 
     /**
-     * Creates a new list panel.
-     *
-     * @param listItems The entities.
+     * Creates a new panel list object.
      */
-    public JPanelListBase(ArrayList<LinkedHashMap<String, String>> listItems, User user) {
+    public JPanelListBase(User user) {
         super(user);
-        this.listItems = listItems;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void instantiate() {
+        this.listItems = this.getListItems();
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.list.setSelectedIndex(0);
+        this.list.setSelectedIndex(this.getSelectedListItemIndex());
         this.list.addListSelectionListener(this);
 
         JScrollPane listScrollPane = new JScrollPane(this.list);
@@ -54,6 +59,22 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
         this.updateListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
         this.add(this.splitPane);
+    }
+
+    /**
+     * Gets the list items.
+     *
+     * @return The list items.
+     */
+    protected abstract ArrayList<LinkedHashMap<String, String>> getListItems();
+
+    /**
+     * Gets the index of the default selected list item.
+     *
+     * @return The index of list item.
+     */
+    protected int getSelectedListItemIndex() {
+        return 0;
     }
 
     /**

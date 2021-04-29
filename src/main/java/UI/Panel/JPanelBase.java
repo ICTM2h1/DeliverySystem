@@ -21,7 +21,7 @@ public abstract class JPanelBase extends JPanel {
     /**
      * Creates a new panel.
      */
-    protected JPanelBase(User user) {
+    public JPanelBase(User user) {
         this(400, 400, user);
     }
 
@@ -31,7 +31,7 @@ public abstract class JPanelBase extends JPanel {
      * @param extraWidth The extra width of the panel.
      * @param extraHeight The extra height of the panel.
      */
-    protected JPanelBase(int extraWidth, int extraHeight, User user) {
+    public JPanelBase(int extraWidth, int extraHeight, User user) {
         this.extraWidth = extraWidth;
         this.extraHeight = extraHeight;
         this.user = user;
@@ -45,13 +45,26 @@ public abstract class JPanelBase extends JPanel {
     public abstract String getTitle();
 
     /**
+     * Instantiates the GUI of the panel.
+     *
+     * The developer may add components to the panel within this method.
+     */
+    public abstract void instantiate();
+
+    /**
      * Registers manually the panels.
      */
     public static void registerPanels(User user) {
-        panels.add(new DeliveryRoutePanel(user));
+        JPanelBase deliveryRoutePanel = new DeliveryRoutePanel(user);
+        deliveryRoutePanel.instantiate();
+        deliveryRoutePanel.updateUI();
+        panels.add(deliveryRoutePanel);
 
         if (user.getRole().isAdmin()) {
-            panels.add(new TestPanel(user));
+            JPanelBase testPanel = new TestPanel(user);
+            testPanel.instantiate();
+            testPanel.updateUI();
+            panels.add(testPanel);
         }
     }
 

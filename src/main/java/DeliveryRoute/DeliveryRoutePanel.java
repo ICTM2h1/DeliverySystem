@@ -5,12 +5,15 @@ import Crud.Order;
 import UI.Panel.JPanelListBase;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
  * Provides a class for generating the delivery routes.
  */
 public class DeliveryRoutePanel extends JPanelListBase {
+
+    private final String date;
 
     /**
      * Creates a new delivery route object.
@@ -26,7 +29,8 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * @param date The date.
      */
     public DeliveryRoutePanel(String date, User user) {
-        super((new Order(date)).filterOnGeometry(), user);
+        super(user);
+        this.date = date;
     }
 
     /**
@@ -35,6 +39,14 @@ public class DeliveryRoutePanel extends JPanelListBase {
     @Override
     public String getTitle() {
         return "Bezorgingstrajecten";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ArrayList<LinkedHashMap<String, String>> getListItems() {
+        return (new Order(this.date)).filterOnGeometry();
     }
 
     /**

@@ -9,7 +9,6 @@ public class TestPanel extends JPanelBase {
 
     public TestPanel(User user) {
         super(user);
-        this.add(new JTextField("TextField", 20));
     }
 
     /**
@@ -18,6 +17,14 @@ public class TestPanel extends JPanelBase {
     @Override
     public String getTitle() {
         return "Item 2";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void instantiate() {
+        this.add(new JTextField("TextField", 20));
     }
 
 }
