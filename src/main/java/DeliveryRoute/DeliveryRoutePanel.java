@@ -46,26 +46,32 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<LinkedHashMap<String, String>> getListItems() {
+    protected ArrayList<LinkedHashMap> getListItems() {
         Order order = new Order(this.date);
 
-        return order.filterOnGeometry();
+        ArrayList<LinkedHashMap> orders = new ArrayList<>(order.filterOnGeometry());
+
+        return orders;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getListItemLabel(LinkedHashMap<String, String> listItem) {
-        return String.format("Bestelling #%s", listItem.get("OrderID"));
+    protected String getListItemLabel(LinkedHashMap listItem) {
+        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+
+        return String.format("Bestelling #%s", entity.get("OrderID"));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
-        this.preview.add(new JLabel(String.format("Bestelling #%s", listItem.get("OrderID"))));
+    protected void updateListItemPreview(LinkedHashMap listItem) {
+        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+
+        this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));
     }
 
 }
