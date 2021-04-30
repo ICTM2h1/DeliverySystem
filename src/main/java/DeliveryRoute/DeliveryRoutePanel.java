@@ -2,7 +2,7 @@ package DeliveryRoute;
 
 import Authenthication.User;
 import Crud.Order;
-import UI.JPanelListBase;
+import UI.JPanelRawListBase;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 /**
  * Provides a class for generating the delivery routes.
  */
-public class DeliveryRoutePanel extends JPanelListBase {
+public class DeliveryRoutePanel extends JPanelRawListBase {
 
     private final String date;
 
@@ -46,7 +46,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<LinkedHashMap> getListItems() {
+    protected ArrayList<LinkedHashMap> getRawListItems() {
         Order order = new Order(this.date);
 
         ArrayList<LinkedHashMap> orders = new ArrayList<>(order.filterOnGeometry());
@@ -58,7 +58,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected String getListItemLabel(LinkedHashMap listItem) {
+    protected String getRawListItemLabel(LinkedHashMap listItem) {
         LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
 
         return String.format("Bestelling #%s", entity.get("OrderID"));
@@ -68,7 +68,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected void updateListItemPreview(LinkedHashMap listItem) {
+    protected void updateRawListItemPreview(LinkedHashMap listItem) {
         LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
 
         this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));

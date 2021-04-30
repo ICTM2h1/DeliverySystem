@@ -29,9 +29,12 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         super(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void instantiate() {
-        this.listItems = this.getListItems();
+        this.listItems = this.getRawListItems();
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -55,7 +58,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         // Provide a preferred size for the split pane.
         this.splitPane.setPreferredSize(new Dimension(400, 200));
-        this.updateListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
+        this.updateRawListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
         this.add(this.splitPane);
     }
@@ -68,7 +71,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         JList<String> list = (JList<String>) e.getSource();
 
         this.preview.removeAll();
-        this.updateListItemPreview(this.listItems.get(list.getSelectedIndex()));
+        this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
     }
 
@@ -80,7 +83,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     protected String[] getListLabels() {
         String[] labels = new String[this.listItems.size()];
         for (int delta = 0; delta < this.listItems.size(); delta++) {
-            labels[delta] = this.getListItemLabel(this.listItems.get(delta));
+            labels[delta] = this.getRawListItemLabel(this.listItems.get(delta));
         }
 
         return labels;
@@ -91,7 +94,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The list items.
      */
-    protected abstract ArrayList<LinkedHashMap> getListItems();
+    protected abstract ArrayList<LinkedHashMap> getRawListItems();
 
     /**
      * Gets the index of the selected list item.
@@ -109,13 +112,13 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The label.
      */
-    protected abstract String getListItemLabel(LinkedHashMap listItem);
+    protected abstract String getRawListItemLabel(LinkedHashMap listItem);
 
     /**
      * Updates the preview of the list.
      *
      * @param listItem The entity.
      */
-    protected abstract void updateListItemPreview(LinkedHashMap listItem);
+    protected abstract void updateRawListItemPreview(LinkedHashMap listItem);
 
 }
