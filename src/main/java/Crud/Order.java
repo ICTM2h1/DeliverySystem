@@ -98,10 +98,14 @@ public class Order extends CrudBase {
         }
 
         orders.sort((order, order_two) -> {
-            Double distance = Double.valueOf(order.get("geometry.distance"));
-            Double distance_two = Double.valueOf(order_two.get("geometry.distance"));
+            try {
+                Double distance = Double.valueOf(order.get("geometry.distance"));
+                Double distance_two = Double.valueOf(order_two.get("geometry.distance"));
 
-            return distance.compareTo(distance_two);
+                return distance.compareTo(distance_two);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
         });
 
         return orders;
