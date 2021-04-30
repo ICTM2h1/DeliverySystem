@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 abstract public class JPanelBase extends JPanel {
 
-    private int extraWidth, extraHeight;
+    private final int extraWidth, extraHeight;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
     protected final User user;
@@ -44,13 +44,27 @@ abstract public class JPanelBase extends JPanel {
     public abstract String getTitle();
 
     /**
+     * Instantiates the panel.
+     *
+     * The developer may add components to the UI within this method.
+     */
+    public abstract void instantiate();
+
+    /**
      * Registers manually the panels.
      */
     public static void registerPanels(User user) {
-        panels.add(new DeliveryRoutePanel(user));
+        ArrayList<JPanelBase> panelList = new ArrayList<>();
+        panelList.add(new DeliveryRoutePanel(user));
 
         if (user.getRole().isAdmin()) {
-            panels.add(new TestPanel(user));
+            panelList.add(new TestPanel(user));
+        }
+
+        for (JPanelBase panel : panelList) {
+            panel.instantiate();
+            panel.updateUI();
+            panels.add(panel);
         }
     }
 

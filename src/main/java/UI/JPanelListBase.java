@@ -17,21 +17,25 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     protected ArrayList<HashMap<String, String>> listItems;
 
     protected JPanel preview;
-    protected final JList<String> list;
+    protected JList<String> list;
     protected JSplitPane splitPane;
 
     /**
      * Creates a new list panel.
      *
-     * @param listItems The entities.
+     * @param user The user.
      */
-    public JPanelListBase(ArrayList<HashMap<String, String>> listItems, User user) {
+    public JPanelListBase(User user) {
         super(user);
-        this.listItems = listItems;
+    }
+
+    @Override
+    public void instantiate() {
+        this.listItems = this.getListItems();
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.list.setSelectedIndex(0);
+        this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
         JScrollPane listScrollPane = new JScrollPane(this.list);
@@ -81,6 +85,22 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
         }
 
         return labels;
+    }
+
+    /**
+     * Gets the list items.
+     *
+     * @return The list items.
+     */
+    protected abstract ArrayList<HashMap<String, String>> getListItems();
+
+    /**
+     * Gets the index of the selected list item.
+     *
+     * @return The list item index.
+     */
+    protected int getSelectedItemIndex() {
+        return 0;
     }
 
     /**
