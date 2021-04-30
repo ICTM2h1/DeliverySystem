@@ -37,7 +37,7 @@ public class SystemError {
             System.exit(-1);
         }
 
-        System.out.println("Something went wrong while running this code, please try again or contact the administrators.");
+        System.out.println("Something went wrong while running this application, please try again or contact the administrators.");
         System.exit(-1);
     }
 
