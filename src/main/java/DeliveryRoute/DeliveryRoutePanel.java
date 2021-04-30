@@ -6,6 +6,7 @@ import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
@@ -46,32 +47,55 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<LinkedHashMap> getRawListItems() {
+    protected ArrayList<Object> getRawListItems() {
         Order order = new Order(this.date);
 
-        ArrayList<LinkedHashMap> orders = new ArrayList<>(order.filterOnGeometry());
+        ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
+        ArrayList<DeliveryRoute> listItems = new ArrayList<>();
 
-        return orders;
+        int ordersPerDeliverer = entities.size() / DeliveryRoute.deliverers;
+        Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
+        for (int deliverer = 0; deliverer < DeliveryRoute.deliverers; deliverer++) {
+            int delivererOrderCount = 0;
+            DeliveryRoute delivererOrders = new DeliveryRoute(ordersPerDeliverer, deliverer);
+
+            while (iterator.hasNext()) {
+                LinkedHashMap<String, String> entity = iterator.next();
+
+                if (delivererOrderCount >= ordersPerDeliverer) {
+                    break;
+                }
+
+                delivererOrders.put(delivererOrderCount, new DeliveryPoint(entity));
+                delivererOrderCount++;
+
+                iterator.remove(); // avoids a ConcurrentModificationException
+            }
+
+            listItems.add(deliverer, delivererOrders);
+        }
+
+        return new ArrayList<>(listItems);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getRawListItemLabel(LinkedHashMap listItem) {
-        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+    protected String getRawListItemLabel(Object listItem) {
+        DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
-        return String.format("Bestelling #%s", entity.get("OrderID"));
+        return String.format("#%s", deliveryRoute.label());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void updateRawListItemPreview(LinkedHashMap listItem) {
-        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+    protected void updateRawListItemPreview(Object listItem) {
+        DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
-        this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));
+        this.preview.add(new JLabel(String.format("Bezorgingstraject: %s", deliveryRoute.getName())));
     }
 
 }

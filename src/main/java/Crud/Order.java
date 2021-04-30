@@ -2,6 +2,8 @@ package Crud;
 
 import DeliveryRoute.DeliveryAddress;
 import DeliveryRoute.DeliveryLocation;
+import System.Error.SystemError;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -104,8 +106,10 @@ public class Order extends CrudBase {
 
                 return distance.compareTo(distance_two);
             } catch (NumberFormatException e) {
-                return 0;
+                SystemError.handle(e);
             }
+
+            return 0;
         });
 
         return orders;
