@@ -7,7 +7,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
  * Provides a base panel for raw lists.
@@ -30,20 +29,39 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     }
 
     /**
+     * Gets the title of the panel.
+     *
+     * @return The title.
+     */
+    public abstract String getTitle();
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void instantiate() {
         this.listItems = this.getRawListItems();
 
+        Insets defaultInsets = this.gridBagConstraints.insets;
+        int defaultGridWidth = this.gridBagConstraints.gridwidth;
+
+        // Row 0 - Title
+        this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
+        this.gridBagConstraints.gridx = 0;
+        this.gridBagConstraints.gridy = 0;
+        this.gridBagConstraints.gridwidth = 2;
+        this.add(new JLabel(this.getTitle(), JLabel.CENTER), this.gridBagConstraints);
+
+        this.gridBagConstraints.insets = defaultInsets;
+        this.gridBagConstraints.gridwidth = defaultGridWidth;
+
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
-        JScrollPane listScrollPane = new JScrollPane(this.list);
         this.preview = new JPanel();
-
+        JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
 
         // Create a split pane with the two scroll panes in it.
@@ -52,15 +70,17 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.splitPane.setDividerLocation(150);
 
         // Provide minimum sizes for the two components in the split pane.
-        Dimension minimumSize = new Dimension(100, 50);
-        listScrollPane.setMinimumSize(minimumSize);
-        previewScrollPane.setMinimumSize(minimumSize);
+        listScrollPane.setMinimumSize(new Dimension(100, this.panelHeight - 50));
+        previewScrollPane.setMinimumSize(new Dimension(this.panelWidth, this.panelHeight - 50));
 
         // Provide a preferred size for the split pane.
-        this.splitPane.setPreferredSize(new Dimension(400, 200));
+        this.splitPane.setPreferredSize(new Dimension(this.panelWidth, this.panelHeight - 50));
+
         this.updateRawListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
-        this.add(this.splitPane);
+        this.gridBagConstraints.gridx = 0;
+        this.gridBagConstraints.gridy = 1;
+        this.add(this.splitPane, gridBagConstraints);
     }
 
     /**

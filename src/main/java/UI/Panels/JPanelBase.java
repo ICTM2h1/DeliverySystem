@@ -5,6 +5,7 @@ import DeliveryRoute.DeliveryRoutePanel;
 import UI.TestPanel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -13,7 +14,10 @@ import java.util.ArrayList;
  */
 abstract public class JPanelBase extends JPanel {
 
-    private final int extraWidth, extraHeight;
+    protected final int panelWidth, panelHeight;
+
+    protected GridBagConstraints gridBagConstraints;
+    protected JLabel titleLabel;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
     protected final User user;
@@ -22,19 +26,21 @@ abstract public class JPanelBase extends JPanel {
      * Creates a new panel.
      */
     protected JPanelBase(User user) {
-        this(400, 400, user);
+        this(700, 500, user);
     }
 
     /**
      * Creates a new panel.
      *
-     * @param extraWidth The extra width of the panel.
-     * @param extraHeight The extra height of the panel.
+     * @param panelWidth The extra width of the panel.
+     * @param panelHeight The extra height of the panel.
      */
-    protected JPanelBase(int extraWidth, int extraHeight, User user) {
-        this.extraWidth = extraWidth;
-        this.extraHeight = extraHeight;
+    protected JPanelBase(int panelWidth, int panelHeight, User user) {
+        this.panelWidth = panelWidth;
+        this.panelHeight = panelHeight;
         this.user = user;
+
+        this.setDefaultGridBagConstraints();
     }
 
     /**
@@ -42,7 +48,7 @@ abstract public class JPanelBase extends JPanel {
      *
      * @return The title.
      */
-    public abstract String getTitle();
+    public abstract String getTabTitle();
 
     /**
      * Instantiates the panel.
@@ -50,6 +56,23 @@ abstract public class JPanelBase extends JPanel {
      * The developer may add components to the UI within this method.
      */
     public abstract void instantiate();
+
+    /**
+     * Gets the layout manager for the panel.
+     *
+     * @return The layout manager.
+     */
+    protected LayoutManager getLayoutManager() {
+        return new GridBagLayout();
+    }
+
+    /**
+     * Sets the default grid bag constraints.
+     */
+    protected void setDefaultGridBagConstraints() {
+        this.gridBagConstraints = new GridBagConstraints();
+        this.gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    }
 
     /**
      * Registers manually the panels.
@@ -63,7 +86,11 @@ abstract public class JPanelBase extends JPanel {
         }
 
         for (JPanelBase panel : panelList) {
+            panel.setLayout(panel.getLayoutManager());
             panel.instantiate();
+            panel.setBorder(getDefaultBorder());
+            panel.setPreferredSize(panel.getPreferredSize());
+            panel.setSize(panel.getPreferredSize());
             panel.updateUI();
             panels.add(panel);
         }
@@ -83,13 +110,22 @@ abstract public class JPanelBase extends JPanel {
     }
 
     /**
+     * Gets the default border of the panels.
+     *
+     * @return The default border.
+     */
+    public static Border getDefaultBorder() {
+        return BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
 
-        size.width += this.extraWidth;
-        size.height += this.extraHeight;
+        size.width = this.panelWidth;
+        size.height = this.panelHeight;
 
         return size;
     }

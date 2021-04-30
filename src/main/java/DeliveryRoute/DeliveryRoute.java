@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
 
-    public final static int deliverers = 6;
+    public final static int deliverers = 12;
 
     private final int id;
     private int distance;

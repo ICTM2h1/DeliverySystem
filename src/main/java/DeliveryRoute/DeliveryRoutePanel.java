@@ -39,8 +39,18 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
-    public String getTitle() {
+    public String getTabTitle() {
         return "Bezorgingstrajecten";
+    }
+
+    /**
+     * Gets the title for this panel.
+     *
+     * @return The title.
+     */
+    @Override
+    public String getTitle() {
+        return String.format("%s bezorgingstrajecten voor vandaag", this.getRawListItems().size());
     }
 
     /**
@@ -48,6 +58,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      */
     @Override
     protected ArrayList<Object> getRawListItems() {
+        if (this.listItems != null && !this.listItems.isEmpty()) {
+            return this.listItems;
+        }
+
         Order order = new Order(this.date);
 
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
