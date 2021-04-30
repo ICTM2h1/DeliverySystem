@@ -1,16 +1,19 @@
 package DeliveryRoute;
 
 import Authenthication.User;
-import Crud.Orders;
+import Crud.Order;
 import UI.JPanelListBase;
 
 import javax.swing.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a class for generating the delivery routes.
  */
 public class DeliveryRoutePanel extends JPanelListBase {
+
+    private final String date;
 
     /**
      * Creates a new delivery route object.
@@ -26,7 +29,9 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * @param date The date.
      */
     public DeliveryRoutePanel(String date, User user) {
-        super((new Orders(date)).filterOnGeometry(), user);
+        super(user);
+
+        this.date = date;
     }
 
     /**
@@ -41,16 +46,32 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected String getListItemLabel(HashMap<String, String> listItem) {
-        return String.format("Bestelling #%s", listItem.get("OrderID"));
+    protected ArrayList<LinkedHashMap> getListItems() {
+        Order order = new Order(this.date);
+
+        ArrayList<LinkedHashMap> orders = new ArrayList<>(order.filterOnGeometry());
+
+        return orders;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void updateListItemPreview(HashMap<String, String> listItem) {
-        this.preview.add(new JLabel(String.format("Bestelling #%s", listItem.get("OrderID"))));
+    protected String getListItemLabel(LinkedHashMap listItem) {
+        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+
+        return String.format("Bestelling #%s", entity.get("OrderID"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void updateListItemPreview(LinkedHashMap listItem) {
+        LinkedHashMap<String, String> entity = (LinkedHashMap<String, String>) listItem;
+
+        this.preview.add(new JLabel(String.format("Bestelling #%s", entity.get("OrderID"))));
     }
 
 }
