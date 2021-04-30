@@ -56,7 +56,9 @@ abstract public class JPanelBase extends JPanel {
      *
      * @return The title.
      */
-    public abstract String getTabTitle();
+    public String getTabTitle() {
+        return this.getTitle();
+    }
 
     /**
      * Gets the title of the panel.

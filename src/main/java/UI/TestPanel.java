@@ -16,14 +16,6 @@ public class TestPanel extends JPanelBase {
      * {@inheritDoc}
      */
     @Override
-    public String getTabTitle() {
-        return "Item 2";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getTitle() {
         return "Test panel";
     }
