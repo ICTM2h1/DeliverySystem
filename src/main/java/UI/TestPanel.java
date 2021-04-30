@@ -24,37 +24,22 @@ public class TestPanel extends JPanelBase {
      * {@inheritDoc}
      */
     @Override
+    public String getTitle() {
+        return "Test panel";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void instantiate() {
-        int defaultGridWidth = gridBagConstraints.gridwidth;
+        this.addComponent(new JLabel("Gebruikersnaam"), true);
+        this.addComponent(new TextField(), false);
 
-        // Row 0 - Title
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        this.add(new JLabel("Inloggen", JLabel.CENTER), gridBagConstraints);
-
-        gridBagConstraints.gridwidth = defaultGridWidth;
-
-        // Row 1 - Username
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        this.add(new JLabel("Gebruikersnaam"), gridBagConstraints);
-
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.gridx = 1;
-        this.add(new TextField(), gridBagConstraints);
-
-        // Row 2 - Password
-        gridBagConstraints.insets = new Insets(5, 0, 0, 0);
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        this.add(new JLabel("Wachtwoord"), gridBagConstraints);
-
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.gridx = 1;
-        this.add(new TextField(), gridBagConstraints);
+        this.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        this.gridBagConstraints.weightx = 0.5;
+        this.addComponent(new JLabel("Wachtwoord"), true);
+        this.addComponent(new TextField(), false);
     }
 
 }

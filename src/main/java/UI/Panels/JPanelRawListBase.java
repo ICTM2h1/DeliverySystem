@@ -29,31 +29,11 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     }
 
     /**
-     * Gets the title of the panel.
-     *
-     * @return The title.
-     */
-    public abstract String getTitle();
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public void instantiate() {
         this.listItems = this.getRawListItems();
-
-        Insets defaultInsets = this.gridBagConstraints.insets;
-        int defaultGridWidth = this.gridBagConstraints.gridwidth;
-
-        // Row 0 - Title
-        this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
-        this.gridBagConstraints.gridx = 0;
-        this.gridBagConstraints.gridy = 0;
-        this.gridBagConstraints.gridwidth = 2;
-        this.add(new JLabel(this.getTitle(), JLabel.CENTER), this.gridBagConstraints);
-
-        this.gridBagConstraints.insets = defaultInsets;
-        this.gridBagConstraints.gridwidth = defaultGridWidth;
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -78,9 +58,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         this.updateRawListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
-        this.gridBagConstraints.gridx = 0;
-        this.gridBagConstraints.gridy = 1;
-        this.add(this.splitPane, gridBagConstraints);
+        this.addComponent(this.splitPane, true);
     }
 
     /**
