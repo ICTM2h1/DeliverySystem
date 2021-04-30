@@ -6,7 +6,7 @@ import UI.JPanelListBase;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a class for generating the delivery routes.
@@ -46,7 +46,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<HashMap<String, String>> getListItems() {
+    protected ArrayList<LinkedHashMap<String, String>> getListItems() {
         Order order = new Order(this.date);
 
         return order.filterOnGeometry();
@@ -56,7 +56,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected String getListItemLabel(HashMap<String, String> listItem) {
+    protected String getListItemLabel(LinkedHashMap<String, String> listItem) {
         return String.format("Bestelling #%s", listItem.get("OrderID"));
     }
 
@@ -64,7 +64,7 @@ public class DeliveryRoutePanel extends JPanelListBase {
      * {@inheritDoc}
      */
     @Override
-    protected void updateListItemPreview(HashMap<String, String> listItem) {
+    protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
         this.preview.add(new JLabel(String.format("Bestelling #%s", listItem.get("OrderID"))));
     }
 

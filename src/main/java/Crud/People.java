@@ -1,6 +1,6 @@
 package Crud;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a class for interacting with the people table.
@@ -26,7 +26,7 @@ public class People extends CrudBase {
      *
      * @return The fetched people.
      */
-    public HashMap<String, String> getByUsername(String username) {
+    public LinkedHashMap<String, String> getByUsername(String username) {
         this.addCondition("LogonName", username);
 
         return super.get("SELECT * FROM people WHERE LogonName = :LogonName");

@@ -7,14 +7,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a base panel for lists.
  */
 public abstract class JPanelListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<HashMap<String, String>> listItems;
+    protected ArrayList<LinkedHashMap<String, String>> listItems;
 
     protected JPanel preview;
     protected JList<String> list;
@@ -80,7 +80,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
     protected String[] getListLabels() {
         String[] labels = new String[this.listItems.size()];
         for (int delta = 0; delta < this.listItems.size(); delta++) {
-            HashMap<String, String> entity = this.listItems.get(delta);
+            LinkedHashMap<String, String> entity = this.listItems.get(delta);
             labels[delta] = this.getListItemLabel(entity);
         }
 
@@ -92,7 +92,7 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      *
      * @return The list items.
      */
-    protected abstract ArrayList<HashMap<String, String>> getListItems();
+    protected abstract ArrayList<LinkedHashMap<String, String>> getListItems();
 
     /**
      * Gets the index of the selected list item.
@@ -110,13 +110,13 @@ public abstract class JPanelListBase extends JPanelBase implements ListSelection
      *
      * @return The label.
      */
-    protected abstract String getListItemLabel(HashMap<String, String> listItem);
+    protected abstract String getListItemLabel(LinkedHashMap<String, String> listItem);
 
     /**
      * Updates the preview of the list.
      *
      * @param listItem The entity.
      */
-    protected abstract void updateListItemPreview(HashMap<String, String> listItem);
+    protected abstract void updateListItemPreview(LinkedHashMap<String, String> listItem);
 
 }

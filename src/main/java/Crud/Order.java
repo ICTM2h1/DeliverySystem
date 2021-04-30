@@ -47,7 +47,7 @@ public class Order extends CrudBase {
      *
      * @return An array list with the selected orders.
      */
-    public ArrayList<HashMap<String, String>> all() {
+    public ArrayList<LinkedHashMap<String, String>> all() {
         String query = "SELECT * FROM orders O " +
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID ";
@@ -65,10 +65,10 @@ public class Order extends CrudBase {
      *
      * @return An array list with the sorted orders.
      */
-    public ArrayList<HashMap<String, String>> filterOnGeometry() {
-        ArrayList<HashMap<String, String>> orders = new ArrayList<>();
-        HashMap<String, String> previousOrder = null;
-        for (HashMap<String, String> order : this.all()) {
+    public ArrayList<LinkedHashMap<String, String>> filterOnGeometry() {
+        ArrayList<LinkedHashMap<String, String>> orders = new ArrayList<>();
+        LinkedHashMap<String, String> previousOrder = null;
+        for (LinkedHashMap<String, String> order : this.all()) {
             String latitudeString = String.valueOf(order.get("Latitude"));
             String longitudeString = String.valueOf(order.get("Longitude"));
 
@@ -124,7 +124,7 @@ public class Order extends CrudBase {
      *
      * @return The distance between two orders.
      */
-    private double calculateDistance(HashMap<String, String> order, HashMap<String, String> compareOrder) {
+    private double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
         String customerID = order.get("CustomerID");
         String city = order.get("CityName");
         String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
@@ -136,7 +136,7 @@ public class Order extends CrudBase {
         // calculation we save it into the customer in order to skip this the next time we want to get the orders.
         if (latitudeString.equals("null") || longitudeString.equals("null")) {
             DeliveryAddress deliveryAddress = new DeliveryAddress(deliveryAddressLine1, postalCode, city);
-            HashMap<String, BigDecimal> geometry = deliveryAddress.toGeometry();
+            LinkedHashMap<String, BigDecimal> geometry = deliveryAddress.toGeometry();
             latitudeString = "0";
             longitudeString = "0";
             if (geometry != null) {
