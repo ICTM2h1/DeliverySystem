@@ -1,7 +1,8 @@
-package UI;
+package UI.Panels;
 
 import Authenthication.User;
 import DeliveryRoute.DeliveryRoutePanel;
+import UI.TestPanel;
 
 import javax.swing.*;
 import java.awt.*;
