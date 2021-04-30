@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<LinkedHashMap> listItems;
+    protected ArrayList<Object> listItems;
 
     protected JPanel preview;
     protected JList<String> list;
@@ -94,7 +94,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The list items.
      */
-    protected abstract ArrayList<LinkedHashMap> getRawListItems();
+    protected abstract ArrayList<Object> getRawListItems();
 
     /**
      * Gets the index of the selected list item.
@@ -112,13 +112,13 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The label.
      */
-    protected abstract String getRawListItemLabel(LinkedHashMap listItem);
+    protected abstract String getRawListItemLabel(Object listItem);
 
     /**
      * Updates the preview of the list.
      *
      * @param listItem The entity.
      */
-    protected abstract void updateRawListItemPreview(LinkedHashMap listItem);
+    protected abstract void updateRawListItemPreview(Object listItem);
 
 }

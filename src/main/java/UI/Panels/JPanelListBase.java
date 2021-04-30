@@ -22,7 +22,7 @@ public abstract class JPanelListBase extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayList<LinkedHashMap> getRawListItems() {
+    protected ArrayList<Object> getRawListItems() {
         return new ArrayList<>(this.getListItems());
     }
 
@@ -37,8 +37,8 @@ public abstract class JPanelListBase extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
-    protected String getRawListItemLabel(LinkedHashMap listItem) {
-        return this.getListItemLabel(new LinkedHashMap<>(listItem));
+    protected String getRawListItemLabel(Object listItem) {
+        return this.getListItemLabel(new LinkedHashMap<>((LinkedHashMap<String, String>) listItem));
     }
 
     /**
@@ -54,8 +54,8 @@ public abstract class JPanelListBase extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
-    protected void updateRawListItemPreview(LinkedHashMap listItem) {
-        this.updateListItemPreview(new LinkedHashMap(listItem));
+    protected void updateRawListItemPreview(Object listItem) {
+        this.updateListItemPreview(new LinkedHashMap<>((LinkedHashMap<String, String>) listItem));
     }
 
     /**
