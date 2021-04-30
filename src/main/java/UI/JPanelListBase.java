@@ -1,14 +1,13 @@
 package UI;
 
 import Authenthication.User;
-import javax.swing.event.ListSelectionListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
  * Provides a base panel for lists.
  */
-public abstract class JPanelListBase extends JPanelRawListBase implements ListSelectionListener {
+public abstract class JPanelListBase extends JPanelRawListBase {
 
     /**
      * Creates a new list panel.
