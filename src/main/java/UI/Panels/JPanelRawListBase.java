@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- * Provides a base panel for lists.
+ * Provides a base panel for raw lists.
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
