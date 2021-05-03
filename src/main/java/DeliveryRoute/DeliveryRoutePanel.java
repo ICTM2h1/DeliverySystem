@@ -107,7 +107,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
             listItems.add(deliverer, deliveryRoute);
         }
 
-        return null;
+        return new ArrayList<>(listItems);
     }
 
     /**
