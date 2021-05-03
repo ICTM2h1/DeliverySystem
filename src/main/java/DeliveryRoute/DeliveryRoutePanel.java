@@ -6,7 +6,6 @@ import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
