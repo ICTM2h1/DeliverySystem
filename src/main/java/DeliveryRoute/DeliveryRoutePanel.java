@@ -2,6 +2,7 @@ package DeliveryRoute;
 
 import Authenthication.User;
 import Crud.Order;
+import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
@@ -132,6 +133,24 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
+
+        Table table = new Table();
+        table.addColumn("Name");
+        table.addColumn("Roll");
+        table.addColumn("Department");
+
+        ArrayList<String> row = new ArrayList<>();
+        row.add("Kundan Kumar Jha");
+        row.add("4041");
+        row.add("CSE");
+
+        table.addRow(row);
+        table.addRow(row);
+        table.addRow(row);
+        table.addRow(row);
+        table.addRow(row);
+
+        this.preview.addFullWidthComponent(table.render());
     }
 
 }
