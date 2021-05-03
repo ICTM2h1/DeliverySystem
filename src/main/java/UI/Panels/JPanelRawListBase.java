@@ -15,7 +15,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
     protected ArrayList<Object> listItems = new ArrayList<>();
 
-    protected JPanel preview;
+    protected JPanelListPreview preview;
     protected JList<String> list;
     protected JSplitPane splitPane;
 
@@ -49,7 +49,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
-        this.preview = new JPanel();
+        this.preview = new JPanelListPreview(this.user);
         JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
 

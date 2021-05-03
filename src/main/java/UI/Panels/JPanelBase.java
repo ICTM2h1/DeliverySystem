@@ -43,8 +43,6 @@ abstract public class JPanelBase extends JPanel {
         this.setDefaultGridBagConstraints();
         this.setLayout(this.getLayoutManager());
         this.setBorder(getDefaultBorder());
-        this.setPreferredSize(this.getPreferredSize());
-        this.setSize(this.getPreferredSize());
     }
 
     /**
@@ -74,6 +72,10 @@ abstract public class JPanelBase extends JPanel {
      * Adds the title component to the panel.
      */
     protected void addTitleComponent() {
+        if (this.getTitle() == null) {
+            return;
+        }
+
         Insets defaultInsets = this.gridBagConstraints.insets;
         this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
         this.addFullWidthComponent(new JLabel(this.getTitle(), JLabel.CENTER), true);
@@ -177,18 +179,6 @@ abstract public class JPanelBase extends JPanel {
      */
     protected int getDefaultFullGridWidth() {
         return 2;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-
-        size.width = this.panelWidth;
-        size.height = this.panelHeight;
-
-        return size;
     }
 
 }
