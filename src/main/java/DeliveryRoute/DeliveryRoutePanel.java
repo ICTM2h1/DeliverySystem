@@ -67,11 +67,17 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
         ArrayList<DeliveryRoute> listItems = new ArrayList<>();
 
-        int ordersPerDeliverer = entities.size() / DeliveryRoute.deliverers;
+        int delivererCount = DeliveryRoute.deliverers;
+        int ordersPerDeliverer = Math.round((float) entities.size() / delivererCount);
+        if (ordersPerDeliverer == 0) {
+            delivererCount = 1;
+            ordersPerDeliverer = entities.size();
+        }
+
         Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
-        for (int deliverer = 0; deliverer < DeliveryRoute.deliverers; deliverer++) {
+        for (int deliverer = 0; deliverer < delivererCount; deliverer++) {
             int delivererOrderCount = 0;
-            DeliveryRoute delivererOrders = new DeliveryRoute(deliverer, ordersPerDeliverer);
+            DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer, ordersPerDeliverer);
 
             while (iterator.hasNext()) {
                 LinkedHashMap<String, String> entity = iterator.next();
@@ -80,13 +86,13 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                     break;
                 }
 
-                delivererOrders.add(delivererOrderCount, new DeliveryPoint(entity));
+                deliveryRoute.add(new DeliveryPoint(entity));
                 delivererOrderCount++;
 
                 iterator.remove(); // avoids a ConcurrentModificationException
             }
 
-            listItems.add(deliverer, delivererOrders);
+            listItems.add(deliverer, deliveryRoute);
         }
 
         return new ArrayList<>(listItems);
