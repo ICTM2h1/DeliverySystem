@@ -131,15 +131,15 @@ public class Order extends CrudBase {
      * @param order The order.
      * @param compareOrder The order to compare the current one to.
      *
-     * @return The distance between two orders.
+     * @return The distance between two orders, in kilometers.
      */
-    private double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
+    public double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
         String customerID = order.get("CustomerID");
         String city = order.get("CityName");
         String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
         String postalCode = order.get("DeliveryPostalCode");
-        String latitudeString = String.valueOf(order.get("Latitude"));
-        String longitudeString = String.valueOf(order.get("Longitude"));
+        String latitudeString = order.get("Latitude");
+        String longitudeString = order.get("Longitude");
 
         // This is an expensive task, so we run this only when the order does not have geometric data. After the
         // calculation we save it into the customer in order to skip this the next time we want to get the orders.
@@ -164,8 +164,8 @@ public class Order extends CrudBase {
         double latitude_two = latitude;
         double longitude_two = longitude;
         if (compareOrder != null) {
-            String previousLatitudeString = String.valueOf(compareOrder.get("Latitude"));
-            String previousLongitudeString = String.valueOf(compareOrder.get("Longitude"));
+            String previousLatitudeString = compareOrder.get("Latitude");
+            String previousLongitudeString = compareOrder.get("Longitude");
             if (!previousLongitudeString.equals("null") && !previousLatitudeString.equals("null")) {
                 latitude_two = Double.parseDouble(previousLatitudeString);
                 longitude_two = Double.parseDouble(previousLongitudeString);
