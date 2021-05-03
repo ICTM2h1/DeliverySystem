@@ -7,22 +7,24 @@ import java.util.LinkedHashMap;
 /**
  * Provides a delivery route for deliverers.
  */
-public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
+public class DeliveryRoute {
 
     public final static int deliverers = 12;
 
     private final int id;
     private int distance;
 
+    private LinkedHashMap<Integer, DeliveryPoint> deliveryPoints;
+
     /**
      * Creates a new delivery route.
      *
+     * @param id The id of this route.
      * @param capacity The capacity of this route.
      */
-    public DeliveryRoute(int capacity, int id) {
-        super(capacity);
-
+    public DeliveryRoute(int id, int capacity) {
         this.id = id + 1;
+        this.deliveryPoints = new LinkedHashMap<>(capacity);
     }
 
     /**
@@ -49,11 +51,11 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
      * @return The name of the route.
      */
     public String getName() {
-        int orderCount = this.size();
+        int orderCount = this.deliveryPoints.size();
         int middlePointKey = (int) Math.round((double) orderCount / 2);
-        DeliveryPoint firstPoint = this.get(0);
-        DeliveryPoint middlePoint = this.get(middlePointKey);
-        DeliveryPoint lastPoint = this.get(orderCount - 1);
+        DeliveryPoint firstPoint = this.deliveryPoints.get(0);
+        DeliveryPoint middlePoint = this.deliveryPoints.get(middlePointKey);
+        DeliveryPoint lastPoint = this.deliveryPoints.get(orderCount - 1);
 
         String name = firstPoint.getOrder().get("CityName") + " - ";
         name += middlePoint.getOrder().get("CityName") + " - ";
@@ -73,7 +75,7 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
         }
 
         double distance = 0;
-        for (DeliveryPoint deliveryPoint : this.values()) {
+        for (DeliveryPoint deliveryPoint : this.deliveryPoints.values()) {
             try {
                 distance += Double.parseDouble(deliveryPoint.getOrder().get("geometry.distance"));
             } catch (NumberFormatException e) {
@@ -83,6 +85,16 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
 
         this.distance = (int) Math.round(distance);
         return this.distance;
+    }
+
+    /**
+     * Adds a delivery point to the map.
+     *
+     * @param key The key of the delivery point.
+     * @param deliveryPoint The delivery point.
+     */
+    public void add(int key, DeliveryPoint deliveryPoint) {
+        this.deliveryPoints.put(key, deliveryPoint);
     }
 
 }

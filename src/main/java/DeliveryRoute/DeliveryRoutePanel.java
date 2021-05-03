@@ -71,7 +71,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
         for (int deliverer = 0; deliverer < DeliveryRoute.deliverers; deliverer++) {
             int delivererOrderCount = 0;
-            DeliveryRoute delivererOrders = new DeliveryRoute(ordersPerDeliverer, deliverer);
+            DeliveryRoute delivererOrders = new DeliveryRoute(deliverer, ordersPerDeliverer);
 
             while (iterator.hasNext()) {
                 LinkedHashMap<String, String> entity = iterator.next();
@@ -80,7 +80,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                     break;
                 }
 
-                delivererOrders.put(delivererOrderCount, new DeliveryPoint(entity));
+                delivererOrders.add(delivererOrderCount, new DeliveryPoint(entity));
                 delivererOrderCount++;
 
                 iterator.remove(); // avoids a ConcurrentModificationException
