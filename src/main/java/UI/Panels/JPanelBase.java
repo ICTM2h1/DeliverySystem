@@ -45,10 +45,6 @@ abstract public class JPanelBase extends JPanel {
         this.setBorder(getDefaultBorder());
         this.setPreferredSize(this.getPreferredSize());
         this.setSize(this.getPreferredSize());
-
-        this.addTitleComponent();
-        this.instantiate();
-        this.updateUI();
     }
 
     /**
@@ -144,7 +140,12 @@ abstract public class JPanelBase extends JPanel {
             panelList.add(new TestPanel(user));
         }
 
-        panels.addAll(panelList);
+        for (JPanelBase panel : panelList) {
+            panel.addTitleComponent();
+            panel.instantiate();
+            panel.updateUI();
+            panels.add(panel);
+        }
     }
 
     /**
