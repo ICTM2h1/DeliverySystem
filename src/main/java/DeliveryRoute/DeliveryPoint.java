@@ -99,17 +99,17 @@ class DeliveryStartPoint extends DeliveryPointBase {
 
     @Override
     public double getLongitude() {
-        return 0;
+        return this.longitude;
     }
 
     @Override
     public double getLatitude() {
-        return 0;
+        return this.latitude;
     }
 
     @Override
     public double getAltitude() {
-        return 0;
+        return this.altitude;
     }
 
 }
