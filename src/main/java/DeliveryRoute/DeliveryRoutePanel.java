@@ -5,6 +5,7 @@ import Crud.Order;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -127,7 +128,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
-        this.preview.add(new JLabel(String.format("Bezorgingstraject: %s", deliveryRoute.getName())));
+        this.preview.titleLabel.setText(String.format("Bezorgingstraject %s", deliveryRoute.getName()));
+
+        this.preview.addComponent(new JLabel("Afstand:"), true);
+        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
     }
 
 }

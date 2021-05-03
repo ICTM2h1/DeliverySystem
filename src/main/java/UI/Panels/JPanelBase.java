@@ -17,7 +17,7 @@ abstract public class JPanelBase extends JPanel {
     protected final int panelWidth, panelHeight;
 
     protected GridBagConstraints gridBagConstraints;
-    protected JLabel titleLabel;
+    public JLabel titleLabel;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
     protected final User user;
@@ -78,7 +78,8 @@ abstract public class JPanelBase extends JPanel {
 
         Insets defaultInsets = this.gridBagConstraints.insets;
         this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
-        this.addFullWidthComponent(new JLabel(this.getTitle(), JLabel.CENTER));
+        this.titleLabel = new JLabel(this.getTitle(), JLabel.CENTER);
+        this.addFullWidthComponent(this.titleLabel);
         this.gridBagConstraints.insets = defaultInsets;
     }
 

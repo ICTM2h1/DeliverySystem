@@ -49,7 +49,10 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
-        this.preview = new JPanelListPreview(this.user);
+        this.preview = new JPanelListPreview(this.user, this.getListPreviewTitle());
+        this.preview.instantiate();
+        this.preview.updateUI();
+
         JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
 
@@ -78,8 +81,18 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         JList<String> list = (JList<String>) e.getSource();
 
         this.preview.removeAll();
+        this.preview.instantiate();
         this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
+    }
+
+    /**
+     * Gets the title of the list preview.
+     *
+     * @return The title.
+     */
+    protected String getListPreviewTitle() {
+        return this.getTitle();
     }
 
     /**
