@@ -17,7 +17,7 @@ public class DeliveryAddress {
 
     protected Config config = Config.getInstance();
 
-    private String address, postalCode, city;
+    private final String address, postalCode, city;
 
     /**
      * Creates a new delivery address.
