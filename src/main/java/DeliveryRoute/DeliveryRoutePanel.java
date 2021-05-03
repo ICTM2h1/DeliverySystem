@@ -50,7 +50,19 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      */
     @Override
     public String getTitle() {
-        return String.format("%s bezorgingstrajecten voor vandaag", this.getRawListItems().size());
+        if (this.listItems.size() == 1) {
+            return "1 bezorgingstraject voor vandaag";
+        }
+
+        return String.format("%s bezorgingstrajecten voor vandaag", this.listItems.size());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getNoResultsText() {
+        return "Er zijn geen bezorgingstrajecten gevonden voor vandaag.";
     }
 
     /**
@@ -95,7 +107,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
             listItems.add(deliverer, deliveryRoute);
         }
 
-        return new ArrayList<>(listItems);
+        return null;
     }
 
     /**

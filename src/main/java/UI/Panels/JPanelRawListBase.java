@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<Object> listItems;
+    protected ArrayList<Object> listItems = new ArrayList<>();
 
     protected JPanel preview;
     protected JList<String> list;
@@ -33,7 +33,16 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      */
     @Override
     public void instantiate() {
-        this.listItems = this.getRawListItems();
+        ArrayList<Object> rawListItems = this.getRawListItems();
+        if (rawListItems != null && !rawListItems.isEmpty()) {
+            this.listItems = rawListItems;
+        }
+
+        if (this.listItems == null || this.listItems.isEmpty()) {
+            this.addNoResultsComponent();
+            return;
+        }
+
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -71,6 +80,22 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.preview.removeAll();
         this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
+    }
+
+    /**
+     * Gets the no results text.
+     *
+     * @return The no results text.
+     */
+    protected String getNoResultsText() {
+        return "Er zijn geen gegevens gevonden.";
+    }
+
+    /**
+     * Adds a no results component.
+     */
+    protected void addNoResultsComponent() {
+        this.addComponent(new JLabel(this.getNoResultsText(), JLabel.CENTER), true);
     }
 
     /**
