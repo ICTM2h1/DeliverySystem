@@ -1,6 +1,7 @@
 ALTER TABLE `nerdygadgets`.`customers`
 ADD COLUMN `Longitude` DOUBLE NULL AFTER `ValidTo`,
 ADD COLUMN `Latitude` DOUBLE NULL AFTER `Longitude`;
+ADD COLUMN `Altitude` DOUBLE NULL AFTER `Latitude`;
 
 ALTER TABLE `nerdygadgets`.`people`
 ADD COLUMN `Role` TINYINT NULL AFTER `ValidTo`;
