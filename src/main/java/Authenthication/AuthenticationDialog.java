@@ -140,7 +140,13 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
      */
     private void handleLogin() {
         if (validateUser()) {
-            UserRole userRole = UserRole.valueOf(Integer.parseInt(this.userResultSet.get("Role")));
+            UserRole userRole;
+            try {
+                userRole = UserRole.valueOf(Integer.parseInt(this.userResultSet.get("Role")));
+            } catch (NumberFormatException e) {
+                userRole = null;
+            }
+
 
             // Check if user role is valid.
             if (userRole != null) {
