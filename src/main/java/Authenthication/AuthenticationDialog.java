@@ -1,14 +1,15 @@
 package Authenthication;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.util.LinkedHashMap;
-import javax.swing.BorderFactory;
-
 import Crud.People;
 import System.Config.Config;
+import UI.Panels.JPanelBase;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
 
 /**
  * Provides a dialog modal for authentication.
@@ -41,47 +42,55 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
         this.passwordField = new JPasswordField();
         this.passwordField.addActionListener(enterPressedPassword);
 
-        this.errorMessage = new JLabel();
+        this.errorMessage = new JLabel("", JLabel.CENTER);
         this.loginButton = new JButton("Aanmelden");
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        int defaultGridWidth = gridBagConstraints.gridwidth;
 
-        // Row 0 - Username
-        gridBagConstraints.weightx = 0.5;
+        // Row 0 - Title
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        panel.add(new JLabel("Inloggen", JLabel.CENTER), gridBagConstraints);
+
+        gridBagConstraints.gridwidth = defaultGridWidth;
+        // Row 1 - Username
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         panel.add(usernameLabel, gridBagConstraints);
 
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 1;
         panel.add(usernameField, gridBagConstraints);
 
-        // Row 1 - Password
+        // Row 2 - Password
         gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         panel.add(passwordLabel, gridBagConstraints);
 
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 1;
         panel.add(passwordField, gridBagConstraints);
 
-        // Row 2 - error message
+        // Row 3 - error message
         gridBagConstraints.insets = new Insets(5, 0, 5, 0);
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         panel.add(errorMessage, gridBagConstraints);
 
-        // Row 3 - Login button
+        // Row 4 - Login button
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         panel.add(loginButton, gridBagConstraints);
 
         // Display panel
@@ -90,7 +99,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
         this.add(panel, BorderLayout.CENTER);
         this.setTitle(String.format("%s", config.get("app_title")).replace("+", " "));
         this.setSize(650, 175);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBorder(JPanelBase.getDefaultBorder());
         this.setVisible(true);
     }
 

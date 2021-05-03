@@ -1,8 +1,10 @@
 package UI;
 
 import Authenthication.User;
+import UI.Panels.JPanelBase;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TestPanel extends JPanelBase {
 
@@ -15,13 +17,21 @@ public class TestPanel extends JPanelBase {
      */
     @Override
     public String getTitle() {
-        return "Item 2";
+        return "Test panel";
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void instantiate() {
-        this.add(new JTextField("TextField", 20));
+        this.addComponent(new JLabel("Gebruikersnaam"), true);
+        this.addComponent(new TextField(), false);
+
+        this.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        this.gridBagConstraints.weightx = 0.5;
+        this.addComponent(new JLabel("Wachtwoord"), true);
+        this.addComponent(new TextField(), false);
     }
 
 }

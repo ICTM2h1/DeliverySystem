@@ -1,4 +1,4 @@
-package UI;
+package UI.Panels;
 
 import Authenthication.User;
 
@@ -7,14 +7,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
- * Provides a base panel for lists.
+ * Provides a base panel for raw lists.
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<LinkedHashMap> listItems;
+    protected ArrayList<Object> listItems;
 
     protected JPanel preview;
     protected JList<String> list;
@@ -29,18 +28,20 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         super(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void instantiate() {
-        this.listItems = this.getListItems();
+        this.listItems = this.getRawListItems();
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
-        JScrollPane listScrollPane = new JScrollPane(this.list);
         this.preview = new JPanel();
-
+        JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
 
         // Create a split pane with the two scroll panes in it.
@@ -49,15 +50,15 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.splitPane.setDividerLocation(150);
 
         // Provide minimum sizes for the two components in the split pane.
-        Dimension minimumSize = new Dimension(100, 50);
-        listScrollPane.setMinimumSize(minimumSize);
-        previewScrollPane.setMinimumSize(minimumSize);
+        listScrollPane.setMinimumSize(new Dimension(100, this.panelHeight - 50));
+        previewScrollPane.setMinimumSize(new Dimension(this.panelWidth, this.panelHeight - 50));
 
         // Provide a preferred size for the split pane.
-        this.splitPane.setPreferredSize(new Dimension(400, 200));
-        this.updateListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
+        this.splitPane.setPreferredSize(new Dimension(this.panelWidth, this.panelHeight - 50));
 
-        this.add(this.splitPane);
+        this.updateRawListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
+
+        this.addComponent(this.splitPane, true);
     }
 
     /**
@@ -68,7 +69,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         JList<String> list = (JList<String>) e.getSource();
 
         this.preview.removeAll();
-        this.updateListItemPreview(this.listItems.get(list.getSelectedIndex()));
+        this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
     }
 
@@ -80,7 +81,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     protected String[] getListLabels() {
         String[] labels = new String[this.listItems.size()];
         for (int delta = 0; delta < this.listItems.size(); delta++) {
-            labels[delta] = this.getListItemLabel(this.listItems.get(delta));
+            labels[delta] = this.getRawListItemLabel(this.listItems.get(delta));
         }
 
         return labels;
@@ -91,7 +92,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The list items.
      */
-    protected abstract ArrayList<LinkedHashMap> getListItems();
+    protected abstract ArrayList<Object> getRawListItems();
 
     /**
      * Gets the index of the selected list item.
@@ -109,13 +110,13 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      *
      * @return The label.
      */
-    protected abstract String getListItemLabel(LinkedHashMap listItem);
+    protected abstract String getRawListItemLabel(Object listItem);
 
     /**
      * Updates the preview of the list.
      *
      * @param listItem The entity.
      */
-    protected abstract void updateListItemPreview(LinkedHashMap listItem);
+    protected abstract void updateRawListItemPreview(Object listItem);
 
 }

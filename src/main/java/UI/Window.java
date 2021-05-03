@@ -3,9 +3,10 @@ package UI;
 import Authenthication.AuthenticationDialog;
 import Authenthication.User;
 import System.Config.Config;
+import UI.Panels.JPanelBase;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Provides a class with main window of the application.
@@ -46,7 +47,7 @@ public class Window extends JFrame {
 
         JPanelBase.registerPanels(this.user);
         for (JPanelBase panel : JPanelBase.getPanels()) {
-            tabbedPane.addTab(panel.getTitle(), panel);
+            tabbedPane.addTab(panel.getTabTitle(), panel);
         }
 
         pane.add(tabbedPane, BorderLayout.CENTER);
