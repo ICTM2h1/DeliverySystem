@@ -139,9 +139,9 @@ abstract class DeliveryPointBase {
         }
 
         DeliveryLocation location = new DeliveryLocation(this.getLatitude(), this.getLongitude(), this.getAltitude());
-        DeliveryLocation location_two = new DeliveryLocation(deliveryPoint.getLatitude(), deliveryPoint.getLongitude(), deliveryPoint.getAltitude());
+        DeliveryLocation compareLocation = new DeliveryLocation(deliveryPoint.getLatitude(), deliveryPoint.getLongitude(), deliveryPoint.getAltitude());
 
-        return location.distance(location_two);
+        return location.distance(compareLocation);
     }
 
     /**

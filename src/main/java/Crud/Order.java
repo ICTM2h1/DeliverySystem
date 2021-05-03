@@ -99,12 +99,12 @@ public class Order extends CrudBase {
             }
         }
 
-        orders.sort((order, order_two) -> {
+        orders.sort((order, compareOrder) -> {
             try {
                 Double distance = Double.valueOf(order.get("geometry.distance"));
-                Double distance_two = Double.valueOf(order_two.get("geometry.distance"));
+                Double compareDistance = Double.valueOf(compareOrder.get("geometry.distance"));
 
-                return distance.compareTo(distance_two);
+                return distance.compareTo(compareDistance);
             } catch (NumberFormatException e) {
                 SystemError.handle(e);
             }
@@ -175,23 +175,23 @@ public class Order extends CrudBase {
             double latitude = Double.parseDouble(latitudeString);
             double longitude = Double.parseDouble(longitudeString);
             double altitude = Double.parseDouble(altitudeString);
-            double latitude_two = latitude;
-            double longitude_two = longitude;
-            double altitude_two = altitude;
+            double compareLatitude = latitude;
+            double compareLongitude = longitude;
+            double compareAltitude = altitude;
 
             String previousLatitudeString = compareOrder.get("Latitude");
             String previousLongitudeString = compareOrder.get("Longitude");
             String previousAltitudeString = compareOrder.get("Altitude");
             if (previousLongitudeString != null && previousLatitudeString != null && previousAltitudeString != null) {
-                latitude_two = Double.parseDouble(previousLatitudeString);
-                longitude_two = Double.parseDouble(previousLongitudeString);
-                altitude_two = Double.parseDouble(previousAltitudeString);
+                compareLatitude = Double.parseDouble(previousLatitudeString);
+                compareLongitude = Double.parseDouble(previousLongitudeString);
+                compareAltitude = Double.parseDouble(previousAltitudeString);
             }
 
             DeliveryLocation location = new DeliveryLocation(latitude, longitude, altitude);
-            DeliveryLocation location_two = new DeliveryLocation(latitude_two, longitude_two, altitude_two);
+            DeliveryLocation compareLocation = new DeliveryLocation(compareLatitude, compareLongitude, compareAltitude);
 
-            return location.distance(location_two);
+            return location.distance(compareLocation);
         } catch (NumberFormatException e) {
             return 0;
         }
