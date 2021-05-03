@@ -78,7 +78,7 @@ abstract public class JPanelBase extends JPanel {
 
         Insets defaultInsets = this.gridBagConstraints.insets;
         this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
-        this.addFullWidthComponent(new JLabel(this.getTitle(), JLabel.CENTER), true);
+        this.addFullWidthComponent(new JLabel(this.getTitle(), JLabel.CENTER));
         this.gridBagConstraints.insets = defaultInsets;
     }
 
@@ -86,24 +86,32 @@ abstract public class JPanelBase extends JPanel {
      * Adds a full width component.
      *
      * @param component The component.
-     * @param newRow Determines if this must be on a new row.
      */
-    protected void addFullWidthComponent(Component component, boolean newRow) {
+    public void addFullWidthComponent(Component component) {
         int defaultGridWidth = this.gridBagConstraints.gridwidth;
 
         this.gridBagConstraints.gridwidth = this.getDefaultFullGridWidth();
-        this.addComponent(component, newRow);
+        this.addComponent(component, true);
 
         this.gridBagConstraints.gridwidth = defaultGridWidth;
     }
 
     /**
-     * Adds a full width component.
+     * Adds a component.
+     *
+     * @param component The component.
+     */
+    public void addComponent(Component component) {
+        this.addComponent(component, false);
+    }
+
+    /**
+     * Adds a component.
      *
      * @param component The component.
      * @param newRow Determines if this must be on a new row.
      */
-    protected void addComponent(Component component, boolean newRow) {
+    public void addComponent(Component component, boolean newRow) {
         this.gridBagConstraints.gridx++;
 
         if (newRow) {
