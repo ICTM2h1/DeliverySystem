@@ -116,6 +116,9 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
         this.preview.addComponent(new JLabel("Klant:"), true);
         this.preview.addComponent(new JLabel(listItem.get("CustomerID")));
 
+        this.preview.addComponent(new JLabel("Naam:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("CustomerName")));
+
         this.preview.addComponent(new JLabel("Straat:"), true);
         this.preview.addComponent(new JLabel(listItem.get("DeliveryAddressLine1")));
 
