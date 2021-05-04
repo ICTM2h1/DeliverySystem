@@ -1,5 +1,6 @@
 package UI.Panels;
 
+import Authenthication.LogoutPanel;
 import Authenthication.User;
 import DeliveryRoute.DeliveryRoutePanel;
 import UI.TestPanel;
@@ -144,12 +145,15 @@ abstract public class JPanelBase extends JPanel {
      * Registers manually the panels.
      */
     public static void registerPanels(User user) {
+        panels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
         panelList.add(new DeliveryRoutePanel(user));
 
         if (user.getRole().isAdmin()) {
             panelList.add(new TestPanel(user));
         }
+
+        panelList.add(new LogoutPanel(user));
 
         for (JPanelBase panel : panelList) {
             panel.addTitleComponent();
