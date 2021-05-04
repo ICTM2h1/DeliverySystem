@@ -3,7 +3,6 @@ package DeliveryRoute;
 import System.Error.SystemError;
 import UI.Components.Table;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -59,7 +58,7 @@ public class DeliveryRoute {
         }
 
         int orderCount = this.deliveryPoints.size();
-        int middlePointKey = (int) Math.round((double) orderCount / 2);
+        int middlePointKey = (int) Math.round((double) orderCount / 2) - 1;
 
         DeliveryPointBase firstPoint = this.deliveryPoints.get(0);
         if (firstPoint != null) {
