@@ -32,7 +32,7 @@ public class DeliveryLocation {
      * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
      * el2 End altitude in meters
      *
-     * @return Distance in meters.
+     * @return Distance in kilometers.
      */
     public double distance(DeliveryLocation location) {
         if (location == null || this.getLatitude() == 0.0 || this.getLongitude() == 0.0
