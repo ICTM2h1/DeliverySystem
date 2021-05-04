@@ -156,6 +156,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
 
         this.preview.gridBagConstraints.insets.top = 10;
         this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount()), JLabel.CENTER));
+        this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
+
         this.preview.gridBagConstraints.insets.top = 5;
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render());
     }
