@@ -110,6 +110,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                 iterator.remove(); // avoids a ConcurrentModificationException
             }
 
+            if (deliveryRoute.getDeliveryPointsAmount() < 1) {
+                continue;
+            }
+
             listItems.add(deliverer, deliveryRoute);
         }
 
