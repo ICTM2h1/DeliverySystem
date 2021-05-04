@@ -55,6 +55,9 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
+        if (!this.hasVerticalScrollbar()) {
+            previewScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        }
 
         // Create a split pane with the two scroll panes in it.
         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPane, previewScrollPane);
@@ -70,7 +73,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         this.updateRawListItemPreview(this.listItems.get(this.list.getSelectedIndex()));
 
-        this.addComponent(this.splitPane, true);
+        this.addListComponent(this.splitPane);
     }
 
     /**
@@ -84,6 +87,24 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.preview.instantiate();
         this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
+    }
+
+    /**
+     * Adds the list component.
+     *
+     * @param splitPane The split pane.
+     */
+    protected void addListComponent(JSplitPane splitPane) {
+        this.addComponent(splitPane, true);
+    }
+
+    /**
+     * Determines if the split pane has a vertical scrollbar.
+     *
+     * @return Whether the panel has a vertical scrollbar or not.
+     */
+    protected boolean hasVerticalScrollbar() {
+        return true;
     }
 
     /**
