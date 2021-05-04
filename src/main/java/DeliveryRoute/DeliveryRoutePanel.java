@@ -2,12 +2,13 @@ package DeliveryRoute;
 
 import Authenthication.User;
 import Crud.Order;
-import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -22,8 +23,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * Creates a new delivery route object.
      */
     public DeliveryRoutePanel(User user) {
-        // @todo use the date of today instead of this date
-        this("2013-01-03", user);
+        this((new SimpleDateFormat("yyyy-MM-dd")).format(new Date()), user);
     }
 
     /**
