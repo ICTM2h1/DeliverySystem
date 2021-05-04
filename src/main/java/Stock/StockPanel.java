@@ -61,6 +61,14 @@ public class StockPanel extends JPanelListBase implements ActionListener {
      * {@inheritDoc}
      */
     @Override
+    protected String getNoResultsText() {
+        return "Er zijn geen producten gevonden.";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected boolean hasVerticalScrollbar() {
         return false;
     }

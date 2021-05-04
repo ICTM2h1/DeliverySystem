@@ -40,6 +40,10 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     public String getTitle() {
+        if (this.getListItems().size() == 1) {
+            return "1 klant";
+        }
+
         return String.format("%s klanten", this.getListItems().size());
     }
 
@@ -50,6 +54,15 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
     protected String getListPreviewTitle() {
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getNoResultsText() {
+        return "Er zijn geen klanten gevonden.";
+    }
+
 
     /**
      * {@inheritDoc}
