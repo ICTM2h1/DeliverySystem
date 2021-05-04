@@ -114,17 +114,17 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
         this.preview.gridBagConstraints.weightx = 0.5;
 
         this.preview.addComponent(new JLabel("Klant:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s", listItem.get("CustomerID"))));
+        this.preview.addComponent(new JLabel(listItem.get("CustomerID")));
 
         this.preview.addComponent(new JLabel("Straat:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s km", listItem.get("DeliveryAddressLine1"))));
+        this.preview.addComponent(new JLabel(listItem.get("DeliveryAddressLine1")));
 
         this.preview.addComponent(new JLabel("Postcode:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s km", listItem.get("DeliveryPostalCode"))));
+        this.preview.addComponent(new JLabel(listItem.get("DeliveryPostalCode")));
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 50, 0);
         this.preview.addComponent(new JLabel("Plaats:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s km", listItem.get("CityName"))));
+        this.preview.addComponent(new JLabel(listItem.get("CityName")));
 
         this.preview.gridBagConstraints.insets = new Insets(5, 25, 275, 25);
         this.editButton = new JButton("Bewerken");
