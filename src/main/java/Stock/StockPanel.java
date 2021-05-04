@@ -79,6 +79,9 @@ public class StockPanel extends JPanelListBase implements ActionListener {
     @Override
     protected ListCellRenderer<Object> getListCellRenderer() {
         return new DefaultListCellRenderer() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -87,13 +90,28 @@ public class StockPanel extends JPanelListBase implements ActionListener {
                     LinkedHashMap<String, String> item = (LinkedHashMap<String, String>) listItemsCopy.get(index);
                     int quantityOnHand = Integer.parseInt(item.get("QuantityOnHand"));
 
-                    this.setForeground(Color.GREEN);
+                    Color background = Color.WHITE, foreground;
+                    foreground = Color.GREEN;
                     if (quantityOnHand >= StockItem.STOCK_DANGER && quantityOnHand <= StockItem.STOCK_WARNING) {
-                        this.setForeground(Color.ORANGE);
+                        foreground = Color.ORANGE;
                     } else if (quantityOnHand < StockItem.STOCK_DANGER) {
-                        this.setForeground(Color.RED);
+                        foreground = Color.RED;
                     }
 
+                    if (!isSelected && !cellHasFocus) {
+                        background = Color.GREEN;
+                        foreground = Color.BLACK;
+                        if (quantityOnHand >= StockItem.STOCK_DANGER && quantityOnHand <= StockItem.STOCK_WARNING) {
+                            background = Color.ORANGE;
+                            foreground = Color.BLACK;
+                        } else if (quantityOnHand < StockItem.STOCK_DANGER) {
+                            background = Color.RED;
+                            foreground = Color.WHITE;
+                        }
+                    }
+
+                    this.setBackground(background);
+                    this.setForeground(foreground);
                 } catch (Exception exception) {
                     this.setForeground(Color.RED);
                 }
