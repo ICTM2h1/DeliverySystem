@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
  */
 public class MainTest {
 
+    private final static int ordersPerCustomer = 2;
+
     /**
      * Main entry point of this class.
      *
@@ -24,6 +26,10 @@ public class MainTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
         String date = simpleDateFormat.format(new Date());
+
+        LinkedHashMap<String, String> conditions = new LinkedHashMap<>();
+        conditions.put("ExpectedDeliveryDate", date);
+        Query.delete("orders", conditions);
 
         Customer customer = new Customer();
         String[][] cities = {
@@ -48,7 +54,7 @@ public class MainTest {
 
             ArrayList<String> selectFields = new ArrayList<>();
             selectFields.add("CustomerID");
-            LinkedHashMap<String, String> conditions = new LinkedHashMap<>();
+            conditions = new LinkedHashMap<>();
             conditions.put("CustomerName", customerName);
             LinkedHashMap<String, String> customerDb = Query.selectFirst("SELECT * FROM customers WHERE CustomerName = :CustomerName", selectFields, conditions);
             if (customerDb == null || customerDb.isEmpty()) {
@@ -60,16 +66,17 @@ public class MainTest {
 
             String customerID = customerDb.get("CustomerID");
             Order order = new Order();
-
-            order.addValue("CustomerID", customerID);
-            order.addValue("SalespersonPersonID", "2");
-            order.addValue("ContactPersonID", "3032");
-            order.addValue("OrderDate", date);
-            order.addValue("ExpectedDeliveryDate", date);
-            order.addValue("IsUndersupplyBackordered", "0");
-            order.addValue("LastEditedWhen", "2013-01-01 00:00:00");
-            order.addValue("LastEditedBy", "7");
-            order.insert();
+            for (int orderAmount = 0; orderAmount < ordersPerCustomer; orderAmount++) {
+                order.addValue("CustomerID", customerID);
+                order.addValue("SalespersonPersonID", "2");
+                order.addValue("ContactPersonID", "3032");
+                order.addValue("OrderDate", date);
+                order.addValue("ExpectedDeliveryDate", date);
+                order.addValue("IsUndersupplyBackordered", "0");
+                order.addValue("LastEditedWhen", "2013-01-01 00:00:00");
+                order.addValue("LastEditedBy", "7");
+                order.insert();
+            }
         }
 
         System.out.println("Succesvol test gegevens toegevoegd.");
