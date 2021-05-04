@@ -153,7 +153,7 @@ abstract class DeliveryPointBase {
         DeliveryLocation location = new DeliveryLocation(this.getLatitude(), this.getLongitude(), this.getAltitude());
         DeliveryLocation compareLocation = new DeliveryLocation(deliveryPoint.getLatitude(), deliveryPoint.getLongitude(), deliveryPoint.getAltitude());
 
-        return location.distance(compareLocation);
+        return Math.round(location.distance(compareLocation));
     }
 
     /**
