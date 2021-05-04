@@ -145,7 +145,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         this.preview.gridBagConstraints.weightx = 0.5;
 
         this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getName())));
+        this.preview.addComponent(new JLabel(deliveryRoute.getName()));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
