@@ -26,12 +26,12 @@ public class TestPanel extends JPanelBase {
     @Override
     public void instantiate() {
         this.addComponent(new JLabel("Gebruikersnaam"), true);
-        this.addComponent(new TextField(), false);
+        this.addComponent(new TextField());
 
         this.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         this.gridBagConstraints.weightx = 0.5;
         this.addComponent(new JLabel("Wachtwoord"), true);
-        this.addComponent(new TextField(), false);
+        this.addComponent(new TextField());
     }
 
 }
