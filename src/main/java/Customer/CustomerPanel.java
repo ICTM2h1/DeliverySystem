@@ -40,6 +40,10 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     public String getTitle() {
+        if (this.getListItems().size() == 1) {
+            return "1 klant";
+        }
+
         return String.format("%s klanten", this.getListItems().size());
     }
 
@@ -50,6 +54,15 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
     protected String getListPreviewTitle() {
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getNoResultsText() {
+        return "Er zijn geen klanten gevonden.";
+    }
+
 
     /**
      * {@inheritDoc}
@@ -115,6 +128,9 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
 
         this.preview.addComponent(new JLabel("Klant:"), true);
         this.preview.addComponent(new JLabel(listItem.get("CustomerID")));
+
+        this.preview.addComponent(new JLabel("Naam:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("CustomerName")));
 
         this.preview.addComponent(new JLabel("Straat:"), true);
         this.preview.addComponent(new JLabel(listItem.get("DeliveryAddressLine1")));

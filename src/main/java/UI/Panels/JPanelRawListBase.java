@@ -50,6 +50,8 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
+        this.list.setSelectionBackground(Color.BLUE);
+        this.list.setSelectionForeground(Color.WHITE);
         this.list.setCellRenderer(this.getListCellRenderer());
 
         this.preview = new JPanelListPreview(this.user, this.getListPreviewTitle());

@@ -70,11 +70,20 @@ public class Order extends CrudBase {
      * @return An array list with the sorted orders.
      */
     public ArrayList<LinkedHashMap<String, String>> filterOnGeometry() {
+        ArrayList<LinkedHashMap<String, String>> entities = this.all();
         ArrayList<LinkedHashMap<String, String>> orders = new ArrayList<>();
-        LinkedHashMap<String, String> previousOrder = null;
-        for (LinkedHashMap<String, String> order : this.all()) {
+        LinkedHashMap<String, String> nextOrder;
+        int counter = 0;
+        for (LinkedHashMap<String, String> order : entities) {
+            int nextOrderIndex = counter + 1;
+            if (nextOrderIndex >= entities.size()) {
+                nextOrderIndex = 0;
+            }
+
+            nextOrder = entities.get(nextOrderIndex);
+
             double latitude, longitude, altitude;
-            double distance = calculateDistance(order, previousOrder);
+            double distance = calculateDistance(order, nextOrder);
             try {
                 latitude = Double.parseDouble(order.get("Latitude"));
                 longitude = Double.parseDouble(order.get("Longitude"));
@@ -92,11 +101,6 @@ public class Order extends CrudBase {
             order.put("geometry.longitude", String.valueOf(longitude));
             order.put("geometry.altitude", String.valueOf(altitude));
             orders.add(order);
-
-            // Keeps track of the previous order.
-            if (previousOrder == null || !previousOrder.equals(order)) {
-                previousOrder = order;
-            }
         }
 
         orders.sort((order, compareOrder) -> {

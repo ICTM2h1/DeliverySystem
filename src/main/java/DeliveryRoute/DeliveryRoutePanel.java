@@ -2,12 +2,13 @@ package DeliveryRoute;
 
 import Authenthication.User;
 import Crud.Order;
-import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -22,8 +23,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * Creates a new delivery route object.
      */
     public DeliveryRoutePanel(User user) {
-        // @todo use the date of today instead of this date
-        this("2013-01-03", user);
+        this((new SimpleDateFormat("yyyy-MM-dd")).format(new Date()), user);
     }
 
     /**
@@ -110,6 +110,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                 iterator.remove(); // avoids a ConcurrentModificationException
             }
 
+            if (deliveryRoute.getDeliveryPointsAmount() < 1) {
+                continue;
+            }
+
             listItems.add(deliverer, deliveryRoute);
         }
 
@@ -145,13 +149,15 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         this.preview.gridBagConstraints.weightx = 0.5;
 
         this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
-        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getName())));
+        this.preview.addComponent(new JLabel(deliveryRoute.getName()));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
 
         this.preview.gridBagConstraints.insets.top = 10;
         this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount()), JLabel.CENTER));
+        this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
+
         this.preview.gridBagConstraints.insets.top = 5;
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render());
     }

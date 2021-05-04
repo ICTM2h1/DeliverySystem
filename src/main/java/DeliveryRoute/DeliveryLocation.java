@@ -40,15 +40,19 @@ public class DeliveryLocation {
             return 0;
         }
 
+        // The math module contains a function named toRadians which converts from degrees to radians.
         double latDistance = Math.toRadians(location.getLatitude() - this.getLatitude());
         double lonDistance = Math.toRadians(location.getLongitude() - this.getLongitude());
+
+        // Haversine formula.
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(this.getLatitude())) * Math.cos(Math.toRadians(location.getLatitude()))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        // Calculates the result, in kilometers.
         double distance = earthRadius * c; // * 1000; // convert to meters
         double height = this.getAltitude() - location.getAltitude();
-
         distance = Math.pow(distance, 2) + Math.pow(height, 2);
 
         return Math.sqrt(distance);

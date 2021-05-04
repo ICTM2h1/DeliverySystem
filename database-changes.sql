@@ -1,3 +1,27 @@
+LOCK TABLES `nerdygadgets`.`people` WRITE;
+ALTER TABLE `nerdygadgets`.`people`
+CHANGE COLUMN `PersonID` `PersonID` INT(11) NOT NULL AUTO_INCREMENT;
+
+LOCK TABLES `nerdygadgets`.`customers` WRITE;
+ALTER TABLE `nerdygadgets`.`customers`
+CHANGE COLUMN `CustomerID` `CustomerID` INT(11) NOT NULL AUTO_INCREMENT;
+
+LOCK TABLES `nerdygadgets`.`orders` WRITE;
+ALTER TABLE `nerdygadgets`.`orders`
+CHANGE COLUMN `OrderID` `OrderID` INT(11) NOT NULL AUTO_INCREMENT;
+SET max_statement_time=0;
+
+LOCK TABLES `nerdygadgets`.`orderlines` WRITE;
+ALTER TABLE `nerdygadgets`.`orderlines`
+CHANGE COLUMN `OrderLineID` `OrderLineID` INT(11) NOT NULL AUTO_INCREMENT;
+
+LOCK TABLES `nerdygadgets`.`cities` WRITE;
+ALTER TABLE `nerdygadgets`.`cities`
+CHANGE COLUMN `CityID` `CityID` INT(11) NOT NULL AUTO_INCREMENT;
+
+SET FOREIGN_KEY_CHECKS = 1;
+UNLOCK TABLES;
+
 ALTER TABLE `nerdygadgets`.`customers`
 ADD COLUMN `Longitude` DOUBLE NULL AFTER `ValidTo`,
 ADD COLUMN `Latitude` DOUBLE NULL AFTER `Longitude`;
