@@ -4,6 +4,7 @@ import Authenthication.LogoutPanel;
 import Authenthication.User;
 import Customer.CustomerPanel;
 import DeliveryRoute.DeliveryRoutePanel;
+import Stock.StockPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -153,6 +154,7 @@ abstract public class JPanelBase extends JPanel {
 
         if (user.getRole().isAdmin()) {
             panelList.add(new CustomerPanel(user));
+            panelList.add(new StockPanel(user));
         }
 
         panelList.add(new LogoutPanel(user));

@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
+    public static ArrayList<Object> listItemsCopy;
     protected ArrayList<Object> listItems = new ArrayList<>();
 
     protected JPanelListPreview preview;
@@ -36,6 +37,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         ArrayList<Object> rawListItems = this.getRawListItems();
         if (rawListItems != null && !rawListItems.isEmpty()) {
             this.listItems = rawListItems;
+            listItemsCopy = listItems;
         }
 
         if (this.listItems == null || this.listItems.isEmpty()) {
@@ -48,6 +50,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
+        this.list.setCellRenderer(this.getListCellRenderer());
 
         this.preview = new JPanelListPreview(this.user, this.getListPreviewTitle());
         this.preview.instantiate();
@@ -61,11 +64,11 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         // Create a split pane with the two scroll panes in it.
         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPane, previewScrollPane);
-        this.splitPane.setOneTouchExpandable(false);
+        this.splitPane.setOneTouchExpandable(true);
         this.splitPane.setDividerLocation(150);
 
         // Provide minimum sizes for the two components in the split pane.
-        listScrollPane.setMinimumSize(new Dimension(100, this.panelHeight - 50));
+        listScrollPane.setMinimumSize(new Dimension(150, this.panelHeight - 50));
         previewScrollPane.setMinimumSize(new Dimension(this.panelWidth, this.panelHeight - 50));
 
         // Provide a preferred size for the split pane.
@@ -144,6 +147,15 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         }
 
         return labels;
+    }
+
+    /**
+     * Gets the list cell renderer.
+     *
+     * @return The list cell renderer.
+     */
+    protected ListCellRenderer<Object> getListCellRenderer() {
+        return new DefaultListCellRenderer();
     }
 
     /**
