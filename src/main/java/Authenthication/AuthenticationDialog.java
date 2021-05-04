@@ -153,7 +153,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
                 String username = this.userResultSet.get("FullName");
                 String HashedDatabasePassword = this.userResultSet.get("HashedPassword");
 
-                this.user = userRole.createUser(username, HashedDatabasePassword, userRole);
+                this.user = UserRole.createUser(username, HashedDatabasePassword, userRole);
                 dispose();
             } else {
                 this.errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
