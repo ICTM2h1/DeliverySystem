@@ -1,5 +1,6 @@
 package UI.Panels;
 
+import Authenthication.LogoutPanel;
 import Authenthication.User;
 import DeliveryRoute.DeliveryRoutePanel;
 import UI.TestPanel;
@@ -16,8 +17,8 @@ abstract public class JPanelBase extends JPanel {
 
     protected final int panelWidth, panelHeight;
 
-    protected GridBagConstraints gridBagConstraints;
-    protected JLabel titleLabel;
+    public GridBagConstraints gridBagConstraints;
+    public JLabel titleLabel;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
     protected final User user;
@@ -43,12 +44,6 @@ abstract public class JPanelBase extends JPanel {
         this.setDefaultGridBagConstraints();
         this.setLayout(this.getLayoutManager());
         this.setBorder(getDefaultBorder());
-        this.setPreferredSize(this.getPreferredSize());
-        this.setSize(this.getPreferredSize());
-
-        this.addTitleComponent();
-        this.instantiate();
-        this.updateUI();
     }
 
     /**
@@ -78,9 +73,14 @@ abstract public class JPanelBase extends JPanel {
      * Adds the title component to the panel.
      */
     protected void addTitleComponent() {
+        if (this.getTitle() == null) {
+            return;
+        }
+
         Insets defaultInsets = this.gridBagConstraints.insets;
         this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
-        this.addFullWidthComponent(new JLabel(this.getTitle(), JLabel.CENTER), true);
+        this.titleLabel = new JLabel(this.getTitle(), JLabel.CENTER);
+        this.addFullWidthComponent(this.titleLabel);
         this.gridBagConstraints.insets = defaultInsets;
     }
 
@@ -88,24 +88,32 @@ abstract public class JPanelBase extends JPanel {
      * Adds a full width component.
      *
      * @param component The component.
-     * @param newRow Determines if this must be on a new row.
      */
-    protected void addFullWidthComponent(Component component, boolean newRow) {
+    public void addFullWidthComponent(Component component) {
         int defaultGridWidth = this.gridBagConstraints.gridwidth;
 
         this.gridBagConstraints.gridwidth = this.getDefaultFullGridWidth();
-        this.addComponent(component, newRow);
+        this.addComponent(component, true);
 
         this.gridBagConstraints.gridwidth = defaultGridWidth;
     }
 
     /**
-     * Adds a full width component.
+     * Adds a component.
+     *
+     * @param component The component.
+     */
+    public void addComponent(Component component) {
+        this.addComponent(component, false);
+    }
+
+    /**
+     * Adds a component.
      *
      * @param component The component.
      * @param newRow Determines if this must be on a new row.
      */
-    protected void addComponent(Component component, boolean newRow) {
+    public void addComponent(Component component, boolean newRow) {
         this.gridBagConstraints.gridx++;
 
         if (newRow) {
@@ -137,6 +145,7 @@ abstract public class JPanelBase extends JPanel {
      * Registers manually the panels.
      */
     public static void registerPanels(User user) {
+        panels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
         panelList.add(new DeliveryRoutePanel(user));
 
@@ -144,7 +153,14 @@ abstract public class JPanelBase extends JPanel {
             panelList.add(new TestPanel(user));
         }
 
-        panels.addAll(panelList);
+        panelList.add(new LogoutPanel(user));
+
+        for (JPanelBase panel : panelList) {
+            panel.addTitleComponent();
+            panel.instantiate();
+            panel.updateUI();
+            panels.add(panel);
+        }
     }
 
     /**
@@ -176,18 +192,6 @@ abstract public class JPanelBase extends JPanel {
      */
     protected int getDefaultFullGridWidth() {
         return 2;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Dimension getPreferredSize() {
-        Dimension size = super.getPreferredSize();
-
-        size.width = this.panelWidth;
-        size.height = this.panelHeight;
-
-        return size;
     }
 
 }

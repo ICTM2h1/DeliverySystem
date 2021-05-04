@@ -32,7 +32,7 @@ public class DeliveryLocation {
      * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
      * el2 End altitude in meters
      *
-     * @return Distance in meters.
+     * @return Distance in kilometers.
      */
     public double distance(DeliveryLocation location) {
         if (location == null || this.getLatitude() == 0.0 || this.getLongitude() == 0.0
@@ -46,7 +46,7 @@ public class DeliveryLocation {
                 + Math.cos(Math.toRadians(this.getLatitude())) * Math.cos(Math.toRadians(location.getLatitude()))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = earthRadius * c * 1000; // convert to meters
+        double distance = earthRadius * c; // * 1000; // convert to meters
         double height = this.getAltitude() - location.getAltitude();
 
         distance = Math.pow(distance, 2) + Math.pow(height, 2);

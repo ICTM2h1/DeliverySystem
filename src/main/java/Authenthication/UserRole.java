@@ -19,19 +19,6 @@ public enum UserRole {
             return true;
         }
 
-        /**
-         * Creates a user instance of logged in deliverer.
-         *
-         * @param username username of logged in deliverer.
-         * @param password password of logged in deliverer.
-         * @param userRole role of logged in deliverer.
-         *
-         * @return user instance of logged in deliverer.
-         */
-        @Override
-        public Deliverer createUser(String username, String password, UserRole userRole) {
-            return new Deliverer(username, password, userRole);
-        }
     },
     ADMIN (2) {
         /**
@@ -44,23 +31,10 @@ public enum UserRole {
             return true;
         }
 
-        /**
-         * Creates a user instance of logged in admin.
-         *
-         * @param username username of logged in admin.
-         * @param password password of logged in admin.
-         * @param userRole role of logged in admin.
-         *
-         * @return user instance of logged in admin.
-         */
-        @Override
-        public Administrator createUser(String username, String password, UserRole userRole) {
-            return new Administrator(username, password, userRole);
-        }
     };
 
     private final int role;
-    private static LinkedHashMap<Integer, UserRole> roleMap = new LinkedHashMap<>();
+    private static final LinkedHashMap<Integer, UserRole> roleMap = new LinkedHashMap<>();
 
     /**
      * Constructs the user role.
@@ -118,7 +92,7 @@ public enum UserRole {
      *
      * @return user instance of logged in user.
      */
-    public User createUser(String username, String password, UserRole userRole) {
+    public static User createUser(String username, String password, UserRole userRole) {
         return new User(username, password, userRole);
     }
 }

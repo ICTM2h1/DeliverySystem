@@ -17,7 +17,7 @@ public class DeliveryAddress {
 
     protected Config config = Config.getInstance();
 
-    private String address, postalCode, city;
+    private final String address, postalCode, city;
 
     /**
      * Creates a new delivery address.
@@ -39,7 +39,7 @@ public class DeliveryAddress {
      */
     public LinkedHashMap<String, BigDecimal> toGeometry() {
         String address = String.format("%s,+%s,+%s", this.address, this.postalCode, this.city).replace(" ", "+");
-        String url = this.config.get("google_maps_api_url") + "?" + "address="+ address + "&key=" + this.config.get("google_maps_api_key");
+        String url = this.config.get("google_maps_api_geocode_url") + "?" + "address="+ address + "&key=" + this.config.get("google_maps_api_key");
 
         UrlRequest urlRequest = new UrlRequest(url);
         urlRequest.addHeader("accept", "application/json");
@@ -67,12 +67,46 @@ public class DeliveryAddress {
 
         JsonNumber latitude = (JsonNumber) location.get("lat");
         JsonNumber longitude = (JsonNumber) location.get("lng");
+        JsonNumber altitude = this.toAltitude(longitude.getBigDecimal().doubleValue(), latitude.getBigDecimal().doubleValue());
 
         LinkedHashMap<String, BigDecimal> items = new LinkedHashMap<>();
         items.put("latitude", latitude.getBigDecimal());
         items.put("longitude", longitude.getBigDecimal());
+        items.put("altitude", altitude.getBigDecimal());
 
         return items;
+    }
+
+    /**
+     * Renders a location, in geometric form, to altitude.
+     *
+     * @param longitude The longitude.
+     * @param latitude The latitude.
+     *
+     * @return A resolution value, indicating the maximum distance between data points from which the elevation was
+     *         interpolated, in meters. This property will be missing if the resolution is not known. Note that
+     *         elevation data becomes more coarse (larger resolution values) when multiple points are passed. To obtain
+     *         the most accurate elevation value for a point, it should be queried independently.
+     */
+    public JsonNumber toAltitude(double longitude, double latitude) {
+        String location = String.format("%s,%s", latitude, longitude);
+        String url = this.config.get("google_maps_api_elevation_url") + "?" + "locations="+ location + "&key=" + this.config.get("google_maps_api_key");
+
+        UrlRequest urlRequest = new UrlRequest(url);
+        urlRequest.addHeader("accept", "application/json");
+        UrlResponse urlResponse = urlRequest.send();
+
+        JsonArray jsonResponse = (JsonArray) urlResponse.toJson().get("results");
+        if (jsonResponse == null || jsonResponse.isEmpty()) {
+            return null;
+        }
+
+        DbDocImpl result = (DbDocImpl) jsonResponse.get(0);
+        if (result == null || result.isEmpty()) {
+            return null;
+        }
+
+        return (JsonNumber) result.get("elevation");
     }
 
 }

@@ -2,9 +2,11 @@ package DeliveryRoute;
 
 import Authenthication.User;
 import Crud.Order;
+import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -50,7 +52,19 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      */
     @Override
     public String getTitle() {
+        if (this.getRawListItems().size() == 1) {
+            return "1 bezorgingstraject voor vandaag";
+        }
+
         return String.format("%s bezorgingstrajecten voor vandaag", this.getRawListItems().size());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getNoResultsText() {
+        return "Er zijn geen bezorgingstrajecten gevonden voor vandaag.";
     }
 
     /**
@@ -65,13 +79,23 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         Order order = new Order(this.date);
 
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
+        if (entities.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         ArrayList<DeliveryRoute> listItems = new ArrayList<>();
 
-        int ordersPerDeliverer = entities.size() / DeliveryRoute.deliverers;
+        int delivererCount = DeliveryRoute.deliverers;
+        int ordersPerDeliverer = Math.round((float) entities.size() / delivererCount);
+        if (ordersPerDeliverer == 0) {
+            delivererCount = 1;
+            ordersPerDeliverer = entities.size();
+        }
+
         Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
-        for (int deliverer = 0; deliverer < DeliveryRoute.deliverers; deliverer++) {
+        for (int deliverer = 0; deliverer < delivererCount; deliverer++) {
             int delivererOrderCount = 0;
-            DeliveryRoute delivererOrders = new DeliveryRoute(ordersPerDeliverer, deliverer);
+            DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer, ordersPerDeliverer);
 
             while (iterator.hasNext()) {
                 LinkedHashMap<String, String> entity = iterator.next();
@@ -80,13 +104,13 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                     break;
                 }
 
-                delivererOrders.put(delivererOrderCount, new DeliveryPoint(entity));
+                deliveryRoute.add(new DeliveryPoint(entity));
                 delivererOrderCount++;
 
                 iterator.remove(); // avoids a ConcurrentModificationException
             }
 
-            listItems.add(deliverer, delivererOrders);
+            listItems.add(deliverer, deliveryRoute);
         }
 
         return new ArrayList<>(listItems);
@@ -106,10 +130,30 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
+    protected String getListPreviewTitle() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
-        this.preview.add(new JLabel(String.format("Bezorgingstraject: %s", deliveryRoute.getName())));
+        this.preview.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        this.preview.gridBagConstraints.weightx = 0.5;
+
+        this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
+        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getName())));
+
+        this.preview.addComponent(new JLabel("Afstand:"), true);
+        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
+
+        this.preview.gridBagConstraints.insets.top = 10;
+        this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount()), JLabel.CENTER));
+        this.preview.gridBagConstraints.insets.top = 5;
+        this.preview.addFullWidthComponent(deliveryRoute.toTable().render());
     }
 
 }

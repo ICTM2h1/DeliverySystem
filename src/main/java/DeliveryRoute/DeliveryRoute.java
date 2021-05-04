@@ -1,28 +1,32 @@
 package DeliveryRoute;
 
 import System.Error.SystemError;
+import UI.Components.Table;
 
-import java.util.LinkedHashMap;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Provides a delivery route for deliverers.
  */
-public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
+public class DeliveryRoute {
 
-    public final static int deliverers = 12;
+    public final static int deliverers = 6;
 
     private final int id;
     private int distance;
 
+    private final ArrayList<DeliveryPointBase> deliveryPoints;
+
     /**
      * Creates a new delivery route.
      *
+     * @param id The id of this route.
      * @param capacity The capacity of this route.
      */
-    public DeliveryRoute(int capacity, int id) {
-        super(capacity);
-
+    public DeliveryRoute(int id, int capacity) {
         this.id = id + 1;
+        this.deliveryPoints = new ArrayList<>(capacity + 1);
     }
 
     /**
@@ -49,15 +53,30 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
      * @return The name of the route.
      */
     public String getName() {
-        int orderCount = this.size();
-        int middlePointKey = (int) Math.round((double) orderCount / 2);
-        DeliveryPoint firstPoint = this.get(0);
-        DeliveryPoint middlePoint = this.get(middlePointKey);
-        DeliveryPoint lastPoint = this.get(orderCount - 1);
+        String name = "Unknown";
+        if (this.deliveryPoints.isEmpty()) {
+            return name;
+        }
 
-        String name = firstPoint.getOrder().get("CityName") + " - ";
-        name += middlePoint.getOrder().get("CityName") + " - ";
-        name += lastPoint.getOrder().get("CityName");
+        int orderCount = this.deliveryPoints.size();
+        int middlePointKey = (int) Math.round((double) orderCount / 2);
+
+        DeliveryPointBase firstPoint = this.deliveryPoints.get(0);
+        if (firstPoint != null) {
+            name = firstPoint.label() + " - ";
+        }
+
+        if (middlePointKey < orderCount) {
+            DeliveryPointBase middlePoint = this.deliveryPoints.get(middlePointKey);
+            if (middlePoint != null) {
+                name += middlePoint.label() + " - ";
+            }
+        }
+
+        DeliveryPointBase lastPoint = this.deliveryPoints.get(orderCount - 1);
+        if (lastPoint != null) {
+            name += lastPoint.label();
+        }
 
         return name;
     }
@@ -73,9 +92,15 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
         }
 
         double distance = 0;
-        for (DeliveryPoint deliveryPoint : this.values()) {
+        DeliveryPointBase previousDeliveryPoint = null;
+        for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
             try {
-                distance += Double.parseDouble(deliveryPoint.getOrder().get("geometry.distance"));
+                distance += deliveryPoint.distance(previousDeliveryPoint);
+
+                // Keeps track of the previous order.
+                if (previousDeliveryPoint == null || !previousDeliveryPoint.equals(deliveryPoint)) {
+                    previousDeliveryPoint = deliveryPoint;
+                }
             } catch (NumberFormatException e) {
                 SystemError.handle(e);
             }
@@ -83,6 +108,65 @@ public class DeliveryRoute extends LinkedHashMap<Integer, DeliveryPoint> {
 
         this.distance = (int) Math.round(distance);
         return this.distance;
+    }
+
+    /**
+     * Renders the delivery route to table.
+     *
+     * @return The table.
+     */
+    public Table toTable() {
+        Table table = new Table();
+        table.addColumn("Nr.");
+        table.addColumn("Stad");
+        table.addColumn("Afstand (Km.)");
+
+        int counter = 1;
+        DeliveryPointBase previousDeliveryPoint = null;
+        for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
+            ArrayList<String> row = new ArrayList<>();
+            row.add(String.valueOf(counter));
+            row.add(deliveryPoint.label());
+            row.add(String.valueOf(deliveryPoint.distance(previousDeliveryPoint)));
+
+            table.addRow(row);
+            counter++;
+
+            if (previousDeliveryPoint == null || previousDeliveryPoint.equals(deliveryPoint)) {
+                previousDeliveryPoint = deliveryPoint;
+            }
+        }
+
+        return table;
+    }
+
+    /**
+     * Gets the number of delivery points.
+     *
+     * @return The delivery points.
+     */
+    public int getDeliveryPointsAmount() {
+        return this.deliveryPoints.size();
+    }
+
+    /**
+     * Gets a delivery point.
+     *
+     * @param delta The delta of this point
+     *
+     * @return The delivery point.
+     */
+    public DeliveryPointBase get(int delta) {
+        return this.deliveryPoints.get(delta);
+    }
+
+    /**
+     * Adds a delivery point to the map.
+     *
+     * @param deliveryPoint The delivery point.
+     */
+    public void add(DeliveryPointBase deliveryPoint) {
+        this.deliveryPoints.add(deliveryPoint);
     }
 
 }

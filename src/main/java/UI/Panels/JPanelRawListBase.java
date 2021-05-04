@@ -13,9 +13,9 @@ import java.util.ArrayList;
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
-    protected ArrayList<Object> listItems;
+    protected ArrayList<Object> listItems = new ArrayList<>();
 
-    protected JPanel preview;
+    protected JPanelListPreview preview;
     protected JList<String> list;
     protected JSplitPane splitPane;
 
@@ -33,20 +33,32 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
      */
     @Override
     public void instantiate() {
-        this.listItems = this.getRawListItems();
+        ArrayList<Object> rawListItems = this.getRawListItems();
+        if (rawListItems != null && !rawListItems.isEmpty()) {
+            this.listItems = rawListItems;
+        }
+
+        if (this.listItems == null || this.listItems.isEmpty()) {
+            this.addNoResultsComponent();
+            return;
+        }
+
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.list.setSelectedIndex(this.getSelectedItemIndex());
         this.list.addListSelectionListener(this);
 
-        this.preview = new JPanel();
+        this.preview = new JPanelListPreview(this.user, this.getListPreviewTitle());
+        this.preview.instantiate();
+        this.preview.updateUI();
+
         JScrollPane listScrollPane = new JScrollPane(this.list);
         JScrollPane previewScrollPane = new JScrollPane(this.preview);
 
         // Create a split pane with the two scroll panes in it.
         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPane, previewScrollPane);
-        this.splitPane.setOneTouchExpandable(true);
+        this.splitPane.setOneTouchExpandable(false);
         this.splitPane.setDividerLocation(150);
 
         // Provide minimum sizes for the two components in the split pane.
@@ -69,8 +81,34 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         JList<String> list = (JList<String>) e.getSource();
 
         this.preview.removeAll();
+        this.preview.instantiate();
         this.updateRawListItemPreview(this.listItems.get(list.getSelectedIndex()));
         this.preview.updateUI();
+    }
+
+    /**
+     * Gets the title of the list preview.
+     *
+     * @return The title.
+     */
+    protected String getListPreviewTitle() {
+        return this.getTitle();
+    }
+
+    /**
+     * Gets the no results text.
+     *
+     * @return The no results text.
+     */
+    protected String getNoResultsText() {
+        return "Er zijn geen gegevens gevonden.";
+    }
+
+    /**
+     * Adds a no results component.
+     */
+    protected void addNoResultsComponent() {
+        this.addComponent(new JLabel(this.getNoResultsText(), JLabel.CENTER), true);
     }
 
     /**
