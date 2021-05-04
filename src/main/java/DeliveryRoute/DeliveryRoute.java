@@ -91,15 +91,18 @@ public class DeliveryRoute {
         }
 
         double distance = 0;
-        DeliveryPointBase previousDeliveryPoint = null;
+        int counter = 0;
+        DeliveryPointBase nextDeliveryPoint;
         for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
-            try {
-                distance += deliveryPoint.distance(previousDeliveryPoint);
+            int nextOrderIndex = counter + 1;
+            if (nextOrderIndex >= this.deliveryPoints.size()) {
+                nextOrderIndex = 0;
+            }
 
-                // Keeps track of the previous order.
-                if (previousDeliveryPoint == null || !previousDeliveryPoint.equals(deliveryPoint)) {
-                    previousDeliveryPoint = deliveryPoint;
-                }
+            nextDeliveryPoint = this.deliveryPoints.get(nextOrderIndex);
+
+            try {
+                distance += deliveryPoint.distance(nextDeliveryPoint);
             } catch (NumberFormatException e) {
                 SystemError.handle(e);
             }
@@ -118,22 +121,25 @@ public class DeliveryRoute {
         Table table = new Table();
         table.addColumn("Nr.");
         table.addColumn("Stad");
-        table.addColumn("Afstand (Km.)");
+        table.addColumn("Afstand tot volgend punt (Km.)");
 
-        int counter = 1;
-        DeliveryPointBase previousDeliveryPoint = null;
+        int counter = 0;
+        DeliveryPointBase nextDeliveryPoint;
         for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
+            int nextOrderIndex = counter + 1;
+            if (nextOrderIndex >= this.deliveryPoints.size()) {
+                nextOrderIndex = 0;
+            }
+
+            nextDeliveryPoint = this.deliveryPoints.get(nextOrderIndex);
+
             ArrayList<String> row = new ArrayList<>();
-            row.add(String.valueOf(counter));
+            row.add(String.valueOf(counter + 1));
             row.add(deliveryPoint.label());
-            row.add(String.valueOf(deliveryPoint.distance(previousDeliveryPoint)));
+            row.add(String.valueOf(deliveryPoint.distance(nextDeliveryPoint)));
 
             table.addRow(row);
             counter++;
-
-            if (previousDeliveryPoint == null || previousDeliveryPoint.equals(deliveryPoint)) {
-                previousDeliveryPoint = deliveryPoint;
-            }
         }
 
         return table;
