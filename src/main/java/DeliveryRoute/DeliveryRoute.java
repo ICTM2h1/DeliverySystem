@@ -109,6 +109,15 @@ public class DeliveryRoute {
     }
 
     /**
+     * Gets the delivery points.
+     *
+     * @return The delivery points.
+     */
+    public ArrayList<DeliveryPointBase> getDeliveryPoints() {
+        return deliveryPoints;
+    }
+
+    /**
      * Gets a delivery point.
      *
      * @param delta The delta of this point

@@ -58,7 +58,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         // Create a split pane with the two scroll panes in it.
         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPane, previewScrollPane);
-        this.splitPane.setOneTouchExpandable(true);
+        this.splitPane.setOneTouchExpandable(false);
         this.splitPane.setDividerLocation(150);
 
         // Provide minimum sizes for the two components in the split pane.

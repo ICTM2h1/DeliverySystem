@@ -94,7 +94,7 @@ class DeliveryStartPoint extends DeliveryPointBase {
 
     @Override
     public String label() {
-        return null;
+        return this.name;
     }
 
     @Override
@@ -142,6 +142,26 @@ abstract class DeliveryPointBase {
         DeliveryLocation compareLocation = new DeliveryLocation(deliveryPoint.getLatitude(), deliveryPoint.getLongitude(), deliveryPoint.getAltitude());
 
         return location.distance(compareLocation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof DeliveryPointBase)) {
+            return false;
+        }
+
+        DeliveryPointBase that = (DeliveryPointBase) obj;
+
+        return this.getAltitude() == that.getAltitude()
+                && this.getLongitude() == that.getLongitude()
+                && this.getLatitude() == that.getLatitude();
     }
 
     /**

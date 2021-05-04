@@ -2,6 +2,9 @@ package UI.Panels;
 
 import Authenthication.User;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Provides a panel for list item previews.
  */
@@ -34,6 +37,18 @@ public class JPanelListPreview extends JPanelBase {
     @Override
     public void instantiate() {
         this.addTitleComponent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Dimension getSize() {
+        Dimension size = super.getSize();
+
+        size.height -= 100;
+
+        return size;
     }
 
 }

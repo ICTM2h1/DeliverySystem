@@ -125,29 +125,44 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * {@inheritDoc}
      */
     @Override
+    protected String getListPreviewTitle() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
-        this.preview.titleLabel.setText(String.format("Bezorgingstraject %s", deliveryRoute.getName()));
+        this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
+        this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getName())));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
 
         Table table = new Table();
-        table.addColumn("Name");
-        table.addColumn("Roll");
-        table.addColumn("Department");
+        table.addColumn("Nr.");
+        table.addColumn("Stad");
+        table.addColumn("Afstand");
 
-        ArrayList<String> row = new ArrayList<>();
-        row.add("Kundan Kumar Jha");
-        row.add("4041");
-        row.add("CSE");
+        int counter = 1;
+        DeliveryPointBase previousDeliveryPoint = null;
+        for (DeliveryPointBase deliveryPoint : deliveryRoute.getDeliveryPoints()) {
+            ArrayList<String> row = new ArrayList<>();
+            row.add(String.valueOf(counter));
+            row.add(deliveryPoint.label());
+            row.add(String.valueOf(deliveryPoint.distance(previousDeliveryPoint)));
 
-        table.addRow(row);
-        table.addRow(row);
-        table.addRow(row);
-        table.addRow(row);
-        table.addRow(row);
+            table.addRow(row);
+            counter++;
+
+            if (previousDeliveryPoint == null || previousDeliveryPoint.equals(deliveryPoint)) {
+                previousDeliveryPoint = deliveryPoint;
+            }
+        }
+
 
         this.preview.addFullWidthComponent(table.render());
     }

@@ -1,6 +1,7 @@
 package UI.Components;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -8,35 +9,26 @@ import java.util.ArrayList;
  */
 public class Table {
 
-    private ArrayList<ArrayList<String>> data;
-    private ArrayList<String> columns;
+    protected final int width, height;
+
+    private final ArrayList<ArrayList<String>> data;
+    private final ArrayList<String> columns;
 
     /**
      * Creates a new table.
      */
     public Table() {
+        this(500, 350);
+    }
+
+    /**
+     * Creates a new table.
+     */
+    public Table(int width, int height) {
         this.data = new ArrayList<>();
         this.columns = new ArrayList<>();
-    }
-
-    /**
-     * Creates a new table.
-     *
-     * @param columns The columns.
-     */
-    public Table(ArrayList<String> columns) {
-        this.columns = columns;
-    }
-
-    /**
-     * Creates a new table.
-     *
-     * @param data The data.
-     * @param columns The columns.
-     */
-    public Table(ArrayList<ArrayList<String>> data, ArrayList<String> columns) {
-        this.data = data;
-        this.columns = columns;
+        this.width = width;
+        this.height = height;
     }
 
     /**
@@ -44,7 +36,7 @@ public class Table {
      *
      * @return Table component.
      */
-    public JScrollPane render() {
+    public Component render() {
         String[][] tableData = new String[this.data.size()][];
         for (int delta = 0; delta < this.data.size(); delta++) {
             ArrayList<String> row = this.data.get(delta);
@@ -53,10 +45,11 @@ public class Table {
 
         JTable table = new JTable(tableData, this.columns.toArray());
         table.removeEditor();
-        table.setBounds(30, 40, 200, 300);
+        table.setPreferredSize(new Dimension(this.width, this.height - 50));
+        table.setCellSelectionEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setSize(500, 400);
+        scrollPane.setPreferredSize(new Dimension(this.width, this.height));
 
         return scrollPane;
     }
