@@ -155,7 +155,7 @@ public class StockPanel extends JPanelListBase implements ActionListener {
         this.preview.addComponent(new JLabel("Voorraad:"), true);
         this.preview.addComponent(new JLabel(listItem.get("QuantityOnHand")));
 
-        this.preview.gridBagConstraints.insets = new Insets(5, 25, 275, 25);
+        this.preview.gridBagConstraints.insets = new Insets(5, 25, 300, 25);
         this.editButton = new JButton("Bewerken");
         this.editButton.addActionListener(this);
         this.preview.addFullWidthComponent(this.editButton);
