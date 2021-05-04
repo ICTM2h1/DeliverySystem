@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Table {
 
     protected final int width, height;
+    protected static boolean isEditable = false;
 
     private final ArrayList<ArrayList<String>> data;
     private final ArrayList<String> columns;
@@ -43,10 +44,17 @@ public class Table {
             tableData[delta] = row.toArray(new String[0]);
         }
 
-        JTable table = new JTable(tableData, this.columns.toArray());
-        table.removeEditor();
+        JTable table = new JTable(tableData, this.columns.toArray()) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return Table.isEditable;
+            }
+        };
+
         table.setPreferredSize(new Dimension(this.width, this.height - 50));
-        table.setCellSelectionEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(this.width, this.height));
@@ -70,6 +78,13 @@ public class Table {
      */
     public void addRow(ArrayList<String> data) {
         this.data.add(data);
+    }
+
+    /**
+     * Makes a table editable.
+     */
+    public void setEditable() {
+        isEditable = true;
     }
 
 }
