@@ -89,7 +89,11 @@ public class MainTest {
         System.out.println("Succesvol test gegevens toegevoegd.");
     }
 
-
+    /**
+     * Creates a new customer.
+     *
+     * @param city The city data for this customer.
+     */
     private static void createCustomer(String[] city) {
         String cityName = city[2];
         String customerName = city[3];
