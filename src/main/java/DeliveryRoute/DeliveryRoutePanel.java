@@ -79,6 +79,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         Order order = new Order(this.date);
 
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
+        if (entities.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         ArrayList<DeliveryRoute> listItems = new ArrayList<>();
 
         int delivererCount = DeliveryRoute.deliverers;
