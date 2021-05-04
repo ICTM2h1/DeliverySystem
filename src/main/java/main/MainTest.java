@@ -44,9 +44,17 @@ public class MainTest {
             {"Hintzenstraat 11", "6216ES", "Maastricht", "Klaas Hendriksen"},
             {"Wibauthof 12", "7604XA", "Almelo", "Jessica van den berg"},
             {"Zuiderzeestraatweg 145", "3849AD", "Hierden", "Jessica van den Pot"},
-            {"Kempenaar 29 06", "8231CX", "Lelystad", "Jessica van den Pot"},
+            {"Kempenaar 29 06", "8231CX", "Lelystad", "Jessica van Pot"},
             {"Zuidoostersingel 3", "8861GB", "Harlingen", "Jessica van den Weg"},
             {"Molenpad 43a", "8921BG", "Leeuwarden", "Jessica van den Boer"},
+            {"Naarderstraat 4", "1211AL", "Hilversum", "Jan van den Boer"},
+            {"Ceram 53", "3772ZX", "Barneveld", "Jan den Boer"},
+            {"Prins Willem-Alexanderpark 317", "3905CK", "Veenendaal", "Pieter Zwat"},
+            {"Springfonteinstraat 27", "2572PK", "Den Haag", "Jaap Zwat"},
+            {"Van Gentlaan 3", "4819AM", "Breda", "Rick Wit"},
+            {"Burgemeester de Raadtsingel 75", "3311JG", "Dordrecht", "Rick Rood"},
+            {"Vivaldistraat 12", "5653BR", "Eindhoven", "Coenraad van den Berg"},
+            {"Stationsweg 81A", "8401DM", "Gorredijk", "Henk van den Berg"},
         };
 
         for (String[] city : cities) {
