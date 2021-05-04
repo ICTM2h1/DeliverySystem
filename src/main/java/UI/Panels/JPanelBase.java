@@ -2,8 +2,9 @@ package UI.Panels;
 
 import Authenthication.LogoutPanel;
 import Authenthication.User;
+import Customer.CustomerPanel;
 import DeliveryRoute.DeliveryRoutePanel;
-import UI.TestPanel;
+import Stock.StockPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -80,6 +81,8 @@ abstract public class JPanelBase extends JPanel {
         Insets defaultInsets = this.gridBagConstraints.insets;
         this.gridBagConstraints.insets = new Insets(5, 0, 15, 0);
         this.titleLabel = new JLabel(this.getTitle(), JLabel.CENTER);
+        Font labelFont = this.titleLabel.getFont();
+        this.titleLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 20));
         this.addFullWidthComponent(this.titleLabel);
         this.gridBagConstraints.insets = defaultInsets;
     }
@@ -150,7 +153,8 @@ abstract public class JPanelBase extends JPanel {
         panelList.add(new DeliveryRoutePanel(user));
 
         if (user.getRole().isAdmin()) {
-            panelList.add(new TestPanel(user));
+            panelList.add(new CustomerPanel(user));
+            panelList.add(new StockPanel(user));
         }
 
         panelList.add(new LogoutPanel(user));
