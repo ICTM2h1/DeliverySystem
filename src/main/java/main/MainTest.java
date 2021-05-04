@@ -31,7 +31,6 @@ public class MainTest {
         conditions.put("ExpectedDeliveryDate", date);
         Query.delete("orders", conditions);
 
-        Customer customer = new Customer();
         String[][] cities = {
             {"Parkweg 2", "3842AD", "Harderwijk", "Henk de Potvis"},
             {"Jan Vermeerstraat 24", "7771WN", "Hardenberg", "Jan Klaasen"},
