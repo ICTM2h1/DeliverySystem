@@ -52,11 +52,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      */
     @Override
     public String getTitle() {
-        if (this.listItems.size() == 1) {
+        if (this.getRawListItems().size() == 1) {
             return "1 bezorgingstraject voor vandaag";
         }
 
-        return String.format("%s bezorgingstrajecten voor vandaag", this.listItems.size());
+        return String.format("%s bezorgingstrajecten voor vandaag", this.getRawListItems().size());
     }
 
     /**
