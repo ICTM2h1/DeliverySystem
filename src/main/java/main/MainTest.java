@@ -37,6 +37,10 @@ public class MainTest {
             {"Rijnstraat 191", "1784BX", "Den Helder", "Jessica Pleiter"},
             {"Hintzenstraat 11", "6216ES", "Maastricht", "Klaas Hendriksen"},
             {"Wibauthof 12", "7604XA", "Almelo", "Jessica van den berg"},
+            {"Zuiderzeestraatweg 145", "3849AD", "Hierden", "Jessica van den Pot"},
+            {"Kempenaar 29 06", "8231CX", "Lelystad", "Jessica van den Pot"},
+            {"Zuidoostersingel 3", "8861GB", "Harlingen", "Jessica van den Weg"},
+            {"Molenpad 43a", "8921BG", "Leeuwarden", "Jessica van den Boer"},
         };
 
         for (String[] city : cities) {
