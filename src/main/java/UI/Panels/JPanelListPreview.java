@@ -2,7 +2,6 @@ package UI.Panels;
 
 import Authenthication.User;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**

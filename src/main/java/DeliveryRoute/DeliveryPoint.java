@@ -92,21 +92,33 @@ class DeliveryStartPoint extends DeliveryPointBase {
         this.altitude = altitude;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String label() {
         return this.name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getLongitude() {
         return this.longitude;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getLatitude() {
         return this.latitude;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getAltitude() {
         return this.altitude;
