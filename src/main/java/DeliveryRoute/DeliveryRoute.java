@@ -1,7 +1,9 @@
 package DeliveryRoute;
 
 import System.Error.SystemError;
+import UI.Components.Table;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -109,12 +111,42 @@ public class DeliveryRoute {
     }
 
     /**
-     * Gets the delivery points.
+     * Renders the delivery route to table.
+     *
+     * @return The table.
+     */
+    public Table toTable() {
+        Table table = new Table();
+        table.addColumn("Nr.");
+        table.addColumn("Stad");
+        table.addColumn("Afstand (Km.)");
+
+        int counter = 1;
+        DeliveryPointBase previousDeliveryPoint = null;
+        for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
+            ArrayList<String> row = new ArrayList<>();
+            row.add(String.valueOf(counter));
+            row.add(deliveryPoint.label());
+            row.add(String.valueOf(deliveryPoint.distance(previousDeliveryPoint)));
+
+            table.addRow(row);
+            counter++;
+
+            if (previousDeliveryPoint == null || previousDeliveryPoint.equals(deliveryPoint)) {
+                previousDeliveryPoint = deliveryPoint;
+            }
+        }
+
+        return table;
+    }
+
+    /**
+     * Gets the number of delivery points.
      *
      * @return The delivery points.
      */
-    public ArrayList<DeliveryPointBase> getDeliveryPoints() {
-        return deliveryPoints;
+    public int getDeliveryPointsAmount() {
+        return this.deliveryPoints.size();
     }
 
     /**

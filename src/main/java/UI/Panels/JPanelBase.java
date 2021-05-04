@@ -16,7 +16,7 @@ abstract public class JPanelBase extends JPanel {
 
     protected final int panelWidth, panelHeight;
 
-    protected GridBagConstraints gridBagConstraints;
+    public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 

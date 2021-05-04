@@ -145,7 +145,7 @@ abstract class DeliveryPointBase {
      *
      * @return The distance between the delivery points.
      */
-    public double distance(DeliveryPointBase deliveryPoint) {
+    public int distance(DeliveryPointBase deliveryPoint) {
         if (deliveryPoint == null) {
             return 0;
         }
@@ -153,7 +153,7 @@ abstract class DeliveryPointBase {
         DeliveryLocation location = new DeliveryLocation(this.getLatitude(), this.getLongitude(), this.getAltitude());
         DeliveryLocation compareLocation = new DeliveryLocation(deliveryPoint.getLatitude(), deliveryPoint.getLongitude(), deliveryPoint.getAltitude());
 
-        return Math.round(location.distance(compareLocation));
+        return (int) Math.round(location.distance(compareLocation));
     }
 
     /**

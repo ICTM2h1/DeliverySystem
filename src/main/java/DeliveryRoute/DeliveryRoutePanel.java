@@ -6,6 +6,7 @@ import UI.Components.Table;
 import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -136,35 +137,19 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
 
+        this.preview.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        this.preview.gridBagConstraints.weightx = 0.5;
+
         this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getName())));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
 
-        Table table = new Table();
-        table.addColumn("Nr.");
-        table.addColumn("Stad");
-        table.addColumn("Afstand");
-
-        int counter = 1;
-        DeliveryPointBase previousDeliveryPoint = null;
-        for (DeliveryPointBase deliveryPoint : deliveryRoute.getDeliveryPoints()) {
-            ArrayList<String> row = new ArrayList<>();
-            row.add(String.valueOf(counter));
-            row.add(deliveryPoint.label());
-            row.add(String.valueOf(deliveryPoint.distance(previousDeliveryPoint)));
-
-            table.addRow(row);
-            counter++;
-
-            if (previousDeliveryPoint == null || previousDeliveryPoint.equals(deliveryPoint)) {
-                previousDeliveryPoint = deliveryPoint;
-            }
-        }
-
-
-        this.preview.addFullWidthComponent(table.render());
+        this.preview.gridBagConstraints.insets.top = 10;
+        this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount()), JLabel.CENTER));
+        this.preview.gridBagConstraints.insets.top = 5;
+        this.preview.addFullWidthComponent(deliveryRoute.toTable().render());
     }
 
 }
