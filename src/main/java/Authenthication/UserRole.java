@@ -21,8 +21,9 @@ public enum UserRole {
 
     },
     ADMIN (2) {
+
         /**
-         * changes function isAdmin to true in case enum status = 2.
+         * Changes function isAdmin to true in case enum status = 2.
          *
          * @return boolean value true if user is admin.
          */
