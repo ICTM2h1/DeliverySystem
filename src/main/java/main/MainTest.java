@@ -55,10 +55,11 @@ public class MainTest {
             {"Burgemeester de Raadtsingel 75", "3311JG", "Dordrecht", "Rick Rood"},
             {"Vivaldistraat 12", "5653BR", "Eindhoven", "Coenraad van den Berg"},
             {"Stationsweg 81A", "8401DM", "Gorredijk", "Henk van den Berg"},
+            {"Pelikaanstraat 37", "9404CH", "Assen", "Henk Pelikaan"},
         };
 
         for (String[] city : cities) {
-            String customerName = city[3];
+            String customerName = city[4];
 
             ArrayList<String> selectFields = new ArrayList<>();
             selectFields.add("CustomerID");
