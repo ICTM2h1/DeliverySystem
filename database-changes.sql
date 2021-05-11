@@ -79,3 +79,9 @@ INSERT INTO `nerdygadgets`.`people` (
     0, '+310612345678', 'test@test.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1
 );
+
+DROP USER IF EXISTS 'nerdygadgets'@'localhost';
+
+CREATE USER 'nerdygadgets'@'localhost' IDENTIFIED BY '^jnx$PK&hHg3Cz6y#V#S';
+REVOKE ALL PRIVILEGES ON * . * FROM 'nerdygadgets'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON * . * TO 'nerdygadgets'@'localhost';
