@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 LOCK TABLES `nerdygadgets`.`people` WRITE;
 ALTER TABLE `nerdygadgets`.`people`
 CHANGE COLUMN `PersonID` `PersonID` INT(11) NOT NULL AUTO_INCREMENT;
@@ -39,10 +41,10 @@ INSERT INTO `nerdygadgets`.`people` (
     PhoneNumber, EmailAddress, ValidFrom,
     ValidTo, LastEditedBy, Role
 ) VALUES (
-    'Beheerder', 'Beheerder', 'Beheerder',
-    1, 'beheerder', 0,
+    'Bezorger', 'Bezorger', 'Bezorger',
+    1, 'bezorger', 0,
     '$2y$10$.D3CZ9FSjEYCOoZwlr.WjekQaijWBo4KTW0I3rpgm4Ou60cknIIXi', 0, 1,
-    0, '+310612345678', 'beheerder@beheerder.nl',
+    0, '+310612345678', 'bezorger@bezorger.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1, 1
 );
 
