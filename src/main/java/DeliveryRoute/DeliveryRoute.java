@@ -121,22 +121,14 @@ public class DeliveryRoute {
         Table table = new Table();
         table.addColumn("Nr.");
         table.addColumn("Stad");
-        table.addColumn("Afstand tot volgend punt (Km.)");
+        table.addColumn("Postcode");
 
         int counter = 0;
-        DeliveryPointBase nextDeliveryPoint;
         for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
-            int nextOrderIndex = counter + 1;
-            if (nextOrderIndex >= this.deliveryPoints.size()) {
-                nextOrderIndex = 0;
-            }
-
-            nextDeliveryPoint = this.deliveryPoints.get(nextOrderIndex);
-
             ArrayList<String> row = new ArrayList<>();
             row.add(String.valueOf(counter + 1));
             row.add(deliveryPoint.label());
-            row.add(String.valueOf(deliveryPoint.distance(nextDeliveryPoint)));
+            row.add(deliveryPoint.postalCode());
 
             table.addRow(row);
             counter++;
