@@ -130,7 +130,7 @@ public class DeliveryRoute {
      * @return The table.
      */
     public Table toTable() {
-        Table table = new Table();
+        Table table = new Table(500, 260);
         table.addColumn("Nr.");
         table.addColumn("Van");
         table.addColumn("Naar");

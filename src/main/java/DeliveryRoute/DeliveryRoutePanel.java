@@ -5,6 +5,8 @@ import UI.Panels.JPanelRawListBase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,10 +16,12 @@ import java.util.LinkedHashMap;
 /**
  * Provides a class for generating the delivery routes.
  */
-public class DeliveryRoutePanel extends JPanelRawListBase {
+public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListener {
 
     private final DeliveryStartPoint deliveryStartPoint;
     private final String date;
+
+    private final JButton routeButton, cancelButton, completeButton;
 
     /**
      * Creates a new delivery route object.
@@ -36,6 +40,15 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
             "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
         );
         this.date = date;
+
+        this.routeButton = new JButton("Volgen route");
+        this.routeButton.addActionListener(this);
+
+        this.cancelButton = new JButton("Annuleren");
+        this.cancelButton.addActionListener(this);
+
+        this.completeButton = new JButton("Afronden");
+        this.completeButton.addActionListener(this);
     }
 
     /**
@@ -166,7 +179,24 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
 
         this.preview.gridBagConstraints.insets.top = 5;
-        this.preview.addFullWidthComponent(deliveryRoute.toTable().render());
+        this.preview.addFullWidthComponent(deliveryRoute.toTable().render(), 3);
+
+        this.preview.gridBagConstraints.insets.top = 15;
+        this.preview.addComponent(this.cancelButton, true);
+        this.preview.gridBagConstraints.insets.left = 10;
+        this.preview.gridBagConstraints.insets.right = 10;
+        this.preview.addComponent(this.routeButton);
+        this.preview.gridBagConstraints.insets.left = 0;
+        this.preview.gridBagConstraints.insets.right = 0;
+        this.preview.addComponent(this.completeButton);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 
 }
