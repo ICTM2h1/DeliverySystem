@@ -41,6 +41,15 @@ public abstract class JPanelListBase extends JPanelRawListBase {
     protected abstract String getListItemLabel(LinkedHashMap<String, String> listItem);
 
     /**
+     * Updates the preview.
+     *
+     * @param listItem The updated list item.
+     */
+    protected void updatePreview(LinkedHashMap<String, String> listItem) {
+        super.updateRawPreview(listItem);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
