@@ -1,6 +1,5 @@
 package Stock;
 
-import Authenthication.User;
 import Crud.StockItem;
 import UI.Panels.JPanelListBase;
 
@@ -17,15 +16,6 @@ import java.util.LinkedHashMap;
 public class StockPanel extends JPanelListBase implements ActionListener {
 
     private JButton addButton, editButton, deleteButton;
-
-    /**
-     * Creates a new list panel.
-     *
-     * @param user The user.
-     */
-    public StockPanel(User user) {
-        super(user);
-    }
 
     /**
      * {@inheritDoc}

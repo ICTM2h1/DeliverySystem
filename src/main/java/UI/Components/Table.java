@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Table {
 
-    protected final int width, height;
-    protected static boolean isEditable = false;
+    private final int width, height;
+    private static boolean isEditable = false;
 
     private final ArrayList<ArrayList<String>> data;
     private final ArrayList<String> columns;

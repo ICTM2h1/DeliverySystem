@@ -1,6 +1,5 @@
 package DeliveryRoute;
 
-import Authenthication.User;
 import Crud.Order;
 import UI.Panels.JPanelRawListBase;
 
@@ -22,8 +21,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
     /**
      * Creates a new delivery route object.
      */
-    public DeliveryRoutePanel(User user) {
-        this((new SimpleDateFormat("yyyy-MM-dd")).format(new Date()), user);
+    public DeliveryRoutePanel() {
+        this((new SimpleDateFormat("yyyy-MM-dd")).format(new Date()));
     }
 
     /**
@@ -31,9 +30,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      *
      * @param date The date.
      */
-    public DeliveryRoutePanel(String date, User user) {
-        super(user);
-
+    public DeliveryRoutePanel(String date) {
         this.date = date;
     }
 

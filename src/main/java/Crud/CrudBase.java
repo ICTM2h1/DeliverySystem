@@ -173,7 +173,7 @@ public abstract class CrudBase {
      *
      * @param conditions The conditions.
      */
-    public void addCondition(LinkedHashMap<String, String> conditions) {
+    public void addConditions(LinkedHashMap<String, String> conditions) {
         this.bindParams(conditions);
     }
 

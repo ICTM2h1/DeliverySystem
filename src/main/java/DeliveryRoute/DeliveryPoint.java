@@ -27,6 +27,14 @@ public class DeliveryPoint extends DeliveryPointBase {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String postalCode() {
+        return this.order.get("DeliveryPostalCode");
+    }
+
+    /**
      * Gets the order.
      *
      * @return The order.
@@ -74,19 +82,21 @@ public class DeliveryPoint extends DeliveryPointBase {
  */
 class DeliveryStartPoint extends DeliveryPointBase {
 
-    private final String name;
+    private final String name, postalCode;
     private final double longitude, latitude, altitude;
 
     /**
      * Creates a new delivery start point.
      *
      * @param name The name.
+     * @param postalCode The postal code.
      * @param longitude The longitude.
      * @param latitude The latitude.
      * @param altitude The altitude.
      */
-    public DeliveryStartPoint(String name, double longitude, double latitude, double altitude) {
+    public DeliveryStartPoint(String name, String postalCode, double longitude, double latitude, double altitude) {
         this.name = name;
+        this.postalCode = postalCode;
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;
@@ -98,6 +108,14 @@ class DeliveryStartPoint extends DeliveryPointBase {
     @Override
     public String label() {
         return this.name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String postalCode() {
+        return this.postalCode;
     }
 
     /**
@@ -137,6 +155,13 @@ abstract class DeliveryPointBase {
      * @return The label of this delivery point.
      */
     public abstract String label();
+
+    /**
+     * Gets the postal code of the delivery point.
+     *
+     * @return The postal code.
+     */
+    public abstract String postalCode();
 
     /**
      * Calculates the distance between 2 delivery points.

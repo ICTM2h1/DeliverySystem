@@ -1,17 +1,11 @@
 package Authenthication;
 
-import System.Error.SystemError;
 import UI.Panels.JPanelBase;
-import UI.Window;
 import main.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.util.List;
 
 /**
  * Provides a logout panel.
@@ -19,15 +13,6 @@ import java.util.List;
 public class LogoutPanel extends JPanelBase implements ActionListener {
 
     private JButton logoutButton;
-
-    /**
-     * Creates a new logout panel.
-     *
-     * @param user The user.
-     */
-    public LogoutPanel(User user) {
-        super(user);
-    }
 
     /**
      * {@inheritDoc}

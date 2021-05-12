@@ -73,19 +73,15 @@ public class Order extends CrudBase {
     public ArrayList<LinkedHashMap<String, String>> filterOnGeometry() {
         ArrayList<LinkedHashMap<String, String>> entities = this.all();
         ArrayList<LinkedHashMap<String, String>> orders = new ArrayList<>();
-        LinkedHashMap<String, String> nextOrder;
-        int counter = 0;
+
         for (LinkedHashMap<String, String> order : entities) {
-            int nextOrderIndex = counter + 1;
-            if (nextOrderIndex >= entities.size()) {
-                nextOrderIndex = 0;
-            }
+            String postalCode = order.get("DeliveryPostalCode").replaceAll("[^0-9]", "");
 
-            nextOrder = entities.get(nextOrderIndex);
-
+            int numericPostalCode;
             double latitude, longitude, altitude;
-            double distance = calculateDistance(order, nextOrder);
+            saveGeometricDataOnce(order);
             try {
+                numericPostalCode = Integer.parseInt(postalCode);
                 latitude = Double.parseDouble(order.get("Latitude"));
                 longitude = Double.parseDouble(order.get("Longitude"));
                 altitude = Double.parseDouble(order.get("Altitude"));
@@ -93,11 +89,11 @@ public class Order extends CrudBase {
                 continue;
             }
 
-            if (latitude == 0 || longitude == 0) {
+            if (latitude == 0 || longitude == 0 || altitude == 0 || numericPostalCode == 0) {
                 this.withoutGeometry++;
             }
 
-            order.put("geometry.distance", String.valueOf(distance));
+            order.put("geometry.postalCode", String.valueOf(numericPostalCode));
             order.put("geometry.latitude", String.valueOf(latitude));
             order.put("geometry.longitude", String.valueOf(longitude));
             order.put("geometry.altitude", String.valueOf(altitude));
@@ -106,8 +102,8 @@ public class Order extends CrudBase {
 
         orders.sort((order, compareOrder) -> {
             try {
-                Double distance = Double.valueOf(order.get("geometry.distance"));
-                Double compareDistance = Double.valueOf(compareOrder.get("geometry.distance"));
+                Integer distance = Integer.valueOf(order.get("geometry.postalCode"));
+                Integer compareDistance = Integer.valueOf(compareOrder.get("geometry.postalCode"));
 
                 return distance.compareTo(compareDistance);
             } catch (NumberFormatException e) {
@@ -130,14 +126,11 @@ public class Order extends CrudBase {
     }
 
     /**
-     * Calculates the distance between two orders.
+     * Saves the geometric data from an order into a customer.
      *
      * @param order The order.
-     * @param compareOrder The order to compare the current one to.
-     *
-     * @return The distance between two orders, in kilometers.
      */
-    public double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
+    public void saveGeometricDataOnce(LinkedHashMap<String, String> order) {
         String customerID = order.get("CustomerID");
         String city = order.get("CityName");
         String deliveryAddressLine1 = order.get("DeliveryAddressLine1");
@@ -171,6 +164,20 @@ public class Order extends CrudBase {
             this.customer.addCondition("CustomerID", customerID);
             this.customer.update();
         }
+    }
+
+    /**
+     * Calculates the distance between two orders.
+     *
+     * @param order The order.
+     * @param compareOrder The order to compare the current one to.
+     *
+     * @return The distance between two orders, in kilometers.
+     */
+    public double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
+        String latitudeString = order.get("Latitude");
+        String longitudeString = order.get("Longitude");
+        String altitudeString = order.get("Altitude");
 
         if (compareOrder == null) {
             return 0;
