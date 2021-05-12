@@ -3,6 +3,8 @@ package DeliveryRoute;
 import System.Error.SystemError;
 import UI.Components.Table;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.util.ArrayList;
 
 /**
@@ -24,8 +26,18 @@ public class DeliveryRoute {
      * @param capacity The capacity of this route.
      */
     public DeliveryRoute(int id, int capacity) {
-        this.id = id + 1;
-        this.deliveryPoints = new ArrayList<>(capacity + 1);
+        this(id, new ArrayList<>(capacity + 1));
+    }
+
+    /**
+     * Creates a new delivery route.
+     *
+     * @param id The id of this route.
+     * @param deliveryPoints The delivery points of this route.
+     */
+    public DeliveryRoute(int id, ArrayList<DeliveryPointBase> deliveryPoints) {
+        this.id = id;
+        this.deliveryPoints = deliveryPoints;
     }
 
     /**
@@ -96,7 +108,7 @@ public class DeliveryRoute {
         for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
             int nextOrderIndex = counter + 1;
             if (nextOrderIndex >= this.deliveryPoints.size()) {
-                nextOrderIndex = 0;
+                break;
             }
 
             nextDeliveryPoint = this.deliveryPoints.get(nextOrderIndex);
@@ -120,19 +132,37 @@ public class DeliveryRoute {
     public Table toTable() {
         Table table = new Table();
         table.addColumn("Nr.");
-        table.addColumn("Stad");
-        table.addColumn("Postcode");
+        table.addColumn("Van");
+        table.addColumn("Naar");
+        table.addColumn("Afstand");
 
         int counter = 0;
+        DeliveryPointBase nextDeliveryPoint;
         for (DeliveryPointBase deliveryPoint : this.deliveryPoints) {
+            int nextOrderIndex = counter + 1;
+            if (nextOrderIndex >= this.deliveryPoints.size()) {
+                break;
+            }
+
+            nextDeliveryPoint = this.deliveryPoints.get(nextOrderIndex);
+
             ArrayList<String> row = new ArrayList<>();
             row.add(String.valueOf(counter + 1));
-            row.add(deliveryPoint.label());
-            row.add(deliveryPoint.postalCode());
+            row.add(deliveryPoint.addressLabel());
+            row.add(nextDeliveryPoint.addressLabel());
+            row.add(String.valueOf(deliveryPoint.distance(nextDeliveryPoint)));
 
             table.addRow(row);
             counter++;
         }
+
+        table.initializeTable();
+        table.setColumnWidth(0, 50);
+        table.setColumnWidth(3, 80);
+
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+        table.setCellRenderer(0, cellRenderer);
 
         return table;
     }
@@ -166,4 +196,12 @@ public class DeliveryRoute {
         this.deliveryPoints.add(deliveryPoint);
     }
 
+    /**
+     * Gets the delivery points.
+     *
+     * @return The delivery points.
+     */
+    public ArrayList<DeliveryPointBase> getDeliveryPoints() {
+        return deliveryPoints;
+    }
 }

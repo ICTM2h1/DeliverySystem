@@ -16,6 +16,9 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryRoutePanel extends JPanelRawListBase {
 
+    private final DeliveryStartPoint deliveryStartPoint = new DeliveryStartPoint(
+      "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
+    );
     private final String date;
 
     /**
@@ -92,7 +95,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
         Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
         for (int deliverer = 0; deliverer < delivererCount; deliverer++) {
             int delivererOrderCount = 0;
-            DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer, ordersPerDeliverer);
+            DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer + 1, ordersPerDeliverer);
 
             while (iterator.hasNext()) {
                 LinkedHashMap<String, String> entity = iterator.next();
@@ -111,7 +114,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                 continue;
             }
 
-            listItems.add(deliverer, deliveryRoute);
+            NearestNeighbour nearestNeighbour = new NearestNeighbour(this.deliveryStartPoint, deliveryRoute.getDeliveryPoints());
+            DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
+
+            listItems.add(deliverer, sortedRoute);
         }
 
         return new ArrayList<>(listItems);
@@ -147,6 +153,9 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
 
         this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
         this.preview.addComponent(new JLabel(deliveryRoute.getName()));
+
+        this.preview.addComponent(new JLabel("Startpunt:"), true);
+        this.preview.addComponent(new JLabel(this.deliveryStartPoint.addressLabel()));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));

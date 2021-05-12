@@ -30,8 +30,24 @@ public class DeliveryPoint extends DeliveryPointBase {
      * {@inheritDoc}
      */
     @Override
-    public String postalCode() {
+    public String getPostalCode() {
         return this.order.get("DeliveryPostalCode");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getHouseNumber() {
+        String[] address = this.order.get("DeliveryAddressLine1").split(" ");
+        StringBuilder houseNumber = new StringBuilder();
+        for (String addressPiece : address) {
+            if (addressPiece.matches(".*\\d.*")) {
+                houseNumber.append(" ").append(addressPiece);
+            }
+        }
+
+        return houseNumber.toString();
     }
 
     /**
@@ -83,6 +99,7 @@ public class DeliveryPoint extends DeliveryPointBase {
 class DeliveryStartPoint extends DeliveryPointBase {
 
     private final String name, postalCode;
+    private final int houseNumber;
     private final double longitude, latitude, altitude;
 
     /**
@@ -90,13 +107,15 @@ class DeliveryStartPoint extends DeliveryPointBase {
      *
      * @param name The name.
      * @param postalCode The postal code.
+     * @param houseNumber The house number.
      * @param longitude The longitude.
      * @param latitude The latitude.
      * @param altitude The altitude.
      */
-    public DeliveryStartPoint(String name, String postalCode, double longitude, double latitude, double altitude) {
+    public DeliveryStartPoint(String name, String postalCode, int houseNumber, double longitude, double latitude, double altitude) {
         this.name = name;
         this.postalCode = postalCode;
+        this.houseNumber = houseNumber;
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;
@@ -114,8 +133,16 @@ class DeliveryStartPoint extends DeliveryPointBase {
      * {@inheritDoc}
      */
     @Override
-    public String postalCode() {
+    public String getPostalCode() {
         return this.postalCode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getHouseNumber() {
+        return " " + this.houseNumber;
     }
 
     /**
@@ -157,11 +184,27 @@ abstract class DeliveryPointBase {
     public abstract String label();
 
     /**
+     * Gets the address label of this delivery point.
+     *
+     * @return The address label of this delivery point.
+     */
+    public String addressLabel() {
+        return String.format("%s (%s,%s)", this.label(), this.getPostalCode(), this.getHouseNumber());
+    }
+
+    /**
      * Gets the postal code of the delivery point.
      *
      * @return The postal code.
      */
-    public abstract String postalCode();
+    public abstract String getPostalCode();
+
+    /**
+     * Gets the house number of the delivery point.
+     *
+     * @return The house number.
+     */
+    public abstract String getHouseNumber();
 
     /**
      * Calculates the distance between 2 delivery points.
