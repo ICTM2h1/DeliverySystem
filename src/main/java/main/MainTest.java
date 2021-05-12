@@ -59,7 +59,7 @@ public class MainTest {
         };
 
         for (String[] city : cities) {
-            String customerName = city[4];
+            String customerName = city[3];
 
             ArrayList<String> selectFields = new ArrayList<>();
             selectFields.add("CustomerID");
