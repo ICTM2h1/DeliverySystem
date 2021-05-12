@@ -20,7 +20,7 @@ abstract public class JPanelBase extends JPanel {
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
-    protected static ArrayList<JPanelBase> panels = new ArrayList<>();
+    protected static final ArrayList<JPanelBase> panels = new ArrayList<>();
 
     /**
      * Creates a new panel.

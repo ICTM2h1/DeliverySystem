@@ -10,11 +10,13 @@ import java.util.LinkedHashMap;
  */
 public abstract class CrudBase {
 
-    protected ArrayList<String> selectFields = new ArrayList<>();
+    protected final ArrayList<String> selectFields = new ArrayList<>();
 
-    protected LinkedHashMap<String, String> values = new LinkedHashMap<>(), parameters = new LinkedHashMap<>();
+    protected final LinkedHashMap<String, String> values = new LinkedHashMap<>();
+    protected final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
-    protected String table, primaryKey;
+    protected final String table;
+    protected final String primaryKey;
 
     /**
      * Constructs a new crud object.
