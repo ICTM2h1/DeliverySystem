@@ -1,6 +1,5 @@
 package Customer;
 
-import Authenthication.User;
 import Crud.Customer;
 import UI.Panels.JPanelListBase;
 
@@ -17,15 +16,6 @@ import java.util.LinkedHashMap;
 public class CustomerPanel extends JPanelListBase implements ActionListener {
 
     private JButton addButton, editButton, deleteButton;
-
-    /**
-     * Creates a new list panel.
-     *
-     * @param user The user.
-     */
-    public CustomerPanel(User user) {
-        super(user);
-    }
 
     /**
      * {@inheritDoc}

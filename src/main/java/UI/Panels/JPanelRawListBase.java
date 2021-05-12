@@ -1,7 +1,5 @@
 package UI.Panels;
 
-import Authenthication.User;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -19,15 +17,6 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     protected JPanelListPreview preview;
     protected JList<String> list;
     protected JSplitPane splitPane;
-
-    /**
-     * Creates a new list panel.
-     *
-     * @param user The user.
-     */
-    public JPanelRawListBase(User user) {
-        super(user);
-    }
 
     /**
      * {@inheritDoc}
@@ -54,7 +43,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         this.list.setSelectionForeground(Color.WHITE);
         this.list.setCellRenderer(this.getListCellRenderer());
 
-        this.preview = new JPanelListPreview(this.user, this.getListPreviewTitle());
+        this.preview = new JPanelListPreview(this.getListPreviewTitle());
         this.preview.instantiate();
         this.preview.updateUI();
 
