@@ -60,6 +60,7 @@ public class Order extends CrudBase {
 
             query += " WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate";
         }
+        query += " ORDER BY OrderID";
 
         return super.all(query);
     }

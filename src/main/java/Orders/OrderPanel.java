@@ -54,6 +54,7 @@ public class OrderPanel extends JPanelListBase {
     @Override
     protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
         this.preview.add(new JLabel(listItem.get("OrderID")));
+
     }
 
 }
