@@ -16,9 +16,7 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryRoutePanel extends JPanelRawListBase {
 
-    private final DeliveryStartPoint deliveryStartPoint = new DeliveryStartPoint(
-      "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
-    );
+    private final DeliveryStartPoint deliveryStartPoint;
     private final String date;
 
     /**
@@ -34,6 +32,9 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
      * @param date The date.
      */
     public DeliveryRoutePanel(String date) {
+        this.deliveryStartPoint = new DeliveryStartPoint(
+            "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
+        );
         this.date = date;
     }
 
