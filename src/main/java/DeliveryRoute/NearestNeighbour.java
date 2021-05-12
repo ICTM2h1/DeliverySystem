@@ -11,7 +11,7 @@ public class NearestNeighbour {
     private DeliveryPointBase closestCity;
     private double closestDistance = Double.MAX_VALUE;
     private int closestArrayIndex;
-    private int citiesCount;
+    private final int citiesCount;
 
     // Route (calculation) variables
     private DeliveryPointBase currentCity;

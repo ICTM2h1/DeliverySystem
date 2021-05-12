@@ -13,7 +13,7 @@ import java.net.http.HttpResponse;
  */
 public class UrlRequest {
 
-    private HttpRequest.Builder httpBuilder;
+    private final HttpRequest.Builder httpBuilder;
 
     /**
      * Constructs a new url request.
