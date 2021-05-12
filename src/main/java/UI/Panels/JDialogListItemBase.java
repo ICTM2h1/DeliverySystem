@@ -27,7 +27,7 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
         this.listItem = listItem;
 
         this.setLayout(new GridLayout(3, 2));
-        this.setTitle("Bewerk productvoorraad");
+        this.setTitle(this.getDialogTitle());
         this.setSize(400, 200);
         this.instantiate(listItem);
 
