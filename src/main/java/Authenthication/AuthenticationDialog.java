@@ -198,7 +198,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     /**
      * Enter key on focus username field acts as a TAB-key.
      */
-    final Action enterPressedUsername = new AbstractAction() {
+    private final Action enterPressedUsername = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (usernameField.getText().trim().length() > 0) {
@@ -210,7 +210,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     /**
      * Enter key on focus password field acts as a submit button.
      */
-    final Action enterPressedPassword = new AbstractAction() {
+    private final Action enterPressedPassword = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             handleLogin();
