@@ -20,7 +20,7 @@ abstract public class JPanelBase extends JPanel {
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
-    protected static ArrayList<JPanelBase> panels = new ArrayList<>();
+    protected static final ArrayList<JPanelBase> panels = new ArrayList<>();
 
     /**
      * Creates a new panel.
@@ -90,9 +90,18 @@ abstract public class JPanelBase extends JPanel {
      * @param component The component.
      */
     public void addFullWidthComponent(Component component) {
+        this.addFullWidthComponent(component, 2);
+    }
+
+    /**
+     * Adds a full width component.
+     *
+     * @param component The component.
+     */
+    public void addFullWidthComponent(Component component, int gridWidth) {
         int defaultGridWidth = this.gridBagConstraints.gridwidth;
 
-        this.gridBagConstraints.gridwidth = this.getDefaultFullGridWidth();
+        this.gridBagConstraints.gridwidth = gridWidth;
         this.addComponent(component, true);
 
         this.gridBagConstraints.gridwidth = defaultGridWidth;
@@ -184,15 +193,6 @@ abstract public class JPanelBase extends JPanel {
      */
     public static Border getDefaultBorder() {
         return BorderFactory.createEmptyBorder(10, 10, 10, 10);
-    }
-
-    /**
-     * Gets the default full grid width value.
-     *
-     * @return The default full gird width value.
-     */
-    protected int getDefaultFullGridWidth() {
-        return 2;
     }
 
 }

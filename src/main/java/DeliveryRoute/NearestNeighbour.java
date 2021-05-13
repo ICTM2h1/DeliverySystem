@@ -11,7 +11,7 @@ public class NearestNeighbour {
     private DeliveryPointBase closestCity;
     private double closestDistance = Double.MAX_VALUE;
     private int closestArrayIndex;
-    private int citiesCount;
+    private final int citiesCount;
 
     // Route (calculation) variables
     private DeliveryPointBase currentCity;
@@ -26,7 +26,7 @@ public class NearestNeighbour {
      * @param startPoint location where you start.
      * @param cities array with locations you need to pass.
      */
-    public NearestNeighbour(DeliveryStartPoint startPoint, ArrayList<DeliveryPoint> cities) {
+    public NearestNeighbour(DeliveryStartPoint startPoint, ArrayList<DeliveryPointBase> cities) {
         // Calculate the amount of cities you're going to pass (excluding the trip back to starting point).
         this.citiesCount = cities.size() + 1;
 
