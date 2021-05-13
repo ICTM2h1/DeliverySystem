@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 /**
  * Represents a delivery point within a delivery route.
  */
-public class DeliveryPoint extends DeliveryPointBase {
+public class DeliveryOrderPoint extends DeliveryPointBase {
 
     private final LinkedHashMap<String, String> order;
 
@@ -14,7 +14,7 @@ public class DeliveryPoint extends DeliveryPointBase {
      *
      * @param order The order.
      */
-    public DeliveryPoint(LinkedHashMap<String, String> order) {
+    public DeliveryOrderPoint(LinkedHashMap<String, String> order) {
         this.order = order;
     }
 
@@ -72,7 +72,7 @@ public class DeliveryPoint extends DeliveryPointBase {
 /**
  * Provides a delivery start point.
  */
-class DeliveryStartPoint extends DeliveryPointBase {
+class DeliveryPoint extends DeliveryPointBase {
 
     private final String name;
     private final double longitude, latitude, altitude;
@@ -85,7 +85,7 @@ class DeliveryStartPoint extends DeliveryPointBase {
      * @param latitude The latitude.
      * @param altitude The altitude.
      */
-    public DeliveryStartPoint(String name, double longitude, double latitude, double altitude) {
+    public DeliveryPoint(String name, double longitude, double latitude, double altitude) {
         this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;

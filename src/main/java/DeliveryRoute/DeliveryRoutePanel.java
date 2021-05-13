@@ -104,7 +104,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase {
                     break;
                 }
 
-                deliveryRoute.add(new DeliveryPoint(entity));
+                deliveryRoute.add(new DeliveryOrderPoint(entity));
                 delivererOrderCount++;
 
                 iterator.remove(); // avoids a ConcurrentModificationException

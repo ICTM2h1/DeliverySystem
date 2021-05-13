@@ -3,6 +3,7 @@ package UI.Panels;
 import Authenthication.LogoutPanel;
 import Authenthication.User;
 import Customer.CustomerPanel;
+import DeliveryRoute.DeliveryFollowPanel;
 import DeliveryRoute.DeliveryRoutePanel;
 import Stock.StockPanel;
 
@@ -157,7 +158,11 @@ abstract public class JPanelBase extends JPanel {
             panelList.add(new StockPanel(user));
         }
 
+        // TODO: DIT WEGHALEN IN PRODUCTIE
+        panelList.add(new DeliveryFollowPanel(user));
+
         panelList.add(new LogoutPanel(user));
+
 
         for (JPanelBase panel : panelList) {
             panel.addTitleComponent();
