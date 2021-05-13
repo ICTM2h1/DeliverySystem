@@ -1,7 +1,5 @@
 package UI.Panels;
 
-import Authenthication.User;
-
 import java.awt.*;
 
 /**
@@ -14,11 +12,9 @@ public class JPanelListPreview extends JPanelBase {
     /**
      * Creates a new list preview.
      *
-     * @param user The user.
+     * @param title The title.
      */
-    protected JPanelListPreview(User user, String title) {
-        super(user);
-
+    protected JPanelListPreview(String title) {
         this.title = title;
     }
 

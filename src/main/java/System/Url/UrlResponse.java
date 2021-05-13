@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
  */
 public class UrlResponse {
 
-    private HttpResponse<String> httpResponse;
+    private final HttpResponse<String> httpResponse;
 
     /**
      * Creates a new url response.

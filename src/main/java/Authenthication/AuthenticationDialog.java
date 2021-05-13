@@ -36,11 +36,11 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
 
         this.usernameLabel = new JLabel("Gebruikersnaam:");
         this.usernameField = new JTextField();
-        this.usernameField.addActionListener(enterPressedUsername);
+        this.usernameField.addActionListener(this.enterPressedUsername);
 
         this.passwordLabel = new JLabel("Wachtwoord:");
         this.passwordField = new JPasswordField();
-        this.passwordField.addActionListener(enterPressedPassword);
+        this.passwordField.addActionListener(this.enterPressedPassword);
 
         this.errorMessage = new JLabel("", JLabel.CENTER);
         this.loginButton = new JButton("Aanmelden");
@@ -61,22 +61,22 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        panel.add(usernameLabel, gridBagConstraints);
+        panel.add(this.usernameLabel, gridBagConstraints);
 
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 1;
-        panel.add(usernameField, gridBagConstraints);
+        panel.add(this.usernameField, gridBagConstraints);
 
         // Row 2 - Password
         gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        panel.add(passwordLabel, gridBagConstraints);
+        panel.add(this.passwordLabel, gridBagConstraints);
 
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.gridx = 1;
-        panel.add(passwordField, gridBagConstraints);
+        panel.add(this.passwordField, gridBagConstraints);
 
         // Row 3 - error message
         gridBagConstraints.insets = new Insets(5, 0, 5, 0);
@@ -84,14 +84,14 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        panel.add(errorMessage, gridBagConstraints);
+        panel.add(this.errorMessage, gridBagConstraints);
 
         // Row 4 - Login button
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        panel.add(loginButton, gridBagConstraints);
+        panel.add(this.loginButton, gridBagConstraints);
 
         // Display panel
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -139,7 +139,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
      * Handles the whole login part (validating and assigning data).
      */
     private void handleLogin() {
-        if (validateUser()) {
+        if (this.validateUser()) {
             UserRole userRole;
             try {
                 userRole = UserRole.valueOf(Integer.parseInt(this.userResultSet.get("Role")));
@@ -154,7 +154,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
                 String HashedDatabasePassword = this.userResultSet.get("HashedPassword");
 
                 this.user = UserRole.createUser(username, HashedDatabasePassword, userRole);
-                dispose();
+                this.dispose();
             } else {
                 this.errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
                 this.errorMessage.setForeground(Color.red);
@@ -191,14 +191,14 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.loginButton) {
-            handleLogin();
+            this.handleLogin();
         }
     }
 
     /**
      * Enter key on focus username field acts as a TAB-key.
      */
-    Action enterPressedUsername = new AbstractAction() {
+    private final Action enterPressedUsername = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (usernameField.getText().trim().length() > 0) {
@@ -210,7 +210,7 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
     /**
      * Enter key on focus password field acts as a submit button.
      */
-    Action enterPressedPassword = new AbstractAction() {
+    private final Action enterPressedPassword = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             handleLogin();

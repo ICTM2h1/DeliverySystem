@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Provides a main class for testing.
@@ -54,6 +55,7 @@ public class MainTest {
             {"Burgemeester de Raadtsingel 75", "3311JG", "Dordrecht", "Rick Rood"},
             {"Vivaldistraat 12", "5653BR", "Eindhoven", "Coenraad van den Berg"},
             {"Stationsweg 81A", "8401DM", "Gorredijk", "Henk van den Berg"},
+            {"Pelikaanstraat 37", "9404CH", "Assen", "Henk Pelikaan"},
         };
 
         for (String[] city : cities) {
@@ -73,7 +75,10 @@ public class MainTest {
 
             String customerID = customerDb.get("CustomerID");
             Order order = new Order();
-            for (int orderAmount = 0; orderAmount < ordersPerCustomer; orderAmount++) {
+            // nextInt is normally exclusive of the top value, so add 1 to make it inclusive.
+            int customerOrders = ThreadLocalRandom.current().nextInt(1, ordersPerCustomer + 1);
+
+            for (int orderAmount = 0; orderAmount < customerOrders; orderAmount++) {
                 order.addValue("CustomerID", customerID);
                 order.addValue("SalespersonPersonID", "2");
                 order.addValue("ContactPersonID", "3032");

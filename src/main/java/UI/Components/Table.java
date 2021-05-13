@@ -1,6 +1,7 @@
 package UI.Components;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -9,8 +10,10 @@ import java.util.ArrayList;
  */
 public class Table {
 
-    protected final int width, height;
-    protected static boolean isEditable = false;
+    private JTable table;
+
+    private final int width, height;
+    private static boolean isEditable = false;
 
     private final ArrayList<ArrayList<String>> data;
     private final ArrayList<String> columns;
@@ -33,18 +36,16 @@ public class Table {
     }
 
     /**
-     * Renders the table to a component.
-     *
-     * @return Table component.
+     * Initializes the table.
      */
-    public Component render() {
+    public void initializeTable() {
         String[][] tableData = new String[this.data.size()][];
         for (int delta = 0; delta < this.data.size(); delta++) {
             ArrayList<String> row = this.data.get(delta);
             tableData[delta] = row.toArray(new String[0]);
         }
 
-        JTable table = new JTable(tableData, this.columns.toArray()) {
+        this.table = new JTable(tableData, this.columns.toArray()) {
             /**
              * {@inheritDoc}
              */
@@ -54,12 +55,43 @@ public class Table {
             }
         };
 
-        table.setPreferredSize(new Dimension(this.width, this.height - 50));
+        this.table.setPreferredSize(new Dimension(this.width, this.height - 50));
+    }
+
+    /**
+     * Renders the table to a component.
+     *
+     * @return Table component.
+     */
+    public Component render() {
+        if (this.table == null) {
+            this.initializeTable();
+        }
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(this.width, this.height));
 
         return scrollPane;
+    }
+
+    /**
+     * Sets column width.
+     *
+     * @param index The index of the column.
+     * @param width The width of the column.
+     */
+    public void setColumnWidth(int index, int width) {
+        this.table.getColumnModel().getColumn(index).setMaxWidth(width);
+    }
+
+    /**
+     * Sets the cell renderer.
+     *
+     * @param index The index of the column.
+     * @param tableCellRenderer The cell renderer.
+     */
+    public void setCellRenderer(int index, TableCellRenderer tableCellRenderer) {
+        this.table.getColumnModel().getColumn(index).setCellRenderer(tableCellRenderer);
     }
 
     /**

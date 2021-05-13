@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 LOCK TABLES `nerdygadgets`.`people` WRITE;
 ALTER TABLE `nerdygadgets`.`people`
 CHANGE COLUMN `PersonID` `PersonID` INT(11) NOT NULL AUTO_INCREMENT;
@@ -24,7 +26,7 @@ UNLOCK TABLES;
 
 ALTER TABLE `nerdygadgets`.`customers`
 ADD COLUMN `Longitude` DOUBLE NULL AFTER `ValidTo`,
-ADD COLUMN `Latitude` DOUBLE NULL AFTER `Longitude`;
+ADD COLUMN `Latitude` DOUBLE NULL AFTER `Longitude`,
 ADD COLUMN `Altitude` DOUBLE NULL AFTER `Latitude`;
 
 ALTER TABLE `nerdygadgets`.`people`
@@ -39,10 +41,10 @@ INSERT INTO `nerdygadgets`.`people` (
     PhoneNumber, EmailAddress, ValidFrom,
     ValidTo, LastEditedBy, Role
 ) VALUES (
-    'Beheerder', 'Beheerder', 'Beheerder',
-    1, 'beheerder', 0,
+    'Bezorger', 'Bezorger', 'Bezorger',
+    1, 'bezorger', 0,
     '$2y$10$.D3CZ9FSjEYCOoZwlr.WjekQaijWBo4KTW0I3rpgm4Ou60cknIIXi', 0, 1,
-    0, '+310612345678', 'beheerder@beheerder.nl',
+    0, '+310612345678', 'bezorger@bezorger.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1, 1
 );
 
@@ -77,3 +79,9 @@ INSERT INTO `nerdygadgets`.`people` (
     0, '+310612345678', 'test@test.nl',
     '2020-12-8 23:59:59', '9999-12-31 23:59:59', 1
 );
+
+DROP USER IF EXISTS 'nerdygadgets'@'localhost';
+
+CREATE USER 'nerdygadgets'@'localhost' IDENTIFIED BY '^jnx$PK&hHg3Cz6y#V#S';
+REVOKE ALL PRIVILEGES ON * . * FROM 'nerdygadgets'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON * . * TO 'nerdygadgets'@'localhost';

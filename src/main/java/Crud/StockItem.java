@@ -41,4 +41,20 @@ public class StockItem extends CrudBase {
         return super.all(query);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LinkedHashMap<String, String> get(int id) {
+        String query = "SELECT SI.StockItemID, SI.StockItemName, ROUND(TaxRate * RecommendedRetailPrice / 100 + RecommendedRetailPrice,2) as SellPrice, " +
+                "SIH.QuantityOnHand, (SELECT COUNT(*) FROM stockitemholdings WHERE QuantityOnHand < 1) AS OutOfStock " +
+                "FROM stockitems SI " +
+                "JOIN stockitemholdings SIH USING(stockitemid) " +
+                "WHERE SI.StockItemID = :StockItemID " +
+                "GROUP BY StockItemID";
+
+        this.addCondition("StockItemID", String.valueOf(id));
+
+        return super.get(query);
+    }
 }

@@ -3,7 +3,6 @@ package UI.Panels;
 import Authenthication.LogoutPanel;
 import Authenthication.User;
 import Customer.CustomerPanel;
-import DeliveryRoute.DeliveryFollowPanel;
 import DeliveryRoute.DeliveryRoutePanel;
 import Stock.StockPanel;
 
@@ -21,15 +20,13 @@ abstract public class JPanelBase extends JPanel {
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
-    protected static ArrayList<JPanelBase> panels = new ArrayList<>();
-
-    protected final User user;
+    protected static final ArrayList<JPanelBase> panels = new ArrayList<>();
 
     /**
      * Creates a new panel.
      */
-    protected JPanelBase(User user) {
-        this(700, 500, user);
+    public JPanelBase() {
+        this(700, 500);
     }
 
     /**
@@ -38,10 +35,9 @@ abstract public class JPanelBase extends JPanel {
      * @param panelWidth The extra width of the panel.
      * @param panelHeight The extra height of the panel.
      */
-    protected JPanelBase(int panelWidth, int panelHeight, User user) {
+    public JPanelBase(int panelWidth, int panelHeight) {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
-        this.user = user;
 
         this.setDefaultGridBagConstraints();
         this.setLayout(this.getLayoutManager());
@@ -94,9 +90,18 @@ abstract public class JPanelBase extends JPanel {
      * @param component The component.
      */
     public void addFullWidthComponent(Component component) {
+        this.addFullWidthComponent(component, 2);
+    }
+
+    /**
+     * Adds a full width component.
+     *
+     * @param component The component.
+     */
+    public void addFullWidthComponent(Component component, int gridWidth) {
         int defaultGridWidth = this.gridBagConstraints.gridwidth;
 
-        this.gridBagConstraints.gridwidth = this.getDefaultFullGridWidth();
+        this.gridBagConstraints.gridwidth = gridWidth;
         this.addComponent(component, true);
 
         this.gridBagConstraints.gridwidth = defaultGridWidth;
@@ -151,18 +156,14 @@ abstract public class JPanelBase extends JPanel {
     public static void registerPanels(User user) {
         panels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
-        panelList.add(new DeliveryRoutePanel(user));
+        panelList.add(new DeliveryRoutePanel());
 
         if (user.getRole().isAdmin()) {
-            panelList.add(new CustomerPanel(user));
-            panelList.add(new StockPanel(user));
+            panelList.add(new CustomerPanel());
+            panelList.add(new StockPanel());
         }
 
-        // TODO: DIT WEGHALEN IN PRODUCTIE
-        panelList.add(new DeliveryFollowPanel(user));
-
-        panelList.add(new LogoutPanel(user));
-
+        panelList.add(new LogoutPanel());
 
         for (JPanelBase panel : panelList) {
             panel.addTitleComponent();
@@ -192,15 +193,6 @@ abstract public class JPanelBase extends JPanel {
      */
     public static Border getDefaultBorder() {
         return BorderFactory.createEmptyBorder(10, 10, 10, 10);
-    }
-
-    /**
-     * Gets the default full grid width value.
-     *
-     * @return The default full gird width value.
-     */
-    protected int getDefaultFullGridWidth() {
-        return 2;
     }
 
 }

@@ -1,7 +1,5 @@
 package UI.Panels;
 
-import Authenthication.User;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -9,15 +7,6 @@ import java.util.LinkedHashMap;
  * Provides a base panel for lists.
  */
 public abstract class JPanelListBase extends JPanelRawListBase {
-
-    /**
-     * Creates a new list panel.
-     *
-     * @param user The user.
-     */
-    public JPanelListBase(User user) {
-        super(user);
-    }
 
     /**
      * {@inheritDoc}
@@ -50,6 +39,15 @@ public abstract class JPanelListBase extends JPanelRawListBase {
      * @return The label.
      */
     protected abstract String getListItemLabel(LinkedHashMap<String, String> listItem);
+
+    /**
+     * Updates the preview.
+     *
+     * @param listItem The updated list item.
+     */
+    protected void updatePreview(LinkedHashMap<String, String> listItem) {
+        super.updateRawPreview(listItem);
+    }
 
     /**
      * {@inheritDoc}

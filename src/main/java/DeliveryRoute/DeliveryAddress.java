@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryAddress {
 
-    protected Config config = Config.getInstance();
+    protected final Config config = Config.getInstance();
 
     private final String address, postalCode, city;
 

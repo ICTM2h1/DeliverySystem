@@ -1,7 +1,7 @@
 package Stock;
 
-import Authenthication.User;
 import Crud.StockItem;
+import Crud.StockItemHoldings;
 import UI.Panels.JPanelListBase;
 
 import javax.swing.*;
@@ -18,14 +18,7 @@ public class StockPanel extends JPanelListBase implements ActionListener {
 
     private JButton addButton, editButton, deleteButton;
 
-    /**
-     * Creates a new list panel.
-     *
-     * @param user The user.
-     */
-    public StockPanel(User user) {
-        super(user);
-    }
+    private int selectedProductIndex;
 
     /**
      * {@inheritDoc}
@@ -46,6 +39,10 @@ public class StockPanel extends JPanelListBase implements ActionListener {
         }
 
         String outOfStock = items.get(0).get("OutOfStock");
+        if (outOfStock.equals("0")) {
+            return String.format("%s producten", items.size());
+        }
+
         return String.format("%s producten - %s niet voorradig", items.size(), outOfStock);
     }
 
@@ -145,6 +142,7 @@ public class StockPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
+        this.selectedProductIndex = this.list.getSelectedIndex();
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         this.preview.gridBagConstraints.weightx = 0.5;
 
@@ -166,7 +164,27 @@ public class StockPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == this.editButton) {
+            LinkedHashMap<String, String> product = this.getListItems().get(this.selectedProductIndex);
+            StockItemEditDialog stockEditDialog = new StockItemEditDialog(new JFrame(), true, product);
+            if (stockEditDialog.getClickedButton() != stockEditDialog.getOkButton()) {
+                return;
+            }
 
+            int currentQuantityOnHand = Integer.parseInt(product.get("QuantityOnHand"));
+
+            StockItem stockItem = new StockItem();
+            StockItemHoldings stockItemHoldings = new StockItemHoldings();
+            stockItemHoldings.addCondition("StockItemID", product.get("StockItemID"));
+            stockItemHoldings.addValue("QuantityOnHand", String.valueOf(currentQuantityOnHand + stockEditDialog.getQuantityChange()));
+            stockItemHoldings.update();
+
+            // Get the updated product and write it back to the item on the selected index and update the preview.
+            LinkedHashMap<String, String> updatedProduct = stockItem.get(Integer.parseInt(product.get("StockItemID")));
+            this.listItems.set(this.selectedProductIndex, updatedProduct);
+            this.titleLabel.setText(this.getTitle());
+            this.updatePreview(updatedProduct);
+        }
     }
 
 }
