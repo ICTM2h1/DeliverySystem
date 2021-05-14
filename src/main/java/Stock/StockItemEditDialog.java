@@ -50,7 +50,7 @@ public class StockItemEditDialog extends JDialogListItemBase {
      * {@inheritDoc}
      */
     @Override
-    protected void executionAction() {
+    protected void executeAction() {
         try {
             this.quantityChange = Integer.parseInt(this.quantityField.getText());
         } catch (NumberFormatException exception) {

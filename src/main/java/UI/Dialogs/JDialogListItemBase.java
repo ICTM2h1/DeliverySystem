@@ -65,7 +65,7 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
     public void actionPerformed(ActionEvent e) {
         this.clickedButton = (JButton) e.getSource();
         if (this.clickedButton == this.getOkButton()) {
-            this.executionAction();
+            this.executeAction();
         }
 
         this.dispose();
@@ -75,7 +75,7 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
     /**
      * Executes the action.
      */
-    protected abstract void executionAction();
+    protected abstract void executeAction();
 
     /**
      * Gets the ok button.
