@@ -1,6 +1,6 @@
 package Stock;
 
-import UI.Panels.JDialogListItemBase;
+import UI.Dialogs.JDialogListItemBase;
 
 import javax.swing.*;
 import java.util.LinkedHashMap;
