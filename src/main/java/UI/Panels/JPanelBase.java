@@ -20,7 +20,7 @@ abstract public class JPanelBase extends JPanel {
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
-    protected static final ArrayList<JPanelBase> panels = new ArrayList<>();
+    protected static final ArrayList<JPanelBase> menuPanels = new ArrayList<>();
 
     /**
      * Creates a new panel.
@@ -151,10 +151,10 @@ abstract public class JPanelBase extends JPanel {
     }
 
     /**
-     * Registers manually the panels.
+     * Registers manually the menu panels.
      */
-    public static void registerPanels(User user) {
-        panels.clear();
+    public static void registerMenuPanels(User user) {
+        menuPanels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
         panelList.add(new DeliveryRoutePanel());
 
@@ -169,21 +169,21 @@ abstract public class JPanelBase extends JPanel {
             panel.addTitleComponent();
             panel.instantiate();
             panel.updateUI();
-            panels.add(panel);
+            menuPanels.add(panel);
         }
     }
 
     /**
-     * Gets the registered panels.
+     * Gets the registered menu panels.
      *
      * @return The panels.
      */
-    public static ArrayList<JPanelBase> getPanels() {
-        if (panels.isEmpty()) {
+    public static ArrayList<JPanelBase> getMenuPanels() {
+        if (menuPanels.isEmpty()) {
             throw new RuntimeException("Panels cannot be empty in order to run this application.");
         }
 
-        return panels;
+        return menuPanels;
     }
 
     /**

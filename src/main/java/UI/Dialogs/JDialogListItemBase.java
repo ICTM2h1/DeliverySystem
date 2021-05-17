@@ -1,4 +1,4 @@
-package UI.Panels;
+package UI.Dialogs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
 
     protected LinkedHashMap<String, String> listItem;
 
-    protected JButton okButton, cancelButton, clickedButton;
+    protected JButton proceedButton, cancelButton, clickedButton;
 
     /**
      * Creates a new dialog for list items.
@@ -23,21 +23,27 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
      * @param listItem The list item.
      */
     public JDialogListItemBase(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem) {
+        this(frame, modal, listItem, 3, 2);
+    }
+
+    /**
+     * Creates a new dialog for list items.
+     *
+     * @param frame The frame.
+     * @param modal Is it a modal?
+     * @param listItem The list item.
+     * @param rows The number of rows.
+     * @param cols The number of cols.
+     */
+    public JDialogListItemBase(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem, int rows, int cols) {
         super(frame, modal);
         this.listItem = listItem;
 
-        this.setLayout(new GridLayout(3, 2));
+        this.setLayout(new GridLayout(rows, cols));
         this.setTitle(this.getDialogTitle());
         this.setSize(400, 200);
         this.instantiate(listItem);
-
-        this.cancelButton = new JButton("Annuleren");
-        this.cancelButton.addActionListener(this);
-        this.add(this.cancelButton);
-
-        this.okButton = new JButton("Opslaan");
-        this.okButton.addActionListener(this);
-        this.add(this.okButton);
+        this.addActionButtons();
 
         this.setVisible(true);
     }
@@ -59,13 +65,26 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
     protected abstract void instantiate(LinkedHashMap<String, String> listItem);
 
     /**
+     * Adds the action buttons.
+     */
+    protected void addActionButtons() {
+        this.cancelButton = new JButton("Annuleren");
+        this.cancelButton.addActionListener(this);
+        this.add(this.cancelButton);
+
+        this.proceedButton = new JButton("Opslaan");
+        this.proceedButton.addActionListener(this);
+        this.add(this.proceedButton);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         this.clickedButton = (JButton) e.getSource();
-        if (this.clickedButton == this.getOkButton()) {
-            this.executionAction();
+        if (this.clickedButton == this.getProceedButton()) {
+            this.executeAction();
         }
 
         this.dispose();
@@ -75,15 +94,15 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
     /**
      * Executes the action.
      */
-    protected abstract void executionAction();
+    protected abstract void executeAction();
 
     /**
      * Gets the ok button.
      *
      * @return The ok button.
      */
-    public JButton getOkButton() {
-        return this.okButton;
+    public JButton getProceedButton() {
+        return this.proceedButton;
     }
 
     /**
