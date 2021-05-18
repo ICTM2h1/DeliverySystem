@@ -23,13 +23,11 @@ abstract public class JPanelBase extends JPanel {
     public JLabel titleLabel;
     protected static ArrayList<JPanelBase> panels = new ArrayList<>();
 
-    protected final User user;
-
     /**
      * Creates a new panel.
      */
-    protected JPanelBase(User user) {
-        this(700, 500, user);
+    public JPanelBase() {
+        this(700, 500);
     }
 
     /**
@@ -38,10 +36,9 @@ abstract public class JPanelBase extends JPanel {
      * @param panelWidth The extra width of the panel.
      * @param panelHeight The extra height of the panel.
      */
-    protected JPanelBase(int panelWidth, int panelHeight, User user) {
+    public JPanelBase(int panelWidth, int panelHeight) {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
-        this.user = user;
 
         this.setDefaultGridBagConstraints();
         this.setLayout(this.getLayoutManager());
@@ -151,15 +148,15 @@ abstract public class JPanelBase extends JPanel {
     public static void registerPanels(User user) {
         panels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
-        panelList.add(new DeliveryRoutePanel(user));
+        panelList.add(new DeliveryRoutePanel());
 
         if (user.getRole().isAdmin()) {
-            panelList.add(new CustomerPanel(user));
-            panelList.add(new StockPanel(user));
-            panelList.add(new OrderPanel(user));
+            panelList.add(new CustomerPanel());
+            panelList.add(new StockPanel());
+            panelList.add(new OrderPanel());
         }
 
-        panelList.add(new LogoutPanel(user));
+        panelList.add(new LogoutPanel());
 
         for (JPanelBase panel : panelList) {
             panel.addTitleComponent();
