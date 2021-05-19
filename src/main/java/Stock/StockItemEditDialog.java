@@ -1,8 +1,9 @@
 package Stock;
 
-import UI.Panels.JDialogListItemBase;
+import UI.Dialogs.JDialogListItemBase;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.LinkedHashMap;
 
 /**
@@ -12,6 +13,7 @@ public class StockItemEditDialog extends JDialogListItemBase {
 
     private int quantityChange;
 
+    private JButton decreaseButton, increaseButton;
     private JTextField quantityField;
 
     /**
@@ -22,7 +24,7 @@ public class StockItemEditDialog extends JDialogListItemBase {
      * @param listItem The list item.
      */
     public StockItemEditDialog(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem) {
-        super(frame, modal, listItem);
+        super(frame, modal, listItem, 4, 2);
     }
 
     /**
@@ -41,7 +43,7 @@ public class StockItemEditDialog extends JDialogListItemBase {
         this.add(new JLabel("Product"));
         this.add(new JLabel(listItem.get("StockItemName")));
 
-        this.add(new JLabel("Voorraad verhoging"));
+        this.add(new JLabel("Voorraad aanpassing"));
         this.quantityField = new JTextField(5);
         this.add(this.quantityField);
     }
@@ -50,9 +52,46 @@ public class StockItemEditDialog extends JDialogListItemBase {
      * {@inheritDoc}
      */
     @Override
-    protected void executionAction() {
+    protected void addActionButtons() {
+        this.decreaseButton = new JButton("Verlagen");
+        this.decreaseButton.addActionListener(this);
+        this.add(this.decreaseButton);
+
+        this.increaseButton = new JButton("Verhogen");
+        this.increaseButton.addActionListener(this);
+        this.add(this.increaseButton);
+
+        this.cancelButton = new JButton("Annuleren");
+        this.cancelButton.addActionListener(this);
+        this.add(this.cancelButton);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.clickedButton = (JButton) e.getSource();
+        if (this.clickedButton.equals(this.increaseButton) || this.clickedButton.equals(this.decreaseButton)) {
+            this.executeAction();
+        }
+
+        this.dispose();
+        this.repaint();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void executeAction() {
+        String quantityChangeString = "-" + this.quantityField.getText();
+        if (this.getClickedButton().equals(this.increaseButton)) {
+            quantityChangeString = this.quantityField.getText();
+        }
+
         try {
-            this.quantityChange = Integer.parseInt(this.quantityField.getText());
+            this.quantityChange = Integer.parseInt(quantityChangeString);
         } catch (NumberFormatException exception) {
             this.quantityChange = 0;
         }

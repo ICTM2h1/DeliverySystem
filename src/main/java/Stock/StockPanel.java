@@ -167,7 +167,7 @@ public class StockPanel extends JPanelListBase implements ActionListener {
         if (e.getSource() == this.editButton) {
             LinkedHashMap<String, String> product = this.getListItems().get(this.selectedProductIndex);
             StockItemEditDialog stockEditDialog = new StockItemEditDialog(new JFrame(), true, product);
-            if (stockEditDialog.getClickedButton() != stockEditDialog.getOkButton()) {
+            if (stockEditDialog.getClickedButton() == stockEditDialog.getCancelButton()) {
                 return;
             }
 
