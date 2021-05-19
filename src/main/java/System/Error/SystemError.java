@@ -2,6 +2,7 @@ package System.Error;
 
 import System.Config.Config;
 
+import javax.swing.*;
 import java.util.Arrays;
 
 /**
@@ -37,7 +38,13 @@ public class SystemError {
             System.exit(-1);
         }
 
-        System.out.println("Something went wrong while running this application, please try again or contact the administrators.");
+        String errorMessage = "Something went wrong while running this application, please try again or contact the administrators.";
+        System.out.println(errorMessage);
+
+        JOptionPane.showMessageDialog(new JDialog(),
+                errorMessage, "Foutmelding", JOptionPane.ERROR_MESSAGE
+        );
+
         System.exit(-1);
     }
 
