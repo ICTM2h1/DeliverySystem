@@ -1,5 +1,6 @@
 package DeliveryRoute;
 
+import Authenthication.LogoutPanel;
 import Crud.Order;
 import UI.Panels.JPanelRawListBase;
 
@@ -18,10 +19,13 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListener {
 
-    private final DeliveryStartPoint deliveryStartPoint;
+    private final DeliveryPoint DeliveryPoint;
     private final String date;
 
     private final JButton routeButton, cancelButton, completeButton;
+
+    private String routeTitle;
+    private NearestNeighbour route;
 
     /**
      * Creates a new delivery route object.
@@ -36,7 +40,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      * @param date The date.
      */
     public DeliveryRoutePanel(String date) {
-        this.deliveryStartPoint = new DeliveryStartPoint(
+        this.DeliveryPoint = new DeliveryPoint(
             "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
         );
         this.date = date;
@@ -128,8 +132,9 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
                 continue;
             }
 
-            NearestNeighbour nearestNeighbour = new NearestNeighbour(this.deliveryStartPoint, deliveryRoute.getDeliveryPoints());
+            NearestNeighbour nearestNeighbour = new NearestNeighbour(this.DeliveryPoint, deliveryRoute.getDeliveryPoints());
             DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
+            this.route = nearestNeighbour;
 
             listItems.add(deliverer, sortedRoute);
         }
@@ -167,9 +172,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
         this.preview.addComponent(new JLabel("Bezorgingstraject:"), true);
         this.preview.addComponent(new JLabel(deliveryRoute.getName()));
+        this.routeTitle = deliveryRoute.getName();
 
         this.preview.addComponent(new JLabel("Startpunt:"), true);
-        this.preview.addComponent(new JLabel(this.deliveryStartPoint.addressLabel()));
+        this.preview.addComponent(new JLabel(this.DeliveryPoint.addressLabel()));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
@@ -196,7 +202,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == this.routeButton) {
+            DeliveryFollowPanel deliveryFollowPanel = new DeliveryFollowPanel(this.route, this.routeTitle);
+            deliveryFollowPanel.instantiate();
+            deliveryFollowPanel.updateUI();
+        }
     }
 
 }

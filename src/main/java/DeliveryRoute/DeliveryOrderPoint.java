@@ -176,6 +176,8 @@ class DeliveryPoint extends DeliveryPointBase {
  */
 abstract class DeliveryPointBase {
 
+    private Integer status = 0;
+
     /**
      * Gets the label of this delivery point.
      *
@@ -264,5 +266,23 @@ abstract class DeliveryPointBase {
      * @return The altitude.
      */
     public abstract double getAltitude();
+
+    /**
+     * Sets the status of the deliverypoint.
+     *
+     * @param updatedStatus Integer with new status of deliverypoint.
+     */
+    public void setStatus(Integer updatedStatus) {
+        this.status = updatedStatus;
+    }
+
+    /**
+     * Gets the status of the deliverypoint.
+     *
+     * @return Integer status.
+     */
+    public Integer getStatus() {
+        return this.status;
+    }
 
 }
