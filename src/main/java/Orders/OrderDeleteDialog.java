@@ -14,7 +14,7 @@ public class OrderDeleteDialog extends JDialogListItemBase {
     public OrderDeleteDialog(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem) {
         super(frame, modal, listItem);
     }
-
+//verwijder deze comment
     /**
      * {@inheritDoc}
      */
