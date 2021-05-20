@@ -1,12 +1,23 @@
 package DeliveryRoute;
 
 import Crud.Order;
+import System.Error.SystemError;
 import UI.Panels.JPanelRawListBase;
+import net.sf.dynamicreports.adhoc.AdhocManager;
+import net.sf.dynamicreports.adhoc.configuration.AdhocColumn;
+import net.sf.dynamicreports.adhoc.configuration.AdhocReport;
+import net.sf.dynamicreports.adhoc.transformation.AdhocToXmlTransform;
+import net.sf.dynamicreports.adhoc.transformation.XmlToAdhocTransform;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import net.sf.dynamicreports.report.datasource.DRDataSource;
+import net.sf.dynamicreports.report.exception.DRException;
+import net.sf.jasperreports.engine.JRDataSource;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +32,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     private final DeliveryStartPoint deliveryStartPoint;
     private final String date;
 
-    private final JButton routeButton, cancelButton, completeButton;
+    private final JButton routeButton, cancelButton, completeButton, printButton;
 
     /**
      * Creates a new delivery route object.
@@ -49,6 +60,9 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
         this.completeButton = new JButton("Afronden");
         this.completeButton.addActionListener(this);
+
+        this.printButton = new JButton("Printen");
+        this.printButton.addActionListener(this);
     }
 
     /**
@@ -71,6 +85,30 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         }
 
         return String.format("%s bezorgingstrajecten voor vandaag", this.getRawListItems().size());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void addTitleComponent() {
+        if (this.getTitle() == null) {
+            return;
+        }
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setSize(this.getSize());
+        titlePanel.setLayout(new BorderLayout());
+
+        this.titleLabel = new JLabel(this.getTitle());
+        Font labelFont = this.titleLabel.getFont();
+        this.titleLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 20));
+        titlePanel.add(this.titleLabel, BorderLayout.WEST);
+        titlePanel.add(this.printButton, BorderLayout.EAST);
+
+        this.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
+        this.gridBagConstraints.weightx = 0.5;
+        this.addFullWidthComponent(titlePanel);
     }
 
     /**
@@ -196,7 +234,46 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == this.printButton) {
+            this.build();
+        }
+    }
 
+    /**
+     * Builds the pdf.
+     */
+    private void build() {
+        AdhocReport report = new AdhocReport();
+        AdhocColumn column = new AdhocColumn();
+        column.setName("item");
+        report.addColumn(column);
+
+        column = new AdhocColumn();
+        column.setName("quantity");
+        report.addColumn(column);
+
+        try {
+            AdhocManager adhocManager = AdhocManager.getInstance(new AdhocToXmlTransform(), new XmlToAdhocTransform());
+            JasperReportBuilder reportBuilder = adhocManager.createReport(report);
+            reportBuilder.setDataSource(this.createDataSource());
+            reportBuilder.show();
+        } catch (DRException e) {
+            SystemError.handle(e);
+        }
+    }
+
+    /**
+     * Creates the data source for the pdf.
+     *
+     * @return The data of the pdf.
+     */
+    private JRDataSource createDataSource() {
+        DRDataSource dataSource = new DRDataSource("item", "orderdate", "quantity", "unitprice");
+        for (int i = 0; i < 20; i++) {
+            dataSource.add("Book", new Date(), (int) (Math.random() * 10) + 1, BigDecimal.valueOf(Math.random() * 100 + 1));
+        }
+
+        return dataSource;
     }
 
 }
