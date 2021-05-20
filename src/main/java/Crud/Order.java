@@ -1,7 +1,6 @@
 package Crud;
 
 import DeliveryRoute.DeliveryAddress;
-import DeliveryRoute.DeliveryLocation;
 import System.Error.SystemError;
 
 import java.math.BigDecimal;
@@ -17,7 +16,6 @@ public class Order extends CrudBase {
     protected final Customer customer = new Customer();
 
     protected String date;
-    protected int withoutGeometry;
 
     /**
      * Constructs a new orders object.
@@ -110,10 +108,6 @@ public class Order extends CrudBase {
                 continue;
             }
 
-            if (latitude == 0 || longitude == 0 || altitude == 0 || numericPostalCode == 0) {
-                this.withoutGeometry++;
-            }
-
             order.put("geometry.postalCode", String.valueOf(numericPostalCode));
             order.put("geometry.latitude", String.valueOf(latitude));
             order.put("geometry.longitude", String.valueOf(longitude));
@@ -135,15 +129,6 @@ public class Order extends CrudBase {
         });
 
         return orders;
-    }
-
-    /**
-     * Gets the number of orders without geometry.
-     *
-     * @return The number of orders.
-     */
-    public int getWithoutGeometry() {
-        return this.withoutGeometry;
     }
 
     /**
@@ -184,49 +169,6 @@ public class Order extends CrudBase {
             this.customer.addValue("Altitude", altitudeString);
             this.customer.addCondition("CustomerID", customerID);
             this.customer.update();
-        }
-    }
-
-    /**
-     * Calculates the distance between two orders.
-     *
-     * @param order The order.
-     * @param compareOrder The order to compare the current one to.
-     *
-     * @return The distance between two orders, in kilometers.
-     */
-    public double calculateDistance(LinkedHashMap<String, String> order, LinkedHashMap<String, String> compareOrder) {
-        String latitudeString = order.get("Latitude");
-        String longitudeString = order.get("Longitude");
-        String altitudeString = order.get("Altitude");
-
-        if (compareOrder == null) {
-            return 0;
-        }
-
-        try {
-            double latitude = Double.parseDouble(latitudeString);
-            double longitude = Double.parseDouble(longitudeString);
-            double altitude = Double.parseDouble(altitudeString);
-            double compareLatitude = latitude;
-            double compareLongitude = longitude;
-            double compareAltitude = altitude;
-
-            String previousLatitudeString = compareOrder.get("Latitude");
-            String previousLongitudeString = compareOrder.get("Longitude");
-            String previousAltitudeString = compareOrder.get("Altitude");
-            if (previousLongitudeString != null && previousLatitudeString != null && previousAltitudeString != null) {
-                compareLatitude = Double.parseDouble(previousLatitudeString);
-                compareLongitude = Double.parseDouble(previousLongitudeString);
-                compareAltitude = Double.parseDouble(previousAltitudeString);
-            }
-
-            DeliveryLocation location = new DeliveryLocation(latitude, longitude, altitude);
-            DeliveryLocation compareLocation = new DeliveryLocation(compareLatitude, compareLongitude, compareAltitude);
-
-            return location.distance(compareLocation);
-        } catch (NumberFormatException e) {
-            return 0;
         }
     }
 
