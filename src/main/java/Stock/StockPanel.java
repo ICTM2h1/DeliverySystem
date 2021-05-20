@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
  */
 public class StockPanel extends JPanelListBase implements ActionListener {
 
-    private JButton addButton, editButton, deleteButton;
+    private JButton editButton;
 
     private int selectedProductIndex;
 
