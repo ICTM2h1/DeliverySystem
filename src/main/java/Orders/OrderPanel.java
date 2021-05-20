@@ -34,10 +34,10 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
     public String getTitle() {
         ArrayList<LinkedHashMap<String, String>> items = this.getListItems();
         if (items.size() == 1) {
-            return "1 bestelling";
+            return "1 niet bezorgde bestelling";
         }
 
-        return String.format("%s bestellingen", items.size());
+        return String.format("%s niet bezorgde bestellingen", items.size());
     }
 
     /**
@@ -93,14 +93,17 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
         this.preview.addComponent(new JLabel("Geplaatst op:"), true);
         this.preview.addComponent(new JLabel(listItem.get("OrderDate")));
 
-        this.preview.addComponent(new JLabel("Afleverdatum:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("ExpectedDeliveryDate")));
-
         String deliveryDate = listItem.get("ExpectedDeliveryDate");
         String currentDate = (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());
         if (currentDate.equals(deliveryDate)) {
+            this.preview.gridBagConstraints.insets = new Insets(5, 0, 325, 0);
+            this.preview.addComponent(new JLabel("Afleverdatum:"), true);
+            this.preview.addComponent(new JLabel(listItem.get("ExpectedDeliveryDate")));
             return;
         }
+
+        this.preview.addComponent(new JLabel("Afleverdatum:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("ExpectedDeliveryDate")));
 
         this.preview.gridBagConstraints.insets = new Insets(25, 25, 275, 25);
         this.editButton = new JButton("Verwijderen");

@@ -78,7 +78,7 @@ public class Order extends CrudBase {
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
                 "WHERE YEAR(OrderDate) >= 2020 " +
                 "AND O.Status = 0 " +
-                "ORDER BY ExpectedDeliveryDate " +
+                "ORDER BY ExpectedDeliveryDate DESC " +
                 "LIMIT 1000";
 
         return super.all(query);
