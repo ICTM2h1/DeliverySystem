@@ -11,7 +11,6 @@ import java.util.ArrayList;
  */
 public abstract class JPanelRawListBase extends JPanelBase implements ListSelectionListener {
 
-    public static ArrayList<Object> listItemsCopy;
     protected ArrayList<Object> listItems = new ArrayList<>();
 
     protected JPanelListPreview preview;
@@ -26,7 +25,6 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
         ArrayList<Object> rawListItems = this.getRawListItems();
         if (rawListItems != null && !rawListItems.isEmpty()) {
             this.listItems = rawListItems;
-            listItemsCopy = listItems;
         }
 
         if (this.listItems == null || this.listItems.isEmpty()) {
