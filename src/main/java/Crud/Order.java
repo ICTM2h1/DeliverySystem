@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
  */
 public class Order extends CrudBase {
 
-    protected Customer customer = new Customer();
+    protected final Customer customer = new Customer();
 
     protected String date;
     protected int withoutGeometry;

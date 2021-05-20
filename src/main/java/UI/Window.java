@@ -45,8 +45,8 @@ public class Window extends JFrame {
     private void addComponentToPane(Container pane) {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanelBase.registerPanels(this.user);
-        for (JPanelBase panel : JPanelBase.getPanels()) {
+        JPanelBase.registerMenuPanels(this.user);
+        for (JPanelBase panel : JPanelBase.getMenuPanels()) {
             tabbedPane.addTab(panel.getTabTitle(), panel);
         }
 

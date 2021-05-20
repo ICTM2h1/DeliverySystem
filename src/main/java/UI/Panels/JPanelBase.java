@@ -21,7 +21,7 @@ abstract public class JPanelBase extends JPanel {
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;
-    protected static ArrayList<JPanelBase> panels = new ArrayList<>();
+    protected static final ArrayList<JPanelBase> menuPanels = new ArrayList<>();
 
     /**
      * Creates a new panel.
@@ -91,9 +91,18 @@ abstract public class JPanelBase extends JPanel {
      * @param component The component.
      */
     public void addFullWidthComponent(Component component) {
+        this.addFullWidthComponent(component, 2);
+    }
+
+    /**
+     * Adds a full width component.
+     *
+     * @param component The component.
+     */
+    public void addFullWidthComponent(Component component, int gridWidth) {
         int defaultGridWidth = this.gridBagConstraints.gridwidth;
 
-        this.gridBagConstraints.gridwidth = this.getDefaultFullGridWidth();
+        this.gridBagConstraints.gridwidth = gridWidth;
         this.addComponent(component, true);
 
         this.gridBagConstraints.gridwidth = defaultGridWidth;
@@ -143,10 +152,10 @@ abstract public class JPanelBase extends JPanel {
     }
 
     /**
-     * Registers manually the panels.
+     * Registers manually the menu panels.
      */
-    public static void registerPanels(User user) {
-        panels.clear();
+    public static void registerMenuPanels(User user) {
+        menuPanels.clear();
         ArrayList<JPanelBase> panelList = new ArrayList<>();
         panelList.add(new DeliveryRoutePanel());
 
@@ -162,21 +171,21 @@ abstract public class JPanelBase extends JPanel {
             panel.addTitleComponent();
             panel.instantiate();
             panel.updateUI();
-            panels.add(panel);
+            menuPanels.add(panel);
         }
     }
 
     /**
-     * Gets the registered panels.
+     * Gets the registered menu panels.
      *
      * @return The panels.
      */
-    public static ArrayList<JPanelBase> getPanels() {
-        if (panels.isEmpty()) {
+    public static ArrayList<JPanelBase> getMenuPanels() {
+        if (menuPanels.isEmpty()) {
             throw new RuntimeException("Panels cannot be empty in order to run this application.");
         }
 
-        return panels;
+        return menuPanels;
     }
 
     /**
@@ -186,15 +195,6 @@ abstract public class JPanelBase extends JPanel {
      */
     public static Border getDefaultBorder() {
         return BorderFactory.createEmptyBorder(10, 10, 10, 10);
-    }
-
-    /**
-     * Gets the default full grid width value.
-     *
-     * @return The default full gird width value.
-     */
-    protected int getDefaultFullGridWidth() {
-        return 2;
     }
 
 }
