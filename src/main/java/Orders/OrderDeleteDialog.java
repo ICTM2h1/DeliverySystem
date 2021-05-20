@@ -31,6 +31,9 @@ public class OrderDeleteDialog extends JDialogListItemBase {
         return "Verwijderen bestelling";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void instantiate(LinkedHashMap<String, String> listItem) {
         this.add(new JLabel("Bestelling"));
