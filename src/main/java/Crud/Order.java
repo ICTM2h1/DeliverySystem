@@ -54,15 +54,15 @@ public class Order extends CrudBase {
      */
     public ArrayList<LinkedHashMap<String, String>> all() {
         String query = "SELECT * FROM orders O " +
-                "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
-                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID" +
-                "WHERE Status = 0 ";
+                "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID " +
+                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
+                "WHERE O.Status = 0 ";
         if (this.date != null && !this.date.isEmpty()) {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
-            query += " AND ExpectedDeliveryDate = :ExpectedDeliveryDate";
+            query += "AND ExpectedDeliveryDate = :ExpectedDeliveryDate ";
         }
-        query += " ORDER BY OrderID";
+        query += "ORDER BY OrderID ";
 
         return super.all(query);
     }
@@ -77,7 +77,7 @@ public class Order extends CrudBase {
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
                 "WHERE YEAR(OrderDate) >= 2020 " +
-                "AND Status = 0 " +
+                "AND O.Status = 0 " +
                 "ORDER BY ExpectedDeliveryDate " +
                 "LIMIT 1000";
 
