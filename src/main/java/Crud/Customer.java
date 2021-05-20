@@ -27,7 +27,8 @@ public class Customer extends CrudBase {
     @Override
     public ArrayList<LinkedHashMap<String, String>> all() {
         String query = "SELECT * FROM customers CU " +
-                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID ";
+                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
+                "ORDER BY CustomerID DESC";
 
         return super.all(query);
     }

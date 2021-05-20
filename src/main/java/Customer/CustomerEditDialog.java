@@ -61,6 +61,21 @@ public class CustomerEditDialog extends JDialogListItemBase {
      * {@inheritDoc}
      */
     @Override
+    protected boolean validateAction() {
+        String regex = "[1-9][0-9]{3}[a-zA-Z]{2}";
+
+        boolean valid = this.postalCodeField.getText().matches(regex);
+        if (!valid) {
+            JOptionPane.showMessageDialog(this, "Ongeldige postcode opgegeven.");
+        }
+
+        return valid;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void executeAction() {
         this.street = this.streetField.getText();
         this.postalCode = this.postalCodeField.getText();

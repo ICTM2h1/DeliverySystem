@@ -34,10 +34,10 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
     public String getTitle() {
         ArrayList<LinkedHashMap<String, String>> items = this.getListItems();
         if (items.size() == 1) {
-            return "1 niet bezorgde bestelling";
+            return "1 niet geleverde bestelling";
         }
 
-        return String.format("%s niet bezorgde bestellingen", items.size());
+        return String.format("%s niet geleverde bestellingen", items.size());
     }
 
     /**
