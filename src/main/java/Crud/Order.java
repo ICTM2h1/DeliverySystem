@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 /**
  * Provides a class for interacting with the order table.
  */
+// @todo replace the status = 0 value for the correct value.
 public class Order extends CrudBase {
 
     protected final Customer customer = new Customer();
@@ -34,6 +35,7 @@ public class Order extends CrudBase {
         this.addSelectField("Longitude");
         this.addSelectField("Latitude");
         this.addSelectField("Altitude");
+        this.addSelectField("Status");
     }
 
     /**
@@ -55,11 +57,12 @@ public class Order extends CrudBase {
     public ArrayList<LinkedHashMap<String, String>> all() {
         String query = "SELECT * FROM orders O " +
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
-                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID ";
+                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID" +
+                "WHERE Status = 0 ";
         if (this.date != null && !this.date.isEmpty()) {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
-            query += " WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate";
+            query += " AND ExpectedDeliveryDate = :ExpectedDeliveryDate";
         }
         query += " ORDER BY OrderID";
 
@@ -76,6 +79,7 @@ public class Order extends CrudBase {
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
                 "WHERE YEAR(OrderDate) >= 2020 " +
+                "AND Status = 0 " +
                 "ORDER BY ExpectedDeliveryDate " +
                 "LIMIT 1000";
 

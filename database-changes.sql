@@ -32,6 +32,9 @@ ADD COLUMN `Altitude` DOUBLE NULL AFTER `Latitude`;
 ALTER TABLE `nerdygadgets`.`people`
 ADD COLUMN `Role` TINYINT NULL AFTER `ValidTo`;
 
+ALTER TABLE `nerdygadgets`.`orders`
+ADD COLUMN `Status` TINYINT(1) NOT NULL DEFAULT 0 AFTER `LastEditedWhen`;
+
 /** Password for this user is 'nimda' */
 INSERT INTO `nerdygadgets`.`people` (
     FullName, PreferredName, SearchName,
