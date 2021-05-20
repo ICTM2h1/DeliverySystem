@@ -26,6 +26,7 @@ public class Order extends CrudBase {
 
         this.addSelectField("OrderID");
         this.addSelectField("CustomerID");
+        this.addSelectField("OrderDate");
         this.addSelectField("ExpectedDeliveryDate");
         this.addSelectField("CityName");
         this.addSelectField("DeliveryAddressLine1");
@@ -61,6 +62,22 @@ public class Order extends CrudBase {
             query += " WHERE ExpectedDeliveryDate = :ExpectedDeliveryDate";
         }
         query += " ORDER BY OrderID";
+
+        return super.all(query);
+    }
+
+    /**
+     * Gets all orders from table.
+     *
+     * @return An array list with the selected orders.
+     */
+    public ArrayList<LinkedHashMap<String, String>> allLimited() {
+        String query = "SELECT * FROM orders O " +
+                "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
+                "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
+                "WHERE YEAR(OrderDate) >= 2020 " +
+                "ORDER BY ExpectedDeliveryDate " +
+                "LIMIT 1000";
 
         return super.all(query);
     }

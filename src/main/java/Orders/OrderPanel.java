@@ -1,6 +1,5 @@
 package Orders;
 
-import Authenthication.User;
 import Crud.Order;
 import UI.Panels.JPanelListBase;
 
@@ -8,7 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 /**
@@ -22,8 +23,29 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
      * {@inheritDoc}
      */
     @Override
+    public String getTabTitle() {
+        return "Bestellingen";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getTitle() {
-        return "Orders";
+        ArrayList<LinkedHashMap<String, String>> items = this.getListItems();
+        if (items.size() == 1) {
+            return "1 bestelling";
+        }
+
+        return String.format("%s bestellingen", items.size());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getListPreviewTitle() {
+        return null;
     }
 
     /**
@@ -33,7 +55,7 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
     protected ArrayList<LinkedHashMap<String, String>> getListItems() {
         Order order = new Order();
 
-        return order.all();
+        return order.allLimited();
     }
 
     /**
@@ -41,64 +63,72 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     protected String getListItemLabel(LinkedHashMap<String, String> listItem) {
-        return listItem.get("OrderID");
+        return String.format("%s   -   %s", listItem.get("OrderID"), listItem.get("ExpectedDeliveryDate"));
     }
 
     /**
      * {@inheritDoc}
      */
-
     @Override
-    protected void addTitleComponent() {
-        if (this.getTitle() == null) {
-            return;
-        }
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setSize(this.getSize());
-        titlePanel.setLayout(new BorderLayout());
-
-        this.titleLabel = new JLabel(this.getTitle());
-        Font labelFont = this.titleLabel.getFont();
-        this.titleLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 20));
-        titlePanel.add(this.titleLabel, BorderLayout.WEST);
+    protected boolean hasVerticalScrollbar() {
+        return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         this.preview.gridBagConstraints.weightx = 0.5;
 
-        this.preview.addComponent(new JLabel("Klant:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("CustomerID")));
+        this.preview.addComponent(new JLabel("Bestelling:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("OrderID")));
 
-        this.preview.addComponent(new JLabel("Naam:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("CustomerName")));
+        this.preview.addComponent(new JLabel("Adres:"), true);
+        this.preview.addComponent(new JLabel(String.format(
+                "%s, %s, %s", listItem.get("DeliveryAddressLine1"), listItem.get("DeliveryPostalCode"), listItem.get("CityName")
+        )));
 
-        this.preview.addComponent(new JLabel("Straat:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("DeliveryAddressLine1")));
+        this.preview.addComponent(new JLabel("Geplaatst op:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("OrderDate")));
 
-        this.preview.addComponent(new JLabel("Postcode:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("DeliveryPostalCode")));
+        this.preview.addComponent(new JLabel("Afleverdatum:"), true);
+        this.preview.addComponent(new JLabel(listItem.get("ExpectedDeliveryDate")));
 
-        this.preview.addComponent(new JLabel("Plaats:"), true);
-        this.preview.addComponent(new JLabel(listItem.get("CityName")));
+        String deliveryDate = listItem.get("ExpectedDeliveryDate");
+        String currentDate = (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());
+        if (currentDate.equals(deliveryDate)) {
+            return;
+        }
 
         this.preview.gridBagConstraints.insets = new Insets(25, 25, 275, 25);
         this.editButton = new JButton("Verwijderen");
         this.editButton.addActionListener(this);
         this.preview.addFullWidthComponent(this.editButton);
-
-
-
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.editButton) {
+            LinkedHashMap<String, String> orderEntity = this.getListItems().get(this.list.getSelectedIndex());
+            OrderDeleteDialog orderDeleteDialog = new OrderDeleteDialog(new JFrame(), true, orderEntity);
+            if (!orderDeleteDialog.deleteOrder()) {
+                return;
+            }
 
+            Order order = new Order();
+            order.addCondition("OrderID", orderEntity.get("OrderID"));
+            order.delete();
+
+            this.removeAll();
+            this.addTitleComponent();
+            this.instantiate();
+            this.updateUI();
         }
     }
-
 
 }
