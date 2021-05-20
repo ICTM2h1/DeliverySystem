@@ -14,6 +14,10 @@ import java.util.LinkedHashMap;
  */
 public class OrderPanel extends JPanelListBase {
 
+    public OrderPanel(User user) {
+        super(user);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -30,7 +34,6 @@ public class OrderPanel extends JPanelListBase {
         Order order = new Order();
 
         return order.all();
-
     }
 
     /**
@@ -44,6 +47,23 @@ public class OrderPanel extends JPanelListBase {
     /**
      * {@inheritDoc}
      */
+
+    @Override
+    protected void addTitleComponent() {
+        if (this.getTitle() == null) {
+            return;
+        }
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setSize(this.getSize());
+        titlePanel.setLayout(new BorderLayout());
+
+        this.titleLabel = new JLabel(this.getTitle());
+        Font labelFont = this.titleLabel.getFont();
+        this.titleLabel.setFont(new Font(labelFont.getName(), Font.BOLD, 20));
+        titlePanel.add(this.titleLabel, BorderLayout.WEST);
+    }
+
     @Override
     protected void updateListItemPreview(LinkedHashMap<String, String> listItem) {
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 0, 0);

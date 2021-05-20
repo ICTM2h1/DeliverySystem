@@ -2,7 +2,6 @@ package UI;
 
 import Authenthication.AuthenticationDialog;
 import Authenthication.User;
-import Authenthication.UserRole;
 import System.Config.Config;
 import UI.Panels.JPanelBase;
 
