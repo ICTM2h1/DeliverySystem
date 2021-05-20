@@ -6,17 +6,17 @@ import UI.Panels.JPanelListBase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
  * Provides a panel for richard items.
  */
-public class OrderPanel extends JPanelListBase {
+public class OrderPanel extends JPanelListBase implements ActionListener {
 
-    public OrderPanel(User user) {
-        super(user);
-    }
+    private JButton editButton;
 
     /**
      * {@inheritDoc}
@@ -81,13 +81,24 @@ public class OrderPanel extends JPanelListBase {
         this.preview.addComponent(new JLabel("Postcode:"), true);
         this.preview.addComponent(new JLabel(listItem.get("DeliveryPostalCode")));
 
-        this.preview.gridBagConstraints.insets = new Insets(5, 25, 275, 25);
         this.preview.addComponent(new JLabel("Plaats:"), true);
         this.preview.addComponent(new JLabel(listItem.get("CityName")));
 
+        this.preview.gridBagConstraints.insets = new Insets(25, 25, 275, 25);
+        this.editButton = new JButton("Verwijderen");
+        this.editButton.addActionListener(this);
+        this.preview.addFullWidthComponent(this.editButton);
 
 
 
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == this.editButton) {
+
+        }
+    }
+
 
 }
