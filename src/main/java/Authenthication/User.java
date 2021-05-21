@@ -5,19 +5,17 @@ package Authenthication;
  */
 public class User {
 
-    private final String username, password;
+    private final String username;
     private final UserRole role;
 
     /**
      * Creates a new user object.
      *
      * @param username String username of user
-     * @param password String password of user
      * @param role Integer user function role
      */
-    public User(String username, String password, UserRole role) {
+    public User(String username, UserRole role) {
         this.username = username;
-        this.password = password;
         this.role = role;
     }
 
