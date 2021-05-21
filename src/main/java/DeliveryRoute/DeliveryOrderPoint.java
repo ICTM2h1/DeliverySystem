@@ -212,7 +212,7 @@ class DeliveryPoint extends DeliveryPointBase {
  */
 abstract class DeliveryPointBase {
 
-    private DeliveryStatus status = DeliveryStatus.BUSY;
+    private DeliveryStatus status = DeliveryStatus.BUSY_WITH_OTHER_DELIVERING;
 
     /**
      * Gets the label of this delivery point.

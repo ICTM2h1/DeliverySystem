@@ -221,7 +221,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
 
         this.preview.gridBagConstraints.insets.top = 10;
-        this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount()), JLabel.CENTER));
+        this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount() - 1), JLabel.CENTER));
         this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
 
         this.preview.gridBagConstraints.insets.top = 5;
@@ -247,22 +247,33 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         }
 
         if (e.getSource() == this.routeButton) {
-
-            //TODO: Startpunt verwijderen
-
             DeliveryRoute route = (DeliveryRoute) this.listItems.get(this.list.getSelectedIndex());
-            DeliveryPointBase startingPoint = (DeliveryPointBase) route.get(0);
             ArrayList<DeliveryPointBase> deliveryPoints = route.getDeliveryPoints();
-            deliveryPoints.remove(0);
 
-            String[] labels = new String[deliveryPoints.size()];
+            String[] labels = new String[deliveryPoints.size() - 1];
+            int counter = 0;
+            DeliveryPointBase nextDeliveryPoint;
+            for (DeliveryPointBase deliveryPoint : deliveryPoints) {
+                int nextIndex = counter + 1;
+                if (nextIndex >= deliveryPoints.size()) {
+                    break;
+                }
 
-            for (int delta = 0; delta < deliveryPoints.size(); delta++) {
-                labels[delta] = deliveryPoints.get(delta).label();
+                nextDeliveryPoint = deliveryPoints.get(nextIndex);
+
+                labels[counter] = (counter + 1) + " - " + nextDeliveryPoint.label();
+                counter++;
+            }
+
+            // We increase every point with one, because the current point is the start point and the next one is
+            // the arriving point. Skip the start point and set the status of this point to delivering.
+            DeliveryPointBase deliveryPoint = deliveryPoints.get(1);
+            if (deliveryPoint.compareStatus(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING)) {
+                deliveryPoint.setStatus(DeliveryStatus.NOW_DELIVERING);
             }
 
             String title = String.format("%s (%skm)", route.getName(), route.getDistance());
-            DeliveryFollowPanel deliveryFollowPanel = new DeliveryFollowPanel(new JFrame(), true, deliveryPoints, startingPoint, labels, title);
+            DeliveryFollowDialog deliveryFollowPanel = new DeliveryFollowDialog(new JFrame(), true, deliveryPoints, labels, title);
         }
     }
 
@@ -276,11 +287,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         report.addColumn(column);
 
         column = new AdhocColumn();
-        column.setName("Van");
+        column.setName("Vertrekpunt");
         report.addColumn(column);
 
         column = new AdhocColumn();
-        column.setName("Naar");
+        column.setName("Aankomstpunt");
         report.addColumn(column);
 
         column = new AdhocColumn();
@@ -303,7 +314,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      * @return The data of the pdf.
      */
     private JRDataSource createDataSource() {
-        DRDataSource dataSource = new DRDataSource("Bezorgingspunt", "Van", "Naar", "Afstand");
+        DRDataSource dataSource = new DRDataSource("Bezorgingspunt", "Vertrekpunt", "Aankomstpunt", "Afstand");
 
         for (Object listItem : this.listItems) {
             DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;

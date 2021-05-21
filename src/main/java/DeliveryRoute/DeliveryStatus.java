@@ -4,7 +4,17 @@ import java.awt.*;
 import java.util.LinkedHashMap;
 
 public enum DeliveryStatus {
-    BUSY(0) {
+    NONE(-1) {
+        @Override
+        public String toString() {
+            return "Geen status bekend";
+        }
+
+        public int toInteger() {
+            return -1;
+        }
+    },
+    BUSY_WITH_OTHER_DELIVERING(0) {
         @Override
         public String toString() {
             return "Bezig met andere bezorging";
@@ -18,7 +28,7 @@ public enum DeliveryStatus {
             return 0;
         }
     },
-    DELIVERING(1) {
+    NOW_DELIVERING(1) {
         @Override
         public String toString() {
             return "Nu aan het bezorgen";

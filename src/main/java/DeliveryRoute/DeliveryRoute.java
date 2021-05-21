@@ -131,9 +131,9 @@ public class DeliveryRoute {
      */
     public Table toTable() {
         Table table = new Table(500, 260);
-        table.addColumn("Nr.");
-        table.addColumn("Van");
-        table.addColumn("Naar");
+        table.addColumn("Bezorgingspunt");
+        table.addColumn("Vertrekpunt");
+        table.addColumn("Aankomstpunt");
         table.addColumn("Afstand");
 
         int counter = 0;

@@ -73,11 +73,6 @@ public class NearestNeighbour {
             // Reset closest city distance
             this. closestDistance = Double.MAX_VALUE;
 
-            // Set status of first deliverypoint to 'now delivering'
-            if (firstAdressToDeliver == 0) {
-                this.closestCity.setStatus(DeliveryStatus.DELIVERING);
-            }
-
             // Incrementation necessery to define the first deliverypoint
             firstAdressToDeliver++;
         }
