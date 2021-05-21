@@ -11,6 +11,7 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
 
     private JButton confirmButton, rejectButton, completeButton;
     private int indexCounter;
+    public static ArrayList<Object> listItemsCopy;
 
     public DeliveryFollowPanel(JFrame frame, boolean modal, ArrayList<DeliveryPointBase> route, DeliveryPointBase startingPoint, String[] labels, String title) {
         super(frame, modal, new ArrayList<> (route), startingPoint, labels, title);
@@ -30,6 +31,8 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
      */
     @Override
     protected ListCellRenderer<Object> getListCellRenderer() {
+
+        listItemsCopy = this.listItems;
 
         return new DefaultListCellRenderer() {
             /**
