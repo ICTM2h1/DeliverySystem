@@ -268,7 +268,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             AdhocManager adhocManager = AdhocManager.getInstance(new AdhocToXmlTransform(), new XmlToAdhocTransform());
             JasperReportBuilder reportBuilder = adhocManager.createReport(report);
             reportBuilder.setDataSource(this.createDataSource());
-            reportBuilder.show();
+            reportBuilder.show(false);
         } catch (DRException e) {
             SystemError.handle(e);
         }
