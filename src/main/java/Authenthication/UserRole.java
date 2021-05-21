@@ -88,12 +88,11 @@ public enum UserRole {
      * Creates a user instance of logged in user.
      *
      * @param username username of logged in user.
-     * @param password password of logged in user.
      * @param userRole role of logged in user.
      *
      * @return user instance of logged in user.
      */
-    public static User createUser(String username, String password, UserRole userRole) {
-        return new User(username, password, userRole);
+    public static User createUser(String username, UserRole userRole) {
+        return new User(username, userRole);
     }
 }

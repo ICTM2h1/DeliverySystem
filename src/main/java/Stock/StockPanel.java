@@ -186,7 +186,7 @@ public class StockPanel extends JPanelListBase implements ActionListener {
             this.listItems.set(this.selectedProductIndex, updatedProduct);
             this.titleLabel.setText(this.getTitle());
             this.updatePreview(updatedProduct);
+            this.list.updateUI();
         }
     }
-
 }

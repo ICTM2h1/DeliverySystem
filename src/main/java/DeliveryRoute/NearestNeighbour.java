@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 public class NearestNeighbour {
 
+    private DeliveryPointBase startPoint;
+
     // Closest city variables
     private DeliveryPointBase closestCity;
     private double closestDistance = Double.MAX_VALUE;
@@ -26,7 +28,10 @@ public class NearestNeighbour {
      * @param startPoint location where you start.
      * @param cities array with locations you need to pass.
      */
-    public NearestNeighbour(DeliveryStartPoint startPoint, ArrayList<DeliveryPointBase> cities) {
+    public NearestNeighbour(DeliveryPoint startPoint, ArrayList<DeliveryPointBase> cities) {
+        this.startPoint = startPoint;
+        Integer firstAdressToDeliver = 0;
+
         // Calculate the amount of cities you're going to pass (excluding the trip back to starting point).
         this.citiesCount = cities.size() + 1;
 
@@ -67,6 +72,9 @@ public class NearestNeighbour {
 
             // Reset closest city distance
             this. closestDistance = Double.MAX_VALUE;
+
+            // Incrementation necessery to define the first deliverypoint
+            firstAdressToDeliver++;
         }
 
         // Add the starting point to the route array (again).
@@ -89,6 +97,27 @@ public class NearestNeighbour {
     }
 
     /**
+     * Returns a list of delivery points without the first one (startingpoint).
+     * Function necessary since routes.remove(0) wouldn't work xd.
+     *
+     * @return ArrayList<DeliveryPoint> with all points except the first one.
+     */
+    public ArrayList<DeliveryPointBase> getRouteListItems() {
+        ArrayList<DeliveryPointBase> routeListItems = new ArrayList<DeliveryPointBase>();
+        boolean removedTheFirstElement = false;
+
+        for (DeliveryPointBase city : this.getRoute()) {
+            if (!city.equals(this.startPoint) || removedTheFirstElement) {
+                routeListItems.add(city);
+            } else {
+                removedTheFirstElement = true;
+            }
+        }
+
+        return routeListItems;
+    }
+
+    /**
      * Returns the NN-ordered route his distance in kilometers.
      *
      * @return double value distance in kilometers.
@@ -97,4 +126,12 @@ public class NearestNeighbour {
         return this.routeDistance;
     }
 
+    /**
+     * Returns the given starting- and endpoint.
+     *
+     * @return DeliveryPointBase-value of starting point.
+     */
+    public DeliveryPointBase getStartPoint() {
+        return this.startPoint;
+    }
 }

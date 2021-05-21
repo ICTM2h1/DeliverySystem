@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 /**
  * Represents a delivery point within a delivery route.
  */
-public class DeliveryPoint extends DeliveryPointBase {
+public class DeliveryOrderPoint extends DeliveryPointBase {
 
     private final LinkedHashMap<String, String> order;
 
@@ -14,7 +14,7 @@ public class DeliveryPoint extends DeliveryPointBase {
      *
      * @param order The order.
      */
-    public DeliveryPoint(LinkedHashMap<String, String> order) {
+    public DeliveryOrderPoint(LinkedHashMap<String, String> order) {
         this.order = order;
     }
 
@@ -32,6 +32,14 @@ public class DeliveryPoint extends DeliveryPointBase {
     @Override
     public String getPostalCode() {
         return this.order.get("DeliveryPostalCode");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getStreet() {
+        return this.order.get("DeliveryAddressLine1");
     }
 
     /**
@@ -91,14 +99,21 @@ public class DeliveryPoint extends DeliveryPointBase {
         return 0;
     }
 
+
+    @Override
+    public String toString() {
+        return "DeliveryOrderPoint{" +
+                "order=" + order +
+                '}';
+    }
 }
 
 /**
  * Provides a delivery start point.
  */
-class DeliveryStartPoint extends DeliveryPointBase {
+class DeliveryPoint extends DeliveryPointBase {
 
-    private final String name, postalCode;
+    private final String name, postalCode, street;
     private final int houseNumber;
     private final double longitude, latitude, altitude;
 
@@ -107,14 +122,16 @@ class DeliveryStartPoint extends DeliveryPointBase {
      *
      * @param name The name.
      * @param postalCode The postal code.
+     * @param street The street.
      * @param houseNumber The house number.
      * @param longitude The longitude.
      * @param latitude The latitude.
      * @param altitude The altitude.
      */
-    public DeliveryStartPoint(String name, String postalCode, int houseNumber, double longitude, double latitude, double altitude) {
+    public DeliveryPoint(String name, String postalCode, String street, int houseNumber, double longitude, double latitude, double altitude) {
         this.name = name;
         this.postalCode = postalCode;
+        this.street = street;
         this.houseNumber = houseNumber;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -149,6 +166,14 @@ class DeliveryStartPoint extends DeliveryPointBase {
      * {@inheritDoc}
      */
     @Override
+    public String getStreet() {
+        return this.street + " " + this.houseNumber;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public double getLongitude() {
         return this.longitude;
     }
@@ -169,12 +194,25 @@ class DeliveryStartPoint extends DeliveryPointBase {
         return this.altitude;
     }
 
+    @Override
+    public String toString() {
+        return "DeliveryPoint{" +
+                "name='" + name + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", houseNumber=" + houseNumber +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", altitude=" + altitude +
+                '}';
+    }
 }
 
 /**
  * Provides a base for delivery points.
  */
 abstract class DeliveryPointBase {
+
+    private DeliveryStatus status = DeliveryStatus.BUSY_WITH_OTHER_DELIVERING;
 
     /**
      * Gets the label of this delivery point.
@@ -205,6 +243,13 @@ abstract class DeliveryPointBase {
      * @return The house number.
      */
     public abstract String getHouseNumber();
+
+    /**
+     * Gets the street of the delivery point.
+     *
+     * @return street.
+     */
+    public abstract String getStreet();
 
     /**
      * Calculates the distance between 2 delivery points.
@@ -265,4 +310,25 @@ abstract class DeliveryPointBase {
      */
     public abstract double getAltitude();
 
+    /**
+     * Sets the status of the deliverypoint.
+     *
+     * @param updatedStatus Integer with new status of deliverypoint.
+     */
+    public void setStatus(DeliveryStatus updatedStatus) {
+        this.status = updatedStatus;
+    }
+
+    /**
+     * Gets the status of the deliverypoint.
+     *
+     * @return Integer status.
+     */
+    public DeliveryStatus getStatus() {
+        return this.status;
+    }
+
+    public boolean compareStatus(DeliveryStatus compareStatus) {
+        return this.status.toInteger() == compareStatus.toInteger();
+    }
 }

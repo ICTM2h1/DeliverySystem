@@ -131,9 +131,9 @@ public class DeliveryRoute {
      */
     public Table toTable() {
         Table table = new Table(500, 260);
-        table.addColumn("Nr.");
-        table.addColumn("Van");
-        table.addColumn("Naar");
+        table.addColumn("Bezorgingspunt");
+        table.addColumn("Vertrekpunt");
+        table.addColumn("Aankomstpunt");
         table.addColumn("Afstand");
 
         int counter = 0;
@@ -202,6 +202,19 @@ public class DeliveryRoute {
      * @return The delivery points.
      */
     public ArrayList<DeliveryPointBase> getDeliveryPoints() {
+        return deliveryPoints;
+    }
+
+    /**
+     * Gets the delivery points.
+     *
+     * @return The delivery points.
+     */
+    public ArrayList<DeliveryPointBase> getDeliveryPointsWithoutStartingPoint() {
+        ArrayList<DeliveryPointBase> deliveryPoints = this.deliveryPoints;
+        deliveryPoints.remove(0);
+        deliveryPoints.remove(deliveryPoints.size() - 1);
+
         return deliveryPoints;
     }
 }

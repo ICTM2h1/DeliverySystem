@@ -143,19 +143,11 @@ public class AuthenticationDialog extends JDialog implements ActionListener {
             UserRole userRole;
             try {
                 userRole = UserRole.valueOf(Integer.parseInt(this.userResultSet.get("Role")));
-            } catch (NumberFormatException e) {
-                userRole = null;
-            }
-
-
-            // Check if user role is valid.
-            if (userRole != null) {
                 String username = this.userResultSet.get("FullName");
-                String HashedDatabasePassword = this.userResultSet.get("HashedPassword");
 
-                this.user = UserRole.createUser(username, HashedDatabasePassword, userRole);
+                this.user = UserRole.createUser(username, userRole);
                 this.dispose();
-            } else {
+            } catch (NumberFormatException e) {
                 this.errorMessage.setText("Gebruiker niet ingesteld als bezorger of beheerder!");
                 this.errorMessage.setForeground(Color.red);
             }
