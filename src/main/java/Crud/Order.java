@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 /**
  * Provides a class for interacting with the order table.
  */
-// @todo replace the status = 0 value for the correct value.
 public class Order extends CrudBase {
 
     protected final Customer customer = new Customer();
