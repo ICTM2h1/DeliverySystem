@@ -84,11 +84,24 @@ public abstract class JDialogListItemBase extends JDialog implements ActionListe
     public void actionPerformed(ActionEvent e) {
         this.clickedButton = (JButton) e.getSource();
         if (this.clickedButton == this.getProceedButton()) {
+            if (!this.validateAction()) {
+                return;
+            }
+
             this.executeAction();
         }
 
         this.dispose();
         this.repaint();
+    }
+
+    /**
+     * Validates the action.
+     *
+     * @return Whether the validation was successful or not.
+     */
+    protected boolean validateAction() {
+        return true;
     }
 
     /**

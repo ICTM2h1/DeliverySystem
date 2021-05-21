@@ -16,7 +16,8 @@ import java.util.LinkedHashMap;
  */
 public class StockPanel extends JPanelListBase implements ActionListener {
 
-    private JButton addButton, editButton, deleteButton;
+    public static ArrayList<Object> listItemsCopy;
+    private JButton editButton;
 
     private int selectedProductIndex;
 
@@ -75,6 +76,8 @@ public class StockPanel extends JPanelListBase implements ActionListener {
      */
     @Override
     protected ListCellRenderer<Object> getListCellRenderer() {
+        listItemsCopy = listItems;
+
         return new DefaultListCellRenderer() {
             /**
              * {@inheritDoc}
