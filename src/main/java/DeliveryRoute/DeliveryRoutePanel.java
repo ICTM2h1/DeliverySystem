@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,6 +92,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     @Override
     protected void addTitleComponent() {
         if (this.getTitle() == null) {
+            return;
+        }
+
+        if (this.getRawListItems().size() < 1) {
+            super.addTitleComponent();
             return;
         }
 
@@ -235,21 +239,29 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.printButton) {
-            this.build();
+            this.buildReport();
         }
     }
 
     /**
-     * Builds the pdf.
+     * Builds the report.
      */
-    private void build() {
+    private void buildReport() {
         AdhocReport report = new AdhocReport();
         AdhocColumn column = new AdhocColumn();
-        column.setName("item");
+        column.setName("Bezorgingspunt");
         report.addColumn(column);
 
         column = new AdhocColumn();
-        column.setName("quantity");
+        column.setName("Van");
+        report.addColumn(column);
+
+        column = new AdhocColumn();
+        column.setName("Naar");
+        report.addColumn(column);
+
+        column = new AdhocColumn();
+        column.setName("Afstand");
         report.addColumn(column);
 
         try {
@@ -268,9 +280,28 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      * @return The data of the pdf.
      */
     private JRDataSource createDataSource() {
-        DRDataSource dataSource = new DRDataSource("item", "orderdate", "quantity", "unitprice");
-        for (int i = 0; i < 20; i++) {
-            dataSource.add("Book", new Date(), (int) (Math.random() * 10) + 1, BigDecimal.valueOf(Math.random() * 100 + 1));
+        DRDataSource dataSource = new DRDataSource("Bezorgingspunt", "Van", "Naar", "Afstand");
+
+        for (Object listItem : this.listItems) {
+            DeliveryRoute deliveryRoute = (DeliveryRoute) listItem;
+
+            dataSource.add("--", "--", "--", "--");
+            dataSource.add(String.format("Bezorgingstraject %s", deliveryRoute.getId()), "--", "--", "--");
+
+            int counter = 0;
+            ArrayList<DeliveryPointBase> deliveryPoints = deliveryRoute.getDeliveryPoints();
+            DeliveryPointBase nextDeliveryPoint;
+            for (DeliveryPointBase deliveryPoint : deliveryPoints) {
+                int nextOrderIndex = counter + 1;
+                if (nextOrderIndex >= deliveryPoints.size()) {
+                    break;
+                }
+
+                nextDeliveryPoint = deliveryPoints.get(nextOrderIndex);
+
+                dataSource.add(String.valueOf(counter + 1), deliveryPoint.addressLabel(), nextDeliveryPoint.addressLabel(), deliveryPoint.distance(nextDeliveryPoint));
+                counter++;
+            }
         }
 
         return dataSource;
