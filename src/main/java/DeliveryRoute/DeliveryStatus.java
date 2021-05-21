@@ -3,71 +3,119 @@ package DeliveryRoute;
 import java.awt.*;
 import java.util.LinkedHashMap;
 
+/**
+ * Enum provides the value for delivery statuses.
+ */
 public enum DeliveryStatus {
     NONE(-1) {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return "Geen status bekend";
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public int toInteger() {
             return -1;
         }
     },
     BUSY_WITH_OTHER_DELIVERING(0) {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return "Bezig met andere bezorging";
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Color foregroundColor() {
             return Color.BLACK;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public int toInteger() {
             return 0;
         }
     },
     NOW_DELIVERING(1) {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return "Nu aan het bezorgen";
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Color foregroundColor() {
             return Color.WHITE;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Color backgroundColor() { return Color.BLUE ;}
 
+        /**
+         * {@inheritDoc}
+         */
         public int toInteger() {
             return 1;
         }
     },
     REJECTED(2) {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return "Bestelling geannuleerd";
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Color foregroundColor() {
             return Color.RED;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public int toInteger() {
             return 2;
         }
     },
     COMPLETED(3) {
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public String toString() {
             return "Bestelling afgeleverd";
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public Color foregroundColor() {
             return Color.GREEN;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public int toInteger() {
             return 3;
         }
@@ -76,6 +124,11 @@ public enum DeliveryStatus {
     private int status;
     private static final LinkedHashMap<Integer, DeliveryStatus> statusMap = new LinkedHashMap<>();
 
+    /**
+     * Creates a new delivery status.
+     *
+     * @param status the status.
+     */
     DeliveryStatus(int status) {
         this.status = status;
     }
@@ -134,6 +187,13 @@ public enum DeliveryStatus {
         return 0;
     }
 
+    /**
+     * Determines if statuses are equal.
+     *
+     * @param compareStatus status to be compared.
+     * @return whether the status is equal or not.
+     */
     public boolean compareStatus(DeliveryStatus compareStatus) {
         return this.status == compareStatus.toInteger();
-    }}
+    }
+}

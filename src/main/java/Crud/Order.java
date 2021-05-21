@@ -1,6 +1,7 @@
 package Crud;
 
 import DeliveryRoute.DeliveryAddress;
+import DeliveryRoute.DeliveryStatus;
 import System.Error.SystemError;
 
 import java.math.BigDecimal;
@@ -56,7 +57,7 @@ public class Order extends CrudBase {
         String query = "SELECT * FROM orders O " +
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID " +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
-                "WHERE O.Status = 0 ";
+                "WHERE O.Status = :status ";
         if (this.date != null && !this.date.isEmpty()) {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
@@ -64,6 +65,7 @@ public class Order extends CrudBase {
         }
         query += "ORDER BY OrderID ";
 
+        this.bindParam("status", String.valueOf(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING.toInteger()));
         return super.all(query);
     }
 
@@ -77,10 +79,11 @@ public class Order extends CrudBase {
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
                 "WHERE YEAR(OrderDate) >= 2020 " +
-                "AND O.Status = 0 " +
+                "AND O.Status = :status " +
                 "ORDER BY ExpectedDeliveryDate DESC " +
                 "LIMIT 1000";
 
+        this.bindParam("status", String.valueOf(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING.toInteger()));
         return super.all(query);
     }
 

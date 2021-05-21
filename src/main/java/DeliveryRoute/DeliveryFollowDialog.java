@@ -1,5 +1,6 @@
 package DeliveryRoute;
 
+import Crud.Order;
 import UI.Dialogs.JDialogRawListBase;
 
 import javax.swing.*;
@@ -7,12 +8,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
+/**
+ * Class to navigate through the route.
+ */
 public class DeliveryFollowDialog extends JDialogRawListBase implements ActionListener {
 
     private JButton confirmButton, rejectButton, completeButton;
     public static ArrayList<Object> listItemsCopy;
 
+    /**
+     * Creates a new delivery follow dialog.
+     *
+     * @param frame the frame.
+     * @param modal is it a modal?
+     * @param route the route.
+     * @param labels the labels.
+     * @param title the title
+     */
     public DeliveryFollowDialog(JFrame frame, boolean modal, ArrayList<DeliveryPointBase> route, String[] labels, String title) {
         super(frame, modal, new ArrayList<>(route), labels, title);
     }
@@ -62,6 +76,9 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryPointBase deliveryPoint = (DeliveryPointBase) listItem;
@@ -137,6 +154,9 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.rejectButton) {
@@ -170,6 +190,14 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
 
                 DeliveryPointBase nextDeliveryPoint = (DeliveryPointBase) this.listItems.get(nextPointIndex);
                 nextDeliveryPoint.setStatus(DeliveryStatus.NOW_DELIVERING);
+
+                if (currentDeliveryPoint instanceof DeliveryOrderPoint) {
+                    LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) currentDeliveryPoint).getOrder();
+                    Order order = new Order();
+                    order.addCondition("OrderID", entity.get("OrderID"));
+                    order.addValue("Status", String.valueOf(DeliveryStatus.COMPLETED.toInteger()));
+                    order.update();
+                }
 
                 // Go to the next delivery point.
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);
