@@ -1,15 +1,7 @@
 package UI.Dialogs;
 
-import Authenthication.LogoutPanel;
-import Authenthication.User;
-import Customer.CustomerPanel;
-import DeliveryRoute.DeliveryRoutePanel;
-import Stock.StockPanel;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Provides a base for panels.
@@ -19,8 +11,6 @@ abstract public class JDialogBase extends JDialog {
     protected final int panelWidth, panelHeight;
 
     public GridBagConstraints gridBagConstraints;
-    public JLabel titleLabel;
-    protected static final ArrayList<JDialogBase> menuPanels = new ArrayList<>();
 
     /**
      * Creates a new panel.

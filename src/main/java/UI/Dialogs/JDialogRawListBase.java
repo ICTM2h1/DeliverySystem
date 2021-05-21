@@ -1,24 +1,17 @@
 package UI.Dialogs;
 
-import DeliveryRoute.DeliveryOrderPoint;
-import UI.Panels.JPanelBase;
 import UI.Panels.JPanelListPreview;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
  * Provides a base panel for raw lists.
  */
 public abstract class JDialogRawListBase extends JDialogBase implements ListSelectionListener {
-
-    public static ArrayList<Object> listItemsCopy;
-    public Object startingPoint;
 
     protected ArrayList<Object> listItems;
 
@@ -26,13 +19,11 @@ public abstract class JDialogRawListBase extends JDialogBase implements ListSele
     protected JList<String> list;
     protected JSplitPane splitPane;
 
-    public JDialogRawListBase(JFrame frame, boolean modal, ArrayList<Object> rawListItems, Object startingPoint, String[] labels, String title) {
+    public JDialogRawListBase(JFrame frame, boolean modal, ArrayList<Object> rawListItems, String[] labels, String title) {
         super(frame, modal, 740, 581);
         this.setTitle(title);
 
-        this.startingPoint = startingPoint;
         this.listItems = rawListItems;
-        listItemsCopy = rawListItems;
 
         if (this.listItems == null || this.listItems.isEmpty()) {
             return;
@@ -112,15 +103,6 @@ public abstract class JDialogRawListBase extends JDialogBase implements ListSele
      */
     protected boolean hasVerticalScrollbar() {
         return true;
-    }
-
-    /**
-     * Gets the title of the list preview.
-     *
-     * @return The title.
-     */
-    protected String getListPreviewTitle() {
-        return this.getTitle();
     }
 
     /**
