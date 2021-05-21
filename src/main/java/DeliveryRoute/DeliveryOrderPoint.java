@@ -38,6 +38,14 @@ public class DeliveryOrderPoint extends DeliveryPointBase {
      * {@inheritDoc}
      */
     @Override
+    public String getStreet() {
+        return this.order.get("DeliveryAddressLine1");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String getHouseNumber() {
         String[] address = this.order.get("DeliveryAddressLine1").split(" ");
         StringBuilder houseNumber = new StringBuilder();
@@ -105,7 +113,7 @@ public class DeliveryOrderPoint extends DeliveryPointBase {
  */
 class DeliveryPoint extends DeliveryPointBase {
 
-    private final String name, postalCode;
+    private final String name, postalCode, street;
     private final int houseNumber;
     private final double longitude, latitude, altitude;
 
@@ -114,14 +122,16 @@ class DeliveryPoint extends DeliveryPointBase {
      *
      * @param name The name.
      * @param postalCode The postal code.
+     * @param street The street.
      * @param houseNumber The house number.
      * @param longitude The longitude.
      * @param latitude The latitude.
      * @param altitude The altitude.
      */
-    public DeliveryPoint(String name, String postalCode, int houseNumber, double longitude, double latitude, double altitude) {
+    public DeliveryPoint(String name, String postalCode, String street, int houseNumber, double longitude, double latitude, double altitude) {
         this.name = name;
         this.postalCode = postalCode;
+        this.street = street;
         this.houseNumber = houseNumber;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -150,6 +160,14 @@ class DeliveryPoint extends DeliveryPointBase {
     @Override
     public String getHouseNumber() {
         return " " + this.houseNumber;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getStreet() {
+        return this.street + " " + this.houseNumber;
     }
 
     /**
@@ -194,7 +212,7 @@ class DeliveryPoint extends DeliveryPointBase {
  */
 abstract class DeliveryPointBase {
 
-    private Integer status = 0;
+    private DeliveryStatus status = DeliveryStatus.BUSY;
 
     /**
      * Gets the label of this delivery point.
@@ -225,6 +243,13 @@ abstract class DeliveryPointBase {
      * @return The house number.
      */
     public abstract String getHouseNumber();
+
+    /**
+     * Gets the street of the delivery point.
+     *
+     * @return street.
+     */
+    public abstract String getStreet();
 
     /**
      * Calculates the distance between 2 delivery points.
@@ -290,7 +315,7 @@ abstract class DeliveryPointBase {
      *
      * @param updatedStatus Integer with new status of deliverypoint.
      */
-    public void setStatus(Integer updatedStatus) {
+    public void setStatus(DeliveryStatus updatedStatus) {
         this.status = updatedStatus;
     }
 
@@ -299,8 +324,11 @@ abstract class DeliveryPointBase {
      *
      * @return Integer status.
      */
-    public Integer getStatus() {
+    public DeliveryStatus getStatus() {
         return this.status;
     }
 
+    public boolean compareStatus(DeliveryStatus compareStatus) {
+        return this.status.toInteger() == compareStatus.toInteger();
+    }
 }

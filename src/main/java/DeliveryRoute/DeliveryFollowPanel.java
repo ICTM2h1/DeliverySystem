@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class DeliveryFollowPanel extends JDialogRawListBase implements ActionListener {
 
     private JButton confirmButton, rejectButton, completeButton;
-    private int indexCounter;
     public static ArrayList<Object> listItemsCopy;
+    private boolean isStartingPoint = true;
 
     public DeliveryFollowPanel(JFrame frame, boolean modal, ArrayList<DeliveryPointBase> route, DeliveryPointBase startingPoint, String[] labels, String title) {
         super(frame, modal, new ArrayList<> (route), startingPoint, labels, title);
-        indexCounter = 0;
+        startingPoint.setStatus(DeliveryStatus.BUSY);
     }
 
     private DeliveryPointBase currentlyDelivering;
@@ -44,20 +44,20 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
 
             try {
                 DeliveryPointBase cityListItem = (DeliveryPointBase) listItemsCopy.get(index);
-                Integer deliveryPointStatus = cityListItem.getStatus();
+                DeliveryStatus deliveryPointStatus = cityListItem.getStatus();
 
                 Color background = Color.WHITE;
                 Color foreground = Color.BLACK;
 
                 // TODO: IS ER EEN MAKKELIJKERE MANIER?
-                if (deliveryPointStatus == DeliveryStatus.BUSY.toInteger()) {
+                if (deliveryPointStatus.compareStatus(DeliveryStatus.BUSY)) {
                     foreground = DeliveryStatus.BUSY.foregroundColor();
-                } else if (deliveryPointStatus == DeliveryStatus.DELIVERING.toInteger()) {
+                } else if (deliveryPointStatus.compareStatus(DeliveryStatus.DELIVERING)) {
                     foreground = DeliveryStatus.DELIVERING.foregroundColor();
                     background = DeliveryStatus.DELIVERING.backgroundColor();
-                } else if (deliveryPointStatus == DeliveryStatus.REJECTED.toInteger()) {
+                } else if (deliveryPointStatus.compareStatus(DeliveryStatus.REJECTED)) {
                     foreground = DeliveryStatus.REJECTED.foregroundColor();
-                } else if (deliveryPointStatus == DeliveryStatus.COMPLETED.toInteger()) {
+                } else if (deliveryPointStatus.compareStatus(DeliveryStatus.COMPLETED)) {
                     foreground = DeliveryStatus.COMPLETED.foregroundColor();
                 }
 
@@ -76,19 +76,17 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryPointBase waypoint = (DeliveryPointBase) listItem;
 
-
         // previousWaypoint may not exceed the length of route.
-        DeliveryPointBase previousWaypoint;
-//        if (listItemsCopy.get(0).equals(listItems.indexOf(waypoint))) {
-        if (listItemsCopy.indexOf(waypoint) == 0 && indexCounter == 0) {
-            previousWaypoint = (DeliveryPointBase) startingPoint;
-        } else {
-            previousWaypoint = (DeliveryPointBase) listItemsCopy.get(indexCounter - 1);
+        DeliveryPointBase previousWaypoint = (DeliveryPointBase) startingPoint;
+        int previousPointIndex = this.list.getSelectedIndex() - 1;
+
+        if (previousPointIndex > 0 && previousPointIndex <= this.listItems.size()) {
+            previousWaypoint = (DeliveryPointBase) this.listItems.get(previousPointIndex);
         }
 
         // Set first (after startpoint) point to status DELIVERING
-        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && indexCounter == 0) {
-            waypoint.setStatus(1);
+        if (waypoint.compareStatus(DeliveryStatus.DELIVERING) && this.list.getSelectedIndex() == 0) {
+            waypoint.setStatus(DeliveryStatus.DELIVERING);
             this.currentlyDelivering = waypoint;
             this.currentlyDeliveringIndex = 1;
         }
@@ -103,10 +101,12 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
         this.preview.addComponent(new JLabel("Van:"), true);
 
         // Add 'startpunt' at end of string incase it is the starting point
-        if (previousWaypoint instanceof DeliveryPoint) {
-            this.preview.addComponent(new JLabel(previousWaypoint.label() + " (STARTPUNT)") );
+        if (previousWaypoint instanceof DeliveryPoint && isStartingPoint) {
+            this.preview.addComponent(new JLabel(previousWaypoint.addressLabel() + " (STARTPUNT)") );
+            // Makes sure that we only have one starting point.
+            this.isStartingPoint = false;
         } else {
-            this.preview.addComponent(new JLabel(previousWaypoint.label()));
+            this.preview.addComponent(new JLabel(previousWaypoint.addressLabel()));
         }
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
@@ -114,9 +114,9 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
 
         // Add 'eindpunt' at end of string incase it is the ending point
         if (waypoint instanceof DeliveryPoint) {
-            this.preview.addComponent(new JLabel(waypoint.label() + " (EINDPUNT)") );
+            this.preview.addComponent(new JLabel(waypoint.addressLabel() + " (EINDPUNT)") );
         } else {
-            this.preview.addComponent(new JLabel(waypoint.label()));
+            this.preview.addComponent(new JLabel(waypoint.addressLabel()));
         }
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
@@ -125,26 +125,28 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
         this.preview.addComponent(new JLabel("Status:"), true);
-        this.preview.addComponent(new JLabel(DeliveryStatus.valueOf(waypoint.getStatus()).toString()));
+        this.preview.addComponent(new JLabel(waypoint.getStatus().toString()));
 
         this.preview.gridBagConstraints.insets = new Insets(15, 0, 5, 0);
         this.preview.addComponent(new JLabel("<html><span style='font-size:13px'>Adresgegevens</span></html>"), true);
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
         this.preview.addComponent(new JLabel("Postcode:"), true);
-        this.preview.addComponent(new JLabel(waypoint.getPostalCode() + ", " + waypoint.label()));
+        this.preview.addComponent(new JLabel(waypoint.getPostalCode()));
 
-        this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
         this.preview.addComponent(new JLabel("Straat:"), true);
-        this.preview.addComponent(new JLabel("HEBBEN WIJ EEN STRAATNAAM...." + waypoint.getHouseNumber()));
+        this.preview.addComponent(new JLabel(waypoint.getStreet()));
+
+        this.preview.addComponent(new JLabel("Stad:"), true);
+        this.preview.addComponent(new JLabel(waypoint.label()));
 
         // Currently navigating to endpoint
-        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && waypoint instanceof DeliveryPoint) {
+        if (waypoint.compareStatus(DeliveryStatus.DELIVERING) && waypoint instanceof DeliveryPoint) {
             this.completeButton = new JButton("Bezorgingstraject afronden");
             this.completeButton.addActionListener(this);
             this.preview.addFullWidthComponent(this.completeButton, 2);
         // Currently delivering (display buttons)
-        } else if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING) {
+        } else if (waypoint.compareStatus(DeliveryStatus.DELIVERING)) {
             this.rejectButton = new JButton("Levering afkeuren");
             this.rejectButton.addActionListener(this);
 
@@ -155,17 +157,16 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
             this.preview.addComponent(this.rejectButton, true);
             this.preview.addComponent(this.confirmButton);
         }
-        indexCounter++;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.rejectButton) {
             if (JOptionPane.showConfirmDialog(null, "Weet je zeker dat je deze bestelling wilt annuleren?", "Bevestiging", JOptionPane.YES_NO_CANCEL_OPTION) == 0) {
-                currentlyDelivering.setStatus(DeliveryStatus.REJECTED.toInteger());
+                currentlyDelivering.setStatus(DeliveryStatus.REJECTED);
 
                 currentlyDelivering = (DeliveryPointBase) listItemsCopy.get(currentlyDeliveringIndex);
-                currentlyDelivering.setStatus(DeliveryStatus.DELIVERING.toInteger());
+                currentlyDelivering.setStatus(DeliveryStatus.DELIVERING);
                 currentlyDeliveringIndex++;
 
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);
@@ -173,10 +174,10 @@ public class DeliveryFollowPanel extends JDialogRawListBase implements ActionLis
             }
         } else if (e.getSource() == this.confirmButton) {
             if (JOptionPane.showConfirmDialog(null, "Weet je zeker dat je deze bestelling wilt bevestigen?", "Bevestiging", JOptionPane.YES_NO_CANCEL_OPTION) == 0) {
-                currentlyDelivering.setStatus(DeliveryStatus.COMPLETED.toInteger());
+                currentlyDelivering.setStatus(DeliveryStatus.COMPLETED);
 
                 currentlyDelivering = (DeliveryPointBase) listItemsCopy.get(currentlyDeliveringIndex);
-                currentlyDelivering.setStatus(DeliveryStatus.DELIVERING.toInteger());
+                currentlyDelivering.setStatus(DeliveryStatus.DELIVERING);
                 currentlyDeliveringIndex++;
 
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);

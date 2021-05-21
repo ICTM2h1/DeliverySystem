@@ -123,4 +123,7 @@ public enum DeliveryStatus {
     public int toInteger() {
         return 0;
     }
-}
+
+    public boolean compareStatus(DeliveryStatus compareStatus) {
+        return this.status == compareStatus.toInteger();
+    }}

@@ -75,7 +75,7 @@ public class NearestNeighbour {
 
             // Set status of first deliverypoint to 'now delivering'
             if (firstAdressToDeliver == 0) {
-                this.closestCity.setStatus(1);
+                this.closestCity.setStatus(DeliveryStatus.DELIVERING);
             }
 
             // Incrementation necessery to define the first deliverypoint

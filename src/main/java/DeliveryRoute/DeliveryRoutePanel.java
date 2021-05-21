@@ -50,7 +50,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      */
     public DeliveryRoutePanel(String date) {
         this.DeliveryPoint = new DeliveryPoint(
-            "Amsterdam", "1071BR", 91, 4.8796204,52.3600336, 5
+            "Amsterdam", "1071BR", "P.C. Hooftstraat", 91, 4.8796204,52.3600336, 5
         );
         this.date = date;
 
