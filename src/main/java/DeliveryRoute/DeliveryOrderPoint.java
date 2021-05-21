@@ -91,6 +91,13 @@ public class DeliveryOrderPoint extends DeliveryPointBase {
         return 0;
     }
 
+
+    @Override
+    public String toString() {
+        return "DeliveryOrderPoint{" +
+                "order=" + order +
+                '}';
+    }
 }
 
 /**
@@ -169,6 +176,17 @@ class DeliveryPoint extends DeliveryPointBase {
         return this.altitude;
     }
 
+    @Override
+    public String toString() {
+        return "DeliveryPoint{" +
+                "name='" + name + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", houseNumber=" + houseNumber +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", altitude=" + altitude +
+                '}';
+    }
 }
 
 /**

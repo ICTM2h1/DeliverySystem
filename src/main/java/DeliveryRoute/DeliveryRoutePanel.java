@@ -134,7 +134,6 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
             NearestNeighbour nearestNeighbour = new NearestNeighbour(this.DeliveryPoint, deliveryRoute.getDeliveryPoints());
             DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
-            this.route = nearestNeighbour;
 
             listItems.add(deliverer, sortedRoute);
         }
@@ -203,9 +202,22 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.routeButton) {
-            DeliveryFollowPanel deliveryFollowPanel = new DeliveryFollowPanel(this.route, this.routeTitle);
-            deliveryFollowPanel.instantiate();
-            deliveryFollowPanel.updateUI();
+
+            //TODO: Startpunt verwijderen
+
+            DeliveryRoute route = (DeliveryRoute) this.listItems.get(this.list.getSelectedIndex());
+            DeliveryPointBase startingPoint = (DeliveryPointBase) route.get(0);
+            ArrayList<DeliveryPointBase> deliveryPoints = route.getDeliveryPoints();
+            deliveryPoints.remove(0);
+
+            String[] labels = new String[deliveryPoints.size()];
+
+            for (int delta = 0; delta < deliveryPoints.size(); delta++) {
+                labels[delta] = deliveryPoints.get(delta).label();
+            }
+
+            String title = String.format("%s (%skm)", route.getName(), route.getDistance());
+            DeliveryFollowPanel deliveryFollowPanel = new DeliveryFollowPanel(new JFrame(), true, deliveryPoints, startingPoint, labels, title);
         }
     }
 

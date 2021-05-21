@@ -204,4 +204,17 @@ public class DeliveryRoute {
     public ArrayList<DeliveryPointBase> getDeliveryPoints() {
         return deliveryPoints;
     }
+
+    /**
+     * Gets the delivery points.
+     *
+     * @return The delivery points.
+     */
+    public ArrayList<DeliveryPointBase> getDeliveryPointsWithoutStartingPoint() {
+        ArrayList<DeliveryPointBase> deliveryPoints = this.deliveryPoints;
+        deliveryPoints.remove(0);
+        deliveryPoints.remove(deliveryPoints.size() - 1);
+
+        return deliveryPoints;
+    }
 }

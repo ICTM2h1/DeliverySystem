@@ -113,7 +113,6 @@ public class StockPanel extends JPanelListBase implements ActionListener {
                     this.setForeground(Color.RED);
                 }
 
-
                 return this;
             }
         };
@@ -187,5 +186,4 @@ public class StockPanel extends JPanelListBase implements ActionListener {
             this.list.updateUI();
         }
     }
-
 }

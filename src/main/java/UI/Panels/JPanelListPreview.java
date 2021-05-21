@@ -14,7 +14,7 @@ public class JPanelListPreview extends JPanelBase {
      *
      * @param title The title.
      */
-    protected JPanelListPreview(String title) {
+    public JPanelListPreview(String title) {
         this.title = title;
     }
 

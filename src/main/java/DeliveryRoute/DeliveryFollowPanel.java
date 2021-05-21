@@ -1,51 +1,28 @@
 package DeliveryRoute;
 
-import UI.Panels.JPanelRawListBase;
+import UI.Dialogs.JDialogRawListBase;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class DeliveryFollowPanel extends JPanelRawListBase implements ActionListener {
+public class DeliveryFollowPanel extends JDialogRawListBase implements ActionListener {
 
     private JButton confirmButton, rejectButton, completeButton;
+    private int indexCounter;
 
-    private NearestNeighbour NearestNeighbour;
-    private ArrayList<DeliveryPointBase> route;
-    private ArrayList<DeliveryPointBase> routeListItems;
-    private final String title;
-
-    public DeliveryFollowPanel(NearestNeighbour route, String title) {
-        this.NearestNeighbour = route;
-        this.route = route.getRoute();
-        this.routeListItems = route.getRouteListItems();
-        this.title = title;
+    public DeliveryFollowPanel(JFrame frame, boolean modal, ArrayList<DeliveryPointBase> route, DeliveryPointBase startingPoint, String[] labels, String title) {
+        super(frame, modal, new ArrayList<> (route), startingPoint, labels, title);
+        indexCounter = 0;
     }
 
     private DeliveryPointBase currentlyDelivering;
     private Integer currentlyDeliveringIndex;
 
     @Override
-    public String getTitle() {
-        return title + " - " + "(" + NearestNeighbour.getDistance() + "km)";
-    }
-
-    @Override
     protected String getListPreviewTitle() {
         return null;
-    }
-
-    @Override
-    protected ArrayList<Object> getRawListItems() {
-        return new ArrayList<> (routeListItems);
-    }
-
-    @Override
-    protected String getRawListItemLabel(Object listItem) {
-        DeliveryPointBase waypoints = (DeliveryPointBase) listItem;
-
-        return waypoints.label();
     }
 
     /**
@@ -60,34 +37,34 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
              */
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                try {
-                    DeliveryPointBase cityListItem = (DeliveryPointBase) listItemsCopy.get(index);
-                    Integer deliveryPointStatus = cityListItem.getStatus();
+            try {
+                DeliveryPointBase cityListItem = (DeliveryPointBase) listItemsCopy.get(index);
+                Integer deliveryPointStatus = cityListItem.getStatus();
 
-                    Color background = Color.WHITE;
-                    Color foreground = Color.BLACK;
+                Color background = Color.WHITE;
+                Color foreground = Color.BLACK;
 
-                    // TODO: IS ER EEN MAKKELIJKERE MANIER?
-                    if (deliveryPointStatus == DeliveryStatus.BUSY.toInteger()) {
-                        foreground = DeliveryStatus.BUSY.foregroundColor();
-                    } else if (deliveryPointStatus == DeliveryStatus.DELIVERING.toInteger()) {
-                        foreground = DeliveryStatus.DELIVERING.foregroundColor();
-                        background = DeliveryStatus.DELIVERING.backgroundColor();
-                    } else if (deliveryPointStatus == DeliveryStatus.REJECTED.toInteger()) {
-                        foreground = DeliveryStatus.REJECTED.foregroundColor();
-                    } else if (deliveryPointStatus == DeliveryStatus.COMPLETED.toInteger()) {
-                        foreground = DeliveryStatus.COMPLETED.foregroundColor();
-                    }
-
-                    this.setBackground(background);
-                    this.setForeground(foreground);
-
-                } catch (Exception exception) {
-                    this.setForeground(Color.RED);
+                // TODO: IS ER EEN MAKKELIJKERE MANIER?
+                if (deliveryPointStatus == DeliveryStatus.BUSY.toInteger()) {
+                    foreground = DeliveryStatus.BUSY.foregroundColor();
+                } else if (deliveryPointStatus == DeliveryStatus.DELIVERING.toInteger()) {
+                    foreground = DeliveryStatus.DELIVERING.foregroundColor();
+                    background = DeliveryStatus.DELIVERING.backgroundColor();
+                } else if (deliveryPointStatus == DeliveryStatus.REJECTED.toInteger()) {
+                    foreground = DeliveryStatus.REJECTED.foregroundColor();
+                } else if (deliveryPointStatus == DeliveryStatus.COMPLETED.toInteger()) {
+                    foreground = DeliveryStatus.COMPLETED.foregroundColor();
                 }
-                return this;
+
+                this.setBackground(background);
+                this.setForeground(foreground);
+
+            } catch (Exception exception) {
+                this.setForeground(Color.LIGHT_GRAY);
+            }
+            return this;
             }
         };
     }
@@ -96,16 +73,18 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
     protected void updateRawListItemPreview(Object listItem) {
         DeliveryPointBase waypoint = (DeliveryPointBase) listItem;
 
-        // previousWaypoint may not exceed the length of testroute.
+
+        // previousWaypoint may not exceed the length of route.
         DeliveryPointBase previousWaypoint;
-        if (route.indexOf(waypoint) == 0) {
-            previousWaypoint = route.get(routeListItems.size() - 1);
+//        if (listItemsCopy.get(0).equals(listItems.indexOf(waypoint))) {
+        if (listItemsCopy.indexOf(waypoint) == 0 && indexCounter == 0) {
+            previousWaypoint = (DeliveryPointBase) startingPoint;
         } else {
-            previousWaypoint = route.get(route.indexOf(waypoint) - 1);
+            previousWaypoint = (DeliveryPointBase) listItemsCopy.get(indexCounter - 1);
         }
 
         // Set first (after startpoint) point to status DELIVERING
-        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && route.indexOf(waypoint) == 1) {
+        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && indexCounter == 0) {
             waypoint.setStatus(1);
             this.currentlyDelivering = waypoint;
             this.currentlyDeliveringIndex = 1;
@@ -121,7 +100,7 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
         this.preview.addComponent(new JLabel("Van:"), true);
 
         // Add 'startpunt' at end of string incase it is the starting point
-        if (previousWaypoint == NearestNeighbour.getStartPoint()) {
+        if (previousWaypoint instanceof DeliveryPoint) {
             this.preview.addComponent(new JLabel(previousWaypoint.label() + " (STARTPUNT)") );
         } else {
             this.preview.addComponent(new JLabel(previousWaypoint.label()));
@@ -131,7 +110,7 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
         this.preview.addComponent(new JLabel("Naar:"), true);
 
         // Add 'eindpunt' at end of string incase it is the ending point
-        if (waypoint == NearestNeighbour.getStartPoint()) {
+        if (waypoint instanceof DeliveryPoint) {
             this.preview.addComponent(new JLabel(waypoint.label() + " (EINDPUNT)") );
         } else {
             this.preview.addComponent(new JLabel(waypoint.label()));
@@ -154,10 +133,10 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
 
         this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);
         this.preview.addComponent(new JLabel("Straat:"), true);
-        this.preview.addComponent(new JLabel("HEBBEN WIJ EEN STRAATNAAM?" + waypoint.getHouseNumber()));
+        this.preview.addComponent(new JLabel("HEBBEN WIJ EEN STRAATNAAM...." + waypoint.getHouseNumber()));
 
         // Currently navigating to endpoint
-        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && waypoint.equals(NearestNeighbour.getStartPoint())) {
+        if (DeliveryStatus.valueOf(waypoint.getStatus()) == DeliveryStatus.DELIVERING && waypoint instanceof DeliveryPoint) {
             this.completeButton = new JButton("Bezorgingstraject afronden");
             this.completeButton.addActionListener(this);
             this.preview.addFullWidthComponent(this.completeButton, 2);
@@ -173,6 +152,7 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
             this.preview.addComponent(this.rejectButton, true);
             this.preview.addComponent(this.confirmButton);
         }
+        indexCounter++;
     }
 
     @Override
@@ -181,9 +161,9 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
             if (JOptionPane.showConfirmDialog(null, "Weet je zeker dat je deze bestelling wilt annuleren?", "Bevestiging", JOptionPane.YES_NO_CANCEL_OPTION) == 0) {
                 currentlyDelivering.setStatus(DeliveryStatus.REJECTED.toInteger());
 
-                currentlyDeliveringIndex++;
-                currentlyDelivering = route.get(currentlyDeliveringIndex);
+                currentlyDelivering = (DeliveryPointBase) listItemsCopy.get(currentlyDeliveringIndex);
                 currentlyDelivering.setStatus(DeliveryStatus.DELIVERING.toInteger());
+                currentlyDeliveringIndex++;
 
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);
                 this.list.updateUI();
@@ -192,9 +172,9 @@ public class DeliveryFollowPanel extends JPanelRawListBase implements ActionList
             if (JOptionPane.showConfirmDialog(null, "Weet je zeker dat je deze bestelling wilt bevestigen?", "Bevestiging", JOptionPane.YES_NO_CANCEL_OPTION) == 0) {
                 currentlyDelivering.setStatus(DeliveryStatus.COMPLETED.toInteger());
 
-                currentlyDeliveringIndex++;
-                currentlyDelivering = route.get(currentlyDeliveringIndex);
+                currentlyDelivering = (DeliveryPointBase) listItemsCopy.get(currentlyDeliveringIndex);
                 currentlyDelivering.setStatus(DeliveryStatus.DELIVERING.toInteger());
+                currentlyDeliveringIndex++;
 
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);
                 this.list.updateUI();
