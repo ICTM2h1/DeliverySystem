@@ -16,6 +16,7 @@ public class DeliveryRoute {
 
     private final int id;
     private int distance;
+    private DeliveryStatus deliveryStatus = DeliveryStatus.NONE;
 
     private final ArrayList<DeliveryPointBase> deliveryPoints;
 
@@ -216,5 +217,23 @@ public class DeliveryRoute {
         deliveryPoints.remove(deliveryPoints.size() - 1);
 
         return deliveryPoints;
+    }
+
+    /**
+     * Sets the delivery status of current instance.
+     *
+     * @param deliveryStatus ENUM value of delivery status.
+     */
+    public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
+
+    /**
+     * Gets the string value of delivery status.
+     *
+     * @return String value of Delivery status
+     */
+    public DeliveryStatus getDeliveryStatus() {
+        return deliveryStatus;
     }
 }

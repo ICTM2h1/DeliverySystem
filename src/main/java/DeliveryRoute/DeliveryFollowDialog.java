@@ -204,8 +204,8 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
                 this.list.updateUI();
             }
         } else if (e.getSource() == this.completeButton) {
-            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-                System.out.println("TODO");
+            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                this.dispose();
             }
         }
     }

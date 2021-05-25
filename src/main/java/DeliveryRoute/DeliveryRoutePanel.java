@@ -220,6 +220,12 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
 
+        JLabel trajectStatusText = new JLabel(deliveryRoute.getDeliveryStatus().toString());
+        DeliveryStatus trajectStatus = deliveryRoute.getDeliveryStatus();
+        trajectStatusText.setForeground((trajectStatus.foregroundColor()));
+        this.preview.addComponent(new JLabel("Trajectstatus:"), true);
+        this.preview.addComponent(trajectStatusText);
+
         this.preview.gridBagConstraints.insets.top = 10;
         this.preview.addFullWidthComponent(new JLabel(String.format("%s bezorgingspunten", deliveryRoute.getDeliveryPointsAmount() - 1), JLabel.CENTER));
         this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
@@ -227,14 +233,17 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.gridBagConstraints.insets.top = 5;
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render(), 3);
 
-        this.preview.gridBagConstraints.insets.top = 15;
-        this.preview.addComponent(this.cancelButton, true);
-        this.preview.gridBagConstraints.insets.left = 10;
-        this.preview.gridBagConstraints.insets.right = 10;
-        this.preview.addComponent(this.routeButton);
-        this.preview.gridBagConstraints.insets.left = 0;
-        this.preview.gridBagConstraints.insets.right = 0;
-        this.preview.addComponent(this.completeButton);
+        if (deliveryRoute.getDeliveryStatus() == DeliveryStatus.NONE) {
+            this.preview.gridBagConstraints.insets.top = 15;
+            this.preview.addComponent(this.cancelButton, true);
+            this.preview.gridBagConstraints.insets.left = 10;
+            this.preview.gridBagConstraints.insets.right = 10;
+            this.preview.addComponent(this.routeButton);
+            this.preview.gridBagConstraints.insets.left = 0;
+            this.preview.gridBagConstraints.insets.right = 0;
+            this.preview.addComponent(this.completeButton);
+        }
+
     }
 
     /**
@@ -242,12 +251,17 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        //TODO: Statussen updaten in database
+        //    : Route op DeliveryStatus.COMPLETED setten wanneer je uit Volgen route komt.
+
         if (e.getSource() == this.printButton) {
             this.buildReport();
         }
+        DeliveryRoute route = (DeliveryRoute) this.listItems.get(this.list.getSelectedIndex());
 
         if (e.getSource() == this.routeButton) {
-            DeliveryRoute route = (DeliveryRoute) this.listItems.get(this.list.getSelectedIndex());
+            route.setDeliveryStatus(DeliveryStatus.NOW_DELIVERING);
             ArrayList<DeliveryPointBase> deliveryPoints = route.getDeliveryPoints();
 
             String[] labels = new String[deliveryPoints.size() - 1];
@@ -274,6 +288,40 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
             String title = String.format("%s (%skm)", route.getName(), route.getDistance());
             DeliveryFollowDialog deliveryFollowPanel = new DeliveryFollowDialog(new JFrame(), true, deliveryPoints, labels, title);
+        } else if (e.getSource() == this.completeButton) {
+            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het hele bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                route.setDeliveryStatus(DeliveryStatus.COMPLETED);
+
+                // Set all delivery point statuses to completed
+                for (DeliveryPointBase deliveryPoint : route.getDeliveryPoints()) {
+                    if (deliveryPoint instanceof DeliveryOrderPoint) {
+                        LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) deliveryPoint).getOrder();
+                        Order order = new Order();
+                        order.addCondition("OrderID", entity.get("OrderID"));
+                        order.addValue("Status", String.valueOf(DeliveryStatus.COMPLETED.toInteger()));
+                        order.update();
+                    }
+                }
+
+                this.updateRawPreview(route);
+            }
+        } else if (e.getSource() == this.cancelButton) {
+            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het hele bezorgingstraject wilt annuleren?", "Bezorgingstraject annuleren", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                route.setDeliveryStatus(DeliveryStatus.REJECTED);
+
+                // Set all delivery point statuses to rejected.
+                for (DeliveryPointBase deliveryPoint : route.getDeliveryPoints()) {
+                    if (deliveryPoint instanceof DeliveryOrderPoint) {
+                        LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) deliveryPoint).getOrder();
+                        Order order = new Order();
+                        order.addCondition("OrderID", entity.get("OrderID"));
+                        order.addValue("Status", String.valueOf(DeliveryStatus.REJECTED.toInteger()));
+                        order.update();
+                    }
+                }
+
+                this.updateRawPreview(route);
+            }
         }
     }
 
