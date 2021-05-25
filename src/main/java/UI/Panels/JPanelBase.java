@@ -17,7 +17,8 @@ import java.util.ArrayList;
  */
 abstract public class JPanelBase extends JPanel {
 
-    protected final int panelWidth, panelHeight;
+    protected final int panelWidth;
+    protected int panelHeight;
 
     public GridBagConstraints gridBagConstraints;
     public JLabel titleLabel;

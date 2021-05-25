@@ -49,6 +49,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
      * @param date The date.
      */
     public DeliveryRoutePanel(String date) {
+        this.panelHeight += 25;
+
         this.DeliveryPoint = new DeliveryPoint(
             "Amsterdam", "1071BR", "P.C. Hooftstraat", 91, 4.8796204,52.3600336, 5
         );
@@ -252,9 +254,6 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        //TODO: Statussen updaten in database
-        //    : Route op DeliveryStatus.COMPLETED setten wanneer je uit Volgen route komt.
-
         if (e.getSource() == this.printButton) {
             this.buildReport();
         }
@@ -288,13 +287,21 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
             String title = String.format("%s (%skm)", route.getName(), route.getDistance());
             DeliveryFollowDialog deliveryFollowPanel = new DeliveryFollowDialog(new JFrame(), true, deliveryPoints, labels, title);
+
+            if (deliveryFollowPanel.getRouteStatus() != null) {
+                if (!deliveryFollowPanel.getRouteStatus().compareStatus(DeliveryStatus.NONE)) {
+                    route.setDeliveryStatus(deliveryFollowPanel.getRouteStatus());
+                    this.updateRawPreview(route);
+                }
+            }
+
         } else if (e.getSource() == this.completeButton) {
             if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het hele bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 route.setDeliveryStatus(DeliveryStatus.COMPLETED);
 
                 // Set all delivery point statuses to completed
                 for (DeliveryPointBase deliveryPoint : route.getDeliveryPoints()) {
-                    if (deliveryPoint instanceof DeliveryOrderPoint) {
+                    if (deliveryPoint instanceof DeliveryOrderPoint && (deliveryPoint.compareStatus(DeliveryStatus.NONE) || deliveryPoint.compareStatus(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING))) {
                         LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) deliveryPoint).getOrder();
                         Order order = new Order();
                         order.addCondition("OrderID", entity.get("OrderID"));
@@ -311,7 +318,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
                 // Set all delivery point statuses to rejected.
                 for (DeliveryPointBase deliveryPoint : route.getDeliveryPoints()) {
-                    if (deliveryPoint instanceof DeliveryOrderPoint) {
+                    if (deliveryPoint instanceof DeliveryOrderPoint && (deliveryPoint.compareStatus(DeliveryStatus.NONE) || deliveryPoint.compareStatus(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING))) {
                         LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) deliveryPoint).getOrder();
                         Order order = new Order();
                         order.addCondition("OrderID", entity.get("OrderID"));
