@@ -17,6 +17,7 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
 
     private JButton confirmButton, rejectButton, completeButton;
     public static ArrayList<Object> listItemsCopy;
+    private DeliveryStatus routeStatus;
 
     /**
      * Creates a new delivery follow dialog.
@@ -159,6 +160,8 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        this.routeStatus = DeliveryStatus.NONE;
+
         if (e.getSource() == this.rejectButton) {
             if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je deze bestelling wilt annuleren?", "Bevestiging", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 // We increase every point with one, because the current point is the start point and the next one is
@@ -169,11 +172,17 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
                 // Reject current delivery point and change status of next point to delivering.
                 DeliveryPointBase currentDeliveryPoint = (DeliveryPointBase) this.listItems.get(currentPointIndex);
                 currentDeliveryPoint.setStatus(DeliveryStatus.REJECTED);
-                System.out.println(currentDeliveryPoint.addressLabel());
 
                 DeliveryPointBase nextDeliveryPoint = (DeliveryPointBase) this.listItems.get(nextPointIndex);
                 nextDeliveryPoint.setStatus(DeliveryStatus.NOW_DELIVERING);
-                System.out.println(nextDeliveryPoint.addressLabel());
+
+                if (currentDeliveryPoint instanceof DeliveryOrderPoint) {
+                    LinkedHashMap<String, String> entity = ((DeliveryOrderPoint) currentDeliveryPoint).getOrder();
+                    Order order = new Order();
+                    order.addCondition("OrderID", entity.get("OrderID"));
+                    order.addValue("Status", String.valueOf(DeliveryStatus.REJECTED.toInteger()));
+                    order.update();
+                }
 
                 // Go to the next delivery point.
                 this.list.setSelectedIndex(this.list.getSelectedIndex() + 1);
@@ -204,9 +213,19 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
                 this.list.updateUI();
             }
         } else if (e.getSource() == this.completeButton) {
-            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-                System.out.println("TODO");
+            if (JOptionPane.showConfirmDialog(this, "Weet je zeker dat je het bezorgingstraject wilt afronden?", "Bezorgingstraject afronden", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                this.routeStatus = DeliveryStatus.COMPLETED;
+                this.dispose();
             }
         }
+    }
+
+    /**
+     * Gets the delivery status for current route.
+     *
+     * @return DeliveryStatus for current route.
+     */
+    public DeliveryStatus getRouteStatus() {
+        return routeStatus;
     }
 }

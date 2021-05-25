@@ -35,7 +35,7 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
 
         this.list = new JList<>(this.getListLabels());
         this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.list.setSelectedIndex(this.getSelectedItemIndex());
+        this.list.setSelectedIndex(this.getDefaultSelectedItemIndex());
         this.list.addListSelectionListener(this);
         this.list.setSelectionBackground(Color.BLUE);
         this.list.setSelectionForeground(Color.WHITE);
@@ -164,11 +164,11 @@ public abstract class JPanelRawListBase extends JPanelBase implements ListSelect
     protected abstract ArrayList<Object> getRawListItems();
 
     /**
-     * Gets the index of the selected list item.
+     * Gets the default index of the selected list item.
      *
      * @return The list item index.
      */
-    protected int getSelectedItemIndex() {
+    protected int getDefaultSelectedItemIndex() {
         return 0;
     }
 
