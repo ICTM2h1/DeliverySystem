@@ -137,7 +137,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             return this.listItems;
         }
 
-        Order order = new Order(this.date);
+        Order order = new Order();
 
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
         if (entities.isEmpty()) {
