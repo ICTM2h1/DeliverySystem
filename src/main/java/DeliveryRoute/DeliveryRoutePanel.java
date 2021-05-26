@@ -237,6 +237,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
 
         this.preview.gridBagConstraints.insets.top = 5;
+        if (!deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NONE) &&
+            !deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NOW_DELIVERING)) {
+            this.preview.gridBagConstraints.insets.bottom = 40;
+        }
+
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render(), 3);
 
         if (deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NONE) ||
