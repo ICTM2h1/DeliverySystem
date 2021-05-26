@@ -56,7 +56,7 @@ public class Order extends CrudBase {
         String query = "SELECT * FROM orders O " +
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID " +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
-                "WHERE O.Status = :status ";
+                "WHERE O.Status != :status ";
         if (this.date != null && !this.date.isEmpty()) {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
@@ -64,7 +64,7 @@ public class Order extends CrudBase {
         }
         query += "ORDER BY OrderID ";
 
-        this.bindParam("status", String.valueOf(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING.toInteger()));
+        this.bindParam("status", String.valueOf(DeliveryStatus.COMPLETED.toInteger()));
         return super.all(query);
     }
 
@@ -78,11 +78,11 @@ public class Order extends CrudBase {
                 "INNER JOIN customers CU ON O.CustomerID = CU.CustomerID \n" +
                 "INNER JOIN cities CI ON CU.DeliveryCityID = CI.CityID " +
                 "WHERE YEAR(OrderDate) >= 2020 " +
-                "AND O.Status = :status " +
+                "AND O.Status != :status " +
                 "ORDER BY ExpectedDeliveryDate DESC " +
                 "LIMIT 1000";
 
-        this.bindParam("status", String.valueOf(DeliveryStatus.BUSY_WITH_OTHER_DELIVERING.toInteger()));
+        this.bindParam("status", String.valueOf(DeliveryStatus.COMPLETED.toInteger()));
         return super.all(query);
     }
 

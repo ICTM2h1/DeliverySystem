@@ -224,6 +224,10 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
         JLabel trajectStatusText = new JLabel(deliveryRoute.getDeliveryStatus().toString());
         DeliveryStatus trajectStatus = deliveryRoute.getDeliveryStatus();
+        trajectStatusText.setFont(new Font("default", Font.BOLD, 13));
+        if (trajectStatus.compareStatus(DeliveryStatus.REJECTED)) {
+            trajectStatusText.setFont(new Font("default", Font.ITALIC, 13));
+        }
         trajectStatusText.setForeground((trajectStatus.foregroundColor()));
         this.preview.addComponent(new JLabel("Trajectstatus:"), true);
         this.preview.addComponent(trajectStatusText);
@@ -388,7 +392,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
                 nextDeliveryPoint = deliveryPoints.get(nextOrderIndex);
 
-                dataSource.add(String.valueOf(counter + 1), deliveryPoint.addressLabel(), nextDeliveryPoint.addressLabel(), deliveryPoint.distance(nextDeliveryPoint));
+                dataSource.add(String.valueOf(counter + 1), deliveryPoint.getStreet(), nextDeliveryPoint.getStreet(), deliveryPoint.distance(nextDeliveryPoint) + " km");
+                dataSource.add("--", deliveryPoint.label() + ", " + deliveryPoint.getPostalCode(), nextDeliveryPoint.label() + ", " + nextDeliveryPoint.getPostalCode(), "--");
                 counter++;
             }
         }

@@ -133,7 +133,12 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
         this.preview.addComponent(new JLabel(nextDeliveryPoint.getPostalCode()));
 
         this.preview.addComponent(new JLabel("Status:"), true);
-        this.preview.addComponent(new JLabel(nextDeliveryPoint.getStatus().toString()));
+        JLabel newStatus = new JLabel(nextDeliveryPoint.getStatus().toString());
+        newStatus.setFont(new Font("default", Font.BOLD, 13));
+        if (nextDeliveryPoint.compareStatus(DeliveryStatus.REJECTED)) {
+            newStatus.setFont(new Font("default", Font.ITALIC, 13));
+        }
+        this.preview.addComponent(newStatus);
 
         // Decrease the number of list items with 2 because we have to remove the start and end point. These points are
         // not shown as apart buttons in the UI.
@@ -146,7 +151,7 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
             this.rejectButton = new JButton("Bestelling annuleren");
             this.rejectButton.addActionListener(this);
 
-            this.confirmButton = new JButton("Bestelling bezorgt");
+            this.confirmButton = new JButton("Bestelling bezorgd");
             this.confirmButton.addActionListener(this);
 
             this.preview.gridBagConstraints.insets = new Insets(5, 0, 5, 0);

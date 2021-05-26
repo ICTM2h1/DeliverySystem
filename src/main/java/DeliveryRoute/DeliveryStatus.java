@@ -58,13 +58,6 @@ public enum DeliveryStatus {
         /**
          * {@inheritDoc}
          */
-        public Color foregroundColor() {
-            return Color.WHITE;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
         public Color backgroundColor() { return Color.BLUE ;}
 
         /**
@@ -110,7 +103,8 @@ public enum DeliveryStatus {
          * {@inheritDoc}
          */
         public Color foregroundColor() {
-            return Color.GREEN;
+            return new Color(0,100,0);
+
         }
 
         /**
