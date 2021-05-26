@@ -173,7 +173,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             nextDeliveryPoint = new DeliveryOrderPoint(entities.get(nextOrderIndex));
             distance += currentDeliveryPoint.distance(nextDeliveryPoint);
 
-            // Takes in account that the deliverer must drive back to the start point within the maximum distnace.
+            // Takes in account that the deliverer must drive back to the start point within the maximum distance.
             int backToStartPointDistance = nextDeliveryPoint.distance(this.StartPoint) + distance;
 
             // If we reach the maximum distance per deliverer, add route to array and start new route.
