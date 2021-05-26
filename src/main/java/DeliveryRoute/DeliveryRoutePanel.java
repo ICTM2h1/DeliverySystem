@@ -137,7 +137,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             return this.listItems;
         }
 
-        Order order = new Order(this.date);
+        Order order = new Order();
 
         ArrayList<LinkedHashMap<String, String>> entities = order.filterOnGeometry();
         if (entities.isEmpty()) {
@@ -147,7 +147,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         ArrayList<DeliveryRoute> listItems = new ArrayList<>();
 
         int delivererCount = DeliveryRoute.deliverers;
-        int ordersPerDeliverer = Math.round((float) entities.size() / delivererCount);
+        // Increase with one to prevent missing some orders in the delivery routes.
+        int ordersPerDeliverer = Math.round((float) entities.size() / delivererCount) + 1;
         if (ordersPerDeliverer == 0) {
             delivererCount = 1;
             ordersPerDeliverer = entities.size();
@@ -159,11 +160,11 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer + 1, ordersPerDeliverer);
 
             while (iterator.hasNext()) {
-                LinkedHashMap<String, String> entity = iterator.next();
-
-                if (delivererOrderCount >= ordersPerDeliverer) {
+                if (delivererOrderCount > ordersPerDeliverer) {
                     break;
                 }
+
+                LinkedHashMap<String, String> entity = iterator.next();
 
                 deliveryRoute.add(new DeliveryOrderPoint(entity));
                 delivererOrderCount++;
@@ -237,9 +238,15 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.addFullWidthComponent(new JLabel("De afstand is (hemelsbreed) berekend vanaf elke stad tot de volgende stad."));
 
         this.preview.gridBagConstraints.insets.top = 5;
+        if (!deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NONE) &&
+            !deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NOW_DELIVERING)) {
+            this.preview.gridBagConstraints.insets.bottom = 40;
+        }
+
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render(), 3);
 
-        if (deliveryRoute.getDeliveryStatus() == DeliveryStatus.NONE) {
+        if (deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NONE) ||
+            deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NOW_DELIVERING)) {
             this.preview.gridBagConstraints.insets.top = 15;
             this.preview.addComponent(this.cancelButton, true);
             this.preview.gridBagConstraints.insets.left = 10;

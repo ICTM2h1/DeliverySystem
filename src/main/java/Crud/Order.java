@@ -61,7 +61,10 @@ public class Order extends CrudBase {
             this.bindParam("ExpectedDeliveryDate", this.date);
 
             query += "AND ExpectedDeliveryDate = :ExpectedDeliveryDate ";
+        } else {
+            query += "AND YEAR(OrderDate) >= 2020 ";
         }
+
         query += "ORDER BY OrderID ";
 
         this.bindParam("status", String.valueOf(DeliveryStatus.COMPLETED.toInteger()));

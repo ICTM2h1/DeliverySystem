@@ -119,6 +119,8 @@ public class DeliveryRoute {
             } catch (NumberFormatException e) {
                 SystemError.handle(e);
             }
+
+            counter++;
         }
 
         this.distance = (int) Math.round(distance);
