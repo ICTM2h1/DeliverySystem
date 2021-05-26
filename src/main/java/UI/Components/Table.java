@@ -54,8 +54,6 @@ public class Table {
                 return Table.isEditable;
             }
         };
-
-        this.table.setPreferredSize(new Dimension(this.width, this.height - 50));
     }
 
     /**
