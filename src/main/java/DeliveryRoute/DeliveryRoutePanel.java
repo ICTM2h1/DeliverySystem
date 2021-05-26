@@ -239,7 +239,8 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.preview.gridBagConstraints.insets.top = 5;
         this.preview.addFullWidthComponent(deliveryRoute.toTable().render(), 3);
 
-        if (deliveryRoute.getDeliveryStatus() == DeliveryStatus.NONE) {
+        if (deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NONE) ||
+            deliveryRoute.getDeliveryStatus().compareStatus(DeliveryStatus.NOW_DELIVERING)) {
             this.preview.gridBagConstraints.insets.top = 15;
             this.preview.addComponent(this.cancelButton, true);
             this.preview.gridBagConstraints.insets.left = 10;
