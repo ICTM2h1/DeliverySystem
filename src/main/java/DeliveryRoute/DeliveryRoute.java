@@ -132,7 +132,7 @@ public class DeliveryRoute {
      */
     public Table toTable() {
         Table table = new Table(500, 260);
-        table.addColumn("Bezorgingspunt");
+        table.addColumn("Nr");
         table.addColumn("Vertrekpunt");
         table.addColumn("Aankomstpunt");
         table.addColumn("Afstand");
