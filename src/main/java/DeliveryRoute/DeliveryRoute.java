@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class DeliveryRoute {
 
-    public final static int distancePerDeliverer = 350;
+    public final static int distancePerDeliverer = 500;
 
     private final int id;
     private int distance;
