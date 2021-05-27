@@ -411,6 +411,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
                 dataSource.add(String.valueOf(counter + 1), deliveryPoint.getStreet(), nextDeliveryPoint.getStreet(), deliveryPoint.distance(nextDeliveryPoint) + " km");
                 dataSource.add("--", deliveryPoint.label() + ", " + deliveryPoint.getPostalCode(), nextDeliveryPoint.label() + ", " + nextDeliveryPoint.getPostalCode(), "--");
+                dataSource.add("--", "--", "--", "--");
                 counter++;
             }
         }
