@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class DeliveryRoute {
 
-    public final static int deliverers = 6;
+    public final static int distancePerDeliverer = 500;
 
     private final int id;
     private int distance;
@@ -24,10 +24,9 @@ public class DeliveryRoute {
      * Creates a new delivery route.
      *
      * @param id The id of this route.
-     * @param capacity The capacity of this route.
      */
-    public DeliveryRoute(int id, int capacity) {
-        this(id, new ArrayList<>(capacity + 1));
+    public DeliveryRoute(int id) {
+        this(id, new ArrayList<>());
     }
 
     /**

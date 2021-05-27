@@ -86,5 +86,5 @@ INSERT INTO `nerdygadgets`.`people` (
 DROP USER IF EXISTS 'nerdygadgets'@'localhost';
 
 CREATE USER 'nerdygadgets'@'localhost' IDENTIFIED BY '^jnx$PK&hHg3Cz6y#V#S';
-REVOKE ALL PRIVILEGES ON * . * FROM 'nerdygadgets'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON * . * TO 'nerdygadgets'@'localhost';
+REVOKE ALL PRIVILEGES ON *.* FROM 'nerdygadgets'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'nerdygadgets'@'localhost';

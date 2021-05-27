@@ -20,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
@@ -28,7 +27,7 @@ import java.util.LinkedHashMap;
  */
 public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListener {
 
-    private final DeliveryPoint DeliveryPoint;
+    private final DeliveryPoint StartPoint;
     private final String date;
 
     private final JButton routeButton, cancelButton, completeButton, printButton;
@@ -51,7 +50,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
     public DeliveryRoutePanel(String date) {
         this.panelHeight += 25;
 
-        this.DeliveryPoint = new DeliveryPoint(
+        this.StartPoint = new DeliveryPoint(
             "Amsterdam", "1071BR", "P.C. Hooftstraat", 91, 4.8796204,52.3600336, 5
         );
         this.date = date;
@@ -144,45 +143,55 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
             return new ArrayList<>();
         }
 
-        ArrayList<DeliveryRoute> listItems = new ArrayList<>();
+        ArrayList<DeliveryRoute> deliveryRoutes = new ArrayList<>();
 
-        int delivererCount = DeliveryRoute.deliverers;
-        // Increase with one to prevent missing some orders in the delivery routes.
-        int ordersPerDeliverer = Math.round((float) entities.size() / delivererCount) + 1;
-        if (ordersPerDeliverer == 0) {
-            delivererCount = 1;
-            ordersPerDeliverer = entities.size();
-        }
+        int distancePerDeliverer = DeliveryRoute.distancePerDeliverer, deliverer = 0, delta = 0, distance = 0;
 
-        Iterator<LinkedHashMap<String, String>> iterator = entities.iterator();
-        for (int deliverer = 0; deliverer < delivererCount; deliverer++) {
-            int delivererOrderCount = 0;
-            DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer + 1, ordersPerDeliverer);
+        DeliveryPointBase nextDeliveryPoint;
+        DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer + 1);
+        for (LinkedHashMap<String, String> orderEntity : entities) {
+            DeliveryOrderPoint currentDeliveryPoint = new DeliveryOrderPoint(orderEntity);
 
-            while (iterator.hasNext()) {
-                if (delivererOrderCount > ordersPerDeliverer) {
-                    break;
-                }
-
-                LinkedHashMap<String, String> entity = iterator.next();
-
-                deliveryRoute.add(new DeliveryOrderPoint(entity));
-                delivererOrderCount++;
-
-                iterator.remove(); // avoids a ConcurrentModificationException
+            // The first distance to be added is the distance from the start point to the first order delivery point.
+            if (distance == 0) {
+                distance += currentDeliveryPoint.distance(this.StartPoint);
             }
 
-            if (deliveryRoute.getDeliveryPointsAmount() < 1) {
-                continue;
+            int nextOrderIndex = delta + 1;
+            // Calculates the distance for each next point until there are no points anymore.
+            // Then add the last point and route and stop the process.
+            if (nextOrderIndex >= entities.size()) {
+                deliveryRoute.add(currentDeliveryPoint);
+                NearestNeighbour nearestNeighbour = new NearestNeighbour(this.StartPoint, deliveryRoute.getDeliveryPoints());
+                DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
+
+                deliveryRoutes.add(sortedRoute);
+                break;
             }
 
-            NearestNeighbour nearestNeighbour = new NearestNeighbour(this.DeliveryPoint, deliveryRoute.getDeliveryPoints());
-            DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
+            nextDeliveryPoint = new DeliveryOrderPoint(entities.get(nextOrderIndex));
+            distance += currentDeliveryPoint.distance(nextDeliveryPoint);
 
-            listItems.add(deliverer, sortedRoute);
+            // Takes in account that the deliverer must drive back to the start point within the maximum distance.
+            int backToStartPointDistance = nextDeliveryPoint.distance(this.StartPoint) + distance;
+
+            // If we reach the maximum distance per deliverer, add route to array and start new route.
+            if (backToStartPointDistance >= distancePerDeliverer) {
+                NearestNeighbour nearestNeighbour = new NearestNeighbour(this.StartPoint, deliveryRoute.getDeliveryPoints());
+                DeliveryRoute sortedRoute = new DeliveryRoute(deliveryRoute.getId(), nearestNeighbour.getRoute());
+
+                deliveryRoutes.add(sortedRoute);
+
+                deliverer++;
+                deliveryRoute = new DeliveryRoute(deliverer + 1);
+                distance = 0;
+            }
+
+            deliveryRoute.add(currentDeliveryPoint);
+            delta++;
         }
 
-        return new ArrayList<>(listItems);
+        return new ArrayList<>(deliveryRoutes);
     }
 
     /**
@@ -218,7 +227,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         this.routeTitle = deliveryRoute.getName();
 
         this.preview.addComponent(new JLabel("Startpunt:"), true);
-        this.preview.addComponent(new JLabel(this.DeliveryPoint.addressLabel()));
+        this.preview.addComponent(new JLabel(this.StartPoint.addressLabel()));
 
         this.preview.addComponent(new JLabel("Afstand:"), true);
         this.preview.addComponent(new JLabel(String.format("%s km", deliveryRoute.getDistance())));
@@ -401,6 +410,7 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
 
                 dataSource.add(String.valueOf(counter + 1), deliveryPoint.getStreet(), nextDeliveryPoint.getStreet(), deliveryPoint.distance(nextDeliveryPoint) + " km");
                 dataSource.add("--", deliveryPoint.label() + ", " + deliveryPoint.getPostalCode(), nextDeliveryPoint.label() + ", " + nextDeliveryPoint.getPostalCode(), "--");
+                dataSource.add("--", "--", "--", "--");
                 counter++;
             }
         }
