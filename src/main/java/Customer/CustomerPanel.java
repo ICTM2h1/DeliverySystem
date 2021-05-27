@@ -118,7 +118,8 @@ public class CustomerPanel extends JPanelListBase implements ActionListener {
         if (e.getSource() == this.editButton) {
             LinkedHashMap<String, String> customerEntity = this.getListItems().get(this.list.getSelectedIndex());
             CustomerEditDialog customerEditDialog = new CustomerEditDialog(new JFrame(), true, customerEntity);
-            if (customerEditDialog.getClickedButton() == customerEditDialog.getCancelButton()) {
+            if (customerEditDialog.getClickedButton() == customerEditDialog.getCancelButton() ||
+                customerEditDialog.getStreet() == null || customerEditDialog.getPostalCode() == null || customerEditDialog.getCity() == null) {
                 return;
             }
 
