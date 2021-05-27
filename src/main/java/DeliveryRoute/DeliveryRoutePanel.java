@@ -146,7 +146,6 @@ public class DeliveryRoutePanel extends JPanelRawListBase implements ActionListe
         ArrayList<DeliveryRoute> deliveryRoutes = new ArrayList<>();
 
         int distancePerDeliverer = DeliveryRoute.distancePerDeliverer, deliverer = 0, delta = 0, distance = 0;
-        System.out.println(entities.size());
 
         DeliveryPointBase nextDeliveryPoint;
         DeliveryRoute deliveryRoute = new DeliveryRoute(deliverer + 1);
