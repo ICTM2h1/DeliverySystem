@@ -51,7 +51,7 @@ public class CustomerEditDialog extends JDialogListItemBase {
         this.postalCodeField.setText(listItem.get("DeliveryPostalCode"));
         this.add(this.postalCodeField);
 
-        this.add(new JLabel("Straat: "));
+        this.add(new JLabel("Plaats: "));
         this.cityField = new JTextField(5);
         this.cityField.setText(listItem.get("CityName"));
         this.add(this.cityField);
