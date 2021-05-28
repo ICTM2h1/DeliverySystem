@@ -132,6 +132,11 @@ public class DeliveryFollowDialog extends JDialogRawListBase implements ActionLi
         this.preview.addComponent(new JLabel("Postcode:"), true);
         this.preview.addComponent(new JLabel(nextDeliveryPoint.getPostalCode()));
 
+        if (nextDeliveryPoint instanceof DeliveryOrderPoint) {
+            this.preview.addComponent(new JLabel("Bestelling:"), true);
+            this.preview.addComponent(new JLabel(((DeliveryOrderPoint) nextDeliveryPoint).getOrder().get("OrderID")));
+        }
+
         this.preview.addComponent(new JLabel("Status:"), true);
         JLabel newStatus = new JLabel(nextDeliveryPoint.getStatus().toString());
         newStatus.setFont(new Font("default", Font.BOLD, 13));
