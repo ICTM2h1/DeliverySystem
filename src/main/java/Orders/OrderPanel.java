@@ -1,6 +1,7 @@
 package Orders;
 
 import Crud.Order;
+import DeliveryRoute.DeliveryStatus;
 import UI.Panels.JPanelListBase;
 
 import javax.swing.*;
@@ -106,7 +107,7 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
         this.preview.addComponent(new JLabel(listItem.get("ExpectedDeliveryDate")));
 
         this.preview.gridBagConstraints.insets = new Insets(25, 25, 275, 25);
-        this.editButton = new JButton("Verwijderen");
+        this.editButton = new JButton("Annuleren");
         this.editButton.addActionListener(this);
         this.preview.addFullWidthComponent(this.editButton);
     }
@@ -118,14 +119,15 @@ public class OrderPanel extends JPanelListBase implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.editButton) {
             LinkedHashMap<String, String> orderEntity = this.getListItems().get(this.list.getSelectedIndex());
-            OrderDeleteDialog orderDeleteDialog = new OrderDeleteDialog(new JFrame(), true, orderEntity);
-            if (!orderDeleteDialog.deleteOrder()) {
+            OrderCancelDialog orderCancelDialog = new OrderCancelDialog(new JFrame(), true, orderEntity);
+            if (!orderCancelDialog.cancelOrder()) {
                 return;
             }
 
             Order order = new Order();
             order.addCondition("OrderID", orderEntity.get("OrderID"));
-            order.delete();
+            order.addValue("Status", String.valueOf(DeliveryStatus.NONE.toInteger()));
+            order.update();
 
             this.removeAll();
             this.addTitleComponent();

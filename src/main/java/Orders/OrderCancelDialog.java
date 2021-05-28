@@ -8,9 +8,9 @@ import java.util.LinkedHashMap;
 /**
  * Provides a dialog for editing stock items.
  */
-public class OrderDeleteDialog extends JDialogListItemBase {
+public class OrderCancelDialog extends JDialogListItemBase {
 
-    private boolean deleteOrder;
+    private boolean cancelOrder;
 
     /**
      * Creates a new delete dialog for orders.
@@ -19,7 +19,7 @@ public class OrderDeleteDialog extends JDialogListItemBase {
      * @param modal Is it a modal?
      * @param listItem The order list item.
      */
-    public OrderDeleteDialog(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem) {
+    public OrderCancelDialog(JFrame frame, boolean modal, LinkedHashMap<String, String> listItem) {
         super(frame, modal, listItem);
     }
 
@@ -28,7 +28,7 @@ public class OrderDeleteDialog extends JDialogListItemBase {
      */
     @Override
     protected String getDialogTitle() {
-        return "Verwijderen bestelling";
+        return "Annuleren bestelling";
     }
 
     /**
@@ -48,7 +48,7 @@ public class OrderDeleteDialog extends JDialogListItemBase {
     protected void addActionButtons() {
         super.addActionButtons();
 
-        this.proceedButton.setText("Verwijderen");
+        this.proceedButton.setText("Annuleer bestelling");
     }
 
     /**
@@ -56,15 +56,15 @@ public class OrderDeleteDialog extends JDialogListItemBase {
      */
     @Override
     protected void executeAction() {
-        this.deleteOrder = true;
+        this.cancelOrder = true;
     }
 
     /**
-     * Determines if the order must be deleted.
+     * Determines if the order must be canceled.
      *
-     * @return Whether the order is going to be deleted or not?
+     * @return Whether the order is going to be canceled or not?
      */
-    public boolean deleteOrder() {
-        return deleteOrder;
+    public boolean cancelOrder() {
+        return cancelOrder;
     }
 }
